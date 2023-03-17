@@ -5,8 +5,8 @@ import PostWidget from "./PostWidget";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts);
-  const token = useSelector((state) => state.token);
+  const posts = useSelector((state) => state.posts.posts);
+  const token = useSelector((state) => state.auth.token);
 
   const getPosts = async () => {
     const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts`, {

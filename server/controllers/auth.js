@@ -42,15 +42,28 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
+
     if (!user) return res.status(400).json({ msg: "User does not exists. " });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Unvalid credentials." });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    delete user.password;
+    console.log(token);
+
+    await User.findByIdAndUpdate(user._id, { token });
+
     res.status(200).json({ token, user });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+export const refresh = async (req, res) => {
+  try {
+    const token = req.params;
+    console.log(token);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

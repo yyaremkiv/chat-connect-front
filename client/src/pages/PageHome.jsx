@@ -1,13 +1,13 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import Navbar from "scenes/navbar";
-import UserWidget from "../widgets/UserWidget";
+import UserWidget from "../scenes/widgets/UserWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
-import AdvertWidget from "../widgets/AdvertWidgets";
+import AdvertWidget from "../scenes/widgets/AdvertWidgets";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 
-const HomePage = () => {
+export const PageHome = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.auth.user);
 
@@ -42,5 +42,3 @@ const HomePage = () => {
     </Box>
   );
 };
-
-export default HomePage;
