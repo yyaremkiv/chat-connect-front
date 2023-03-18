@@ -1,10 +1,9 @@
+import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 
 export const verifyToken = async (req, res, next) => {
   try {
     let token = req.header("Authorization");
-
-    console.log("token authorization", token);
 
     if (!token) {
       return res.status(500).send({ message: "Not token with this response" });
@@ -15,6 +14,13 @@ export const verifyToken = async (req, res, next) => {
     }
 
     const verified = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(verified.id);
+
+    if (token !== user.token) {
+      res.status(404).json({ message: "Not found token" });
+    }
+
     req.user = verified;
     next();
   } catch (err) {

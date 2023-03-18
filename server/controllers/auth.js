@@ -49,7 +49,6 @@ export const login = async (req, res) => {
     if (!isMatch) return res.status(400).json({ msg: "Unvalid credentials." });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    console.log(token);
 
     await User.findByIdAndUpdate(user._id, { token });
 
@@ -61,12 +60,29 @@ export const login = async (req, res) => {
 
 export const refresh = async (req, res) => {
   try {
-    console.log("sdfsdfsdfsdf sdf ", req.user.id);
-    const _id = req.user.id;
+    const { id } = req.user;
 
-    const user = await User.findById(_id);
+    const user = await User.findById(id);
 
     res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    const user = User.findById(id);
+
+    if (!user) {
+      res.status(404).json({ message: "User does not exists" });
+    }
+
+    await User.findByIdAndUpdate(id, { token: null });
+
+    res.status(201).json({ messag: "Succes" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

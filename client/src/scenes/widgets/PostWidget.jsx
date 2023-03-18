@@ -1,9 +1,11 @@
 import {
   ChatBubbleOutlineOutlined,
+  DeleteForever,
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
@@ -12,6 +14,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { patchLike } from "redux/posts/postsOperations";
+
+import { deletePost } from "redux/posts/postsOperations";
 
 const PostWidget = ({
   postId,
@@ -49,6 +53,11 @@ const PostWidget = ({
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
       </Typography>
+      {/* New funcion - start */}
+      <IconButton onClick={() => dispatch(deletePost(postId))}>
+        <DeleteIcon />
+      </IconButton>
+      {/* New funcion - end */}
       {picturePath && (
         <img
           width="100%"

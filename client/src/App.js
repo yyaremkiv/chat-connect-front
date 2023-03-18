@@ -14,6 +14,7 @@ function App() {
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
   const isLogged = useSelector((state) => state.auth.isLogged);
+  console.log(isLogged);
 
   return (
     <div className="app">

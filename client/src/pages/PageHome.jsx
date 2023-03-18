@@ -16,6 +16,10 @@ export const PageHome = () => {
   const { _id, picturePath } = useSelector((state) => state.auth.user);
   const user = useSelector((state) => state.auth.user);
 
+  useEffect(() => {
+    dispatch(refreshUser());
+  }, [dispatch]);
+
   return (
     <Box>
       {_id && <Navbar />}
@@ -42,7 +46,7 @@ export const PageHome = () => {
           <Box flexBasis="26%">
             <AdvertWidget />
             <Box m="2rem 0" />
-            <FriendListWidget userId={_id} />
+            {_id && <FriendListWidget userId={_id} />}
           </Box>
         )}
       </Box>

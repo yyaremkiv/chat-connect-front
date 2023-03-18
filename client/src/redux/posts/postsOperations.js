@@ -94,3 +94,16 @@ export const patchFriend = createAsyncThunk(
     }
   }
 );
+
+export const deletePost = createAsyncThunk(
+  "post/deletePost",
+  async (postId, thunkAPI) => {
+    try {
+      const response = await axios.delete(`/posts/${postId}/delete`);
+      console.log("response", response);
+      return response.data;
+    } catch (err) {
+      return err.message;
+    }
+  }
+);

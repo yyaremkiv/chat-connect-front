@@ -7,16 +7,16 @@ import {
   patchLike,
   getUser,
   patchFriend,
+  deletePost,
 } from "./postsOperations";
 
 const initialState = {
   mode: "light",
   currentUser: null,
   friends: { data: [], isLoading: false, error: "" },
-  token: null,
   posts: [],
   isLoading: false,
-  error: "",
+  error: null,
 };
 
 const postsSlice = createSlice({
@@ -88,6 +88,13 @@ const postsSlice = createSlice({
       state.friends.data = action.payload;
     });
     builder.addCase(patchFriend.rejected, (state, action) => {});
+    builder.addCase(deletePost.pending, (state) => {});
+    builder.addCase(deletePost.fulfilled, (state, action) => {
+      console.log(action.payload);
+      state.posts = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(deletePost.rejected, (state, action) => {});
   },
 });
 
