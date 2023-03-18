@@ -32,9 +32,9 @@ export const register = async (req, res) => {
     });
 
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    res.status(201).json({ message: "Succes" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -53,16 +53,20 @@ export const login = async (req, res) => {
 
     await User.findByIdAndUpdate(user._id, { token });
 
-    res.status(200).json({ token, user });
+    res.status(200).json({ token });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const refresh = async (req, res) => {
   try {
-    const token = req.params;
-    console.log(token);
+    console.log("sdfsdfsdfsdf sdf ", req.user.id);
+    const _id = req.user.id;
+
+    const user = await User.findById(_id);
+
+    res.status(200).json({ user });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

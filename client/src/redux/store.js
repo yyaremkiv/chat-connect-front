@@ -12,6 +12,7 @@ import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 import authSlice from "./auth/authSlice";
 import postsSlice from "./posts/postsSlice";
+import themeSlice from "./theme/themeSlice";
 
 const persistAuthConfig = {
   key: "token",
@@ -19,9 +20,15 @@ const persistAuthConfig = {
   whitelist: ["token"],
 };
 
+const persistThemeConfig = {
+  key: "mode",
+  storage,
+};
+
 export const store = configureStore({
   reducer: {
     auth: persistReducer(persistAuthConfig, authSlice),
+    theme: persistReducer(persistThemeConfig, themeSlice),
     posts: postsSlice,
   },
   middleware: (getDefaultMiddleware) =>
@@ -33,9 +40,3 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
-
-// export const store = configureStore({
-//   reducer: {
-//     auth: authSlice,
-//   },
-// });

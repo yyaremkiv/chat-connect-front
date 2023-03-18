@@ -7,28 +7,24 @@ import FriendListWidget from "scenes/widgets/FriendListWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import UserWidget from "scenes/widgets/UserWidget";
+import { useDispatch } from "react-redux";
+
+import { refreshUser } from "redux/auth/authOperations";
+import { getUser } from "redux/posts/postsOperations";
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.posts.currentUser);
   const { userId } = useParams();
-  const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
-  const getUser = async () => {
-    const response = await fetch(
-      `${process.env.REACT_APP_BASE_URL}/users/${userId}`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    setUser(data);
-  };
+  useEffect(() => {
+    dispatch(refreshUser());
+  }, [dispatch]);
 
   useEffect(() => {
-    getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    dispatch(getUser(userId));
+  }, [dispatch, userId]);
 
   if (!user) return null;
 

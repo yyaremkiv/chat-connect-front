@@ -4,8 +4,10 @@ export const verifyToken = async (req, res, next) => {
   try {
     let token = req.header("Authorization");
 
+    console.log("token authorization", token);
+
     if (!token) {
-      return res.status(500).send("Accese Denied");
+      return res.status(500).send({ message: "Not token with this response" });
     }
 
     if (token.startsWith("Bearer ")) {
@@ -16,6 +18,6 @@ export const verifyToken = async (req, res, next) => {
     req.user = verified;
     next();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "not token to send" });
   }
 };

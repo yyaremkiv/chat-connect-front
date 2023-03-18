@@ -10,12 +10,10 @@ import { themeSettings } from "./theme";
 import { PageHome } from "pages/PageHome";
 
 function App() {
-  const mode = useSelector((state) => state.mode);
+  const mode = useSelector((state) => state.theme.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-  // const isAuth = Boolean(useSelector((state) => state.token));
 
   const isLogged = useSelector((state) => state.auth.isLogged);
-  console.log(isLogged);
 
   return (
     <div className="app">
@@ -23,15 +21,16 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path="/" element={<LoginPage />} />
+            <Route path="/" element={isLogged ? <PageHome /> : <LoginPage />} />
+            <Route
+              path="/login"
+              element={isLogged ? <PageHome /> : <LoginPage />}
+            />
             <Route
               path="/home"
               element={isLogged ? <PageHome /> : <Navigate to="/" />}
             />
-            <Route
-              path="/profile/:userId"
-              element={isLogged ? <ProfilePage /> : <Navigate to="/" />}
-            />
+            <Route path="/profile/:userId" element={<ProfilePage />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

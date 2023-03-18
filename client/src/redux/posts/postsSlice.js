@@ -1,19 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  getPosts,
+  getUserPosts,
+  getFriends,
+  createNewPost,
+  patchLike,
+  getUser,
+  patchFriend,
+} from "./postsOperations";
 
 const initialState = {
   mode: "light",
-  user: null,
+  currentUser: null,
+  friends: { data: [], isLoading: false, error: "" },
   token: null,
   posts: [],
+  isLoading: false,
+  error: "",
 };
 
-export const postsSlice = createSlice({
+const postsSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setMode: (state) => {
-      state.mode = state.mode === "light" ? "dark" : "light";
-    },
     setLogin: (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
@@ -22,23 +31,63 @@ export const postsSlice = createSlice({
       state.user = null;
       state.token = null;
     },
-    setFriends: (state, action) => {
-      if (state.user) {
-        state.user.friends = action.payload.friends;
-      } else {
-        console.error("user friends non-existent :(");
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getPosts.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getPosts.fulfilled, (state, action) => {
+      state.posts = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(getPosts.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(getUserPosts.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getUserPosts.fulfilled, (state, action) => {
+      state.posts = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(getUserPosts.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    });
+
+    builder.addCase(getFriends.pending, (state) => {});
+    builder.addCase(getFriends.fulfilled, (state, action) => {
+      state.friends.data = action.payload;
+    });
+    builder.addCase(getFriends.rejected, (state, action) => {});
+    builder.addCase(createNewPost.pending, (state) => {});
+    builder.addCase(createNewPost.fulfilled, (state, action) => {
+      state.posts = action.payload;
+    });
+    builder.addCase(createNewPost.rejected, (state, action) => {});
+    builder.addCase(patchLike.pending, (state) => {});
+    builder.addCase(patchLike.fulfilled, (state, action) => {
+      const updatedPost = action.payload;
+      const postIndex = state.posts.findIndex(
+        (post) => post._id === updatedPost._id
+      );
+      if (postIndex !== -1) {
+        state.posts[postIndex] = updatedPost;
       }
-    },
-    setPosts: (state, action) => {
-      state.posts = action.payload.posts;
-    },
-    setPost: (state, action) => {
-      const updatedPosts = state.posts.map((post) => {
-        if (post._id === action.payload.post._id) return action.payload.post;
-        return post;
-      });
-      state.posts = updatedPosts;
-    },
+    });
+    builder.addCase(patchLike.rejected, (state, action) => {});
+    builder.addCase(getUser.pending, (state) => {});
+    builder.addCase(getUser.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+    });
+    builder.addCase(getUser.rejected, (state, action) => {});
+    builder.addCase(patchFriend.pending, (state) => {});
+    builder.addCase(patchFriend.fulfilled, (state, action) => {
+      console.log(action.payload);
+      state.friends.data = action.payload;
+    });
+    builder.addCase(patchFriend.rejected, (state, action) => {});
   },
 });
 

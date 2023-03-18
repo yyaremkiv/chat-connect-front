@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { Box, useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "scenes/navbar";
 import UserWidget from "../scenes/widgets/UserWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
@@ -7,13 +8,17 @@ import PostsWidget from "scenes/widgets/PostsWidget";
 import AdvertWidget from "../scenes/widgets/AdvertWidgets";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 
+import { refreshUser } from "redux/auth/authOperations";
+
 export const PageHome = () => {
+  const dispatch = useDispatch();
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
 
   return (
     <Box>
-      <Navbar />
+      {_id && <Navbar />}
       <Box
         width="100%"
         padding="2rem 6%"
@@ -22,14 +27,16 @@ export const PageHome = () => {
         justifyContent="space-between"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={_id} picturePath={picturePath} />
+          {_id && picturePath && (
+            <UserWidget userId={_id} picturePath={picturePath} />
+          )}
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
           <MyPostWidget picturePath={picturePath} />
-          <PostsWidget userId={_id} />
+          {_id && <PostsWidget userId={_id} />}
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">

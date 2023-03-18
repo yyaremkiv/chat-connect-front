@@ -8,35 +8,26 @@ import { Box, Typography, Divider, useTheme } from "@mui/material";
 import UserImage from "../../components/UserImage";
 import FlexBetween from "../../components/FlexBetween";
 import WidgetWrapper from "../../components/WidgetWrapper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { getUser } from "redux/posts/postsOperations";
+
 const UserWidget = ({ userId, picturePath }) => {
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  // const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.token);
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
 
-  const getUser = async () => {
-    const response = await fetch(
-      `${process.env.REACT_APP_BASE_URL}/users/${userId}`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-
-    setUser(data);
-  };
+  const user = useSelector((state) => state.posts.currentUser);
 
   useEffect(() => {
-    getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    dispatch(getUser(userId));
+  }, [dispatch, userId]);
 
   if (!user) {
     return null;

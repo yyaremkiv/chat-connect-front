@@ -1,9 +1,18 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { refreshUser } from "redux/auth/authOperations.js";
+
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { Form } from "./Form.jsx";
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+
+  useEffect(() => {
+    dispatch(refreshUser());
+  }, [dispatch]);
 
   return (
     <Box>
@@ -14,7 +23,7 @@ const LoginPage = () => {
         textAlign="center"
       >
         <Typography fontWeight="bold" fontSize="32px" color="primary">
-          Sociopedia
+          ChatConnect
         </Typography>
       </Box>
 

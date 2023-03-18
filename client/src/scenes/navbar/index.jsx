@@ -21,9 +21,12 @@ import {
   Close,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { setMode, setLogout } from "../../state/index";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "../../components/FlexBetween";
+
+import { setModeTheme } from "redux/theme/themeSlice";
+
+import { logoutUser } from "redux/auth/authOperations";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -56,7 +59,7 @@ const Navbar = () => {
             },
           }}
         >
-          Sociopedia
+          ChatConnect
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -76,7 +79,7 @@ const Navbar = () => {
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
-          <IconButton onClick={() => dispatch(setMode())}>
+          <IconButton onClick={() => dispatch(setModeTheme())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
             ) : (
@@ -107,7 +110,9 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem onClick={() => dispatch(logoutUser())}>
+                Log Out
+              </MenuItem>
             </Select>
           </FormControl>
         </FlexBetween>
@@ -149,7 +154,7 @@ const Navbar = () => {
             gap="3rem"
           >
             <IconButton
-              onClick={() => dispatch(setMode())}
+              onClick={() => dispatch(setModeTheme())}
               sx={{ fontSize: "25px" }}
             >
               {theme.palette.mode === "dark" ? (
@@ -182,7 +187,7 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
+                <MenuItem onClick={() => dispatch(logoutUser())}>
                   Log Out
                 </MenuItem>
               </Select>
