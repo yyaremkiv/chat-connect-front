@@ -60,8 +60,10 @@ app.post("/posts", verifyToken, upload.single("picture"), createPost);
 async function createPost(req, res) {
   try {
     if (req.file) {
+      console.log("this 1 console");
       const bucketName = "chat-connect";
       const fileName = `${Date.now()}-${req.file.originalname}`;
+      console.log("this 2 console", fileName);
       const bucket = storage.bucket(bucketName);
       const file = bucket.file(fileName);
       const stream = file.createWriteStream({
@@ -70,6 +72,7 @@ async function createPost(req, res) {
         },
       });
       stream.on("error", (err) => {
+        console.log("this 3 console", fileName);
         next(err);
       });
       stream.on("finish", async () => {
