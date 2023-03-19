@@ -8,6 +8,8 @@ import {
   getUser,
   patchFriend,
   deletePost,
+  addComment,
+  deleteComment,
 } from "./postsOperations";
 
 const initialState = {
@@ -95,6 +97,16 @@ const postsSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(deletePost.rejected, (state, action) => {});
+    builder.addCase(addComment.pending, (state) => {});
+    builder.addCase(addComment.fulfilled, (state, action) => {
+      state.posts = action.payload;
+    });
+    builder.addCase(addComment.rejected, (state, action) => {});
+    builder.addCase(deleteComment.pending, (state) => {});
+    builder.addCase(deleteComment.fulfilled, (state, action) => {
+      state.posts = action.payload;
+    });
+    builder.addCase(deleteComment.rejected, (state, action) => {});
   },
 });
 

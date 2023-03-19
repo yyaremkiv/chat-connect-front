@@ -66,7 +66,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
             onClick={() => handlePatchFriend()}
             sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
           >
-            <PersonAddOutlined sx={{ color: primaryDark }} />)
+            <PersonAddOutlined sx={{ color: primaryDark }} />
           </IconButton>
         )
       ) : null}

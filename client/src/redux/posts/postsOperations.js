@@ -71,6 +71,35 @@ export const patchLike = createAsyncThunk(
   }
 );
 
+export const addComment = createAsyncThunk(
+  "posts/addComment",
+  async ({ postId, userId, text }, thunkAPI) => {
+    try {
+      const response = await axios.patch(`/posts/${postId}/comment`, {
+        text,
+        userId,
+      });
+      return response.data;
+    } catch (err) {
+      return err.message;
+    }
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  "posts/deleteComment",
+  async ({ postId, text }, thunkAPI) => {
+    try {
+      const response = await axios.patch(`/posts/${postId}/comment/delete`, {
+        text,
+      });
+      return response.data;
+    } catch (err) {
+      return err.message;
+    }
+  }
+);
+
 export const getUser = createAsyncThunk(
   "posts/getUser",
   async (userId, thunkAPI) => {

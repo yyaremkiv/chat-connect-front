@@ -1,6 +1,5 @@
 import {
   ChatBubbleOutlineOutlined,
-  DeleteForever,
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
@@ -9,13 +8,28 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
+import { WidgetNewComment } from "components/WidgetNewComment/WidgetNewComment";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import UserImage from "components/UserImage";
+
 import { patchLike } from "redux/posts/postsOperations";
 
 import { deletePost } from "redux/posts/postsOperations";
+import { deleteComment } from "redux/posts/postsOperations";
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const formattedDate = date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+
+  return formattedDate.replace(/\//g, ".");
+}
 
 const PostWidget = ({
   postId,
@@ -40,6 +54,10 @@ const PostWidget = ({
 
   const handlePatchLike = () => {
     dispatch(patchLike({ postId, loggedInUserId }));
+  };
+
+  const handleDeleteComment = (postId, text) => {
+    dispatch(deleteComment({ postId, text }));
   };
 
   return (
@@ -92,19 +110,60 @@ const PostWidget = ({
           <ShareOutlined />
         </IconButton>
       </FlexBetween>
+      {/* Comments - start */}
       {isComments && (
-        <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
-              </Typography>
-            </Box>
-          ))}
+        <Box
+          mt="0.5rem"
+          sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
+          {comments.map(
+            ({ picturePath, firstName, lastName, text, create }, index) => (
+              <Box
+                key={index}
+                sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <Divider />
+                <UserImage image={userPicturePath} size="40px" />
+                <Box sx={{ width: "100%" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                  >
+                    <Typography fontSize="h5">{`${firstName} ${lastName}`}</Typography>
+                    <Typography>{formatDate(create)}</Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <Typography
+                      sx={{ color: main, m: "0.5rem 0", pl: "0.5rem" }}
+                    >
+                      {text}
+                    </Typography>
+                    <IconButton
+                      onClick={() => handleDeleteComment(postId, text)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </Box>
+            )
+          )}
           <Divider />
         </Box>
       )}
+      {/* Comments - end */}
+      <WidgetNewComment postId={postId} />
     </WidgetWrapper>
   );
 };

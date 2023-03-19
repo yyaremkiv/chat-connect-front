@@ -1,7 +1,6 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
-/* CREATE */
 export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
@@ -26,7 +25,6 @@ export const createPost = async (req, res) => {
   }
 };
 
-/* READ */
 export const getFeedPosts = async (req, res) => {
   try {
     const post = await Post.find().sort({ createdAt: "desc" });
@@ -46,7 +44,6 @@ export const getUserPosts = async (req, res) => {
   }
 };
 
-/* UPDATE */
 export const likePost = async (req, res) => {
   try {
     const { id } = req.params;
@@ -72,20 +69,75 @@ export const likePost = async (req, res) => {
   }
 };
 
+export const addComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { text } = req.body;
+    const { userId } = req.body;
+
+    const post = await Post.findById(id);
+    const user = await User.findById(userId);
+
+    const comment = {
+      userId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      picturePath: user.picturePath,
+      create: new Date(),
+      text,
+    };
+    console.log("console", user);
+
+    const updatePost = await Post.findByIdAndUpdate(id, {
+      comments: [...post.comments, comment],
+    });
+
+    const updatedPosts = await Post.find().sort({ createdAt: "desc" });
+
+    res.status(200).json(updatedPosts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const deleteComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { text } = req.body;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      res.status(500).json({ message: "Post not found" });
+    }
+
+    const newComments = post.comments.filter((comment) => {
+      if (comment.text !== text) {
+        return true;
+      }
+      return false;
+    });
+
+    console.log("text", newComments);
+
+    await Post.findByIdAndUpdate(id, {
+      comments: newComments,
+    });
+
+    const updatedPosts = await Post.find().sort({ createdAt: "desc" });
+
+    res.status(200).json(updatedPosts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 export const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("posts", id);
 
     await Post.findByIdAndDelete(id);
     const posts = await Post.find().sort({ createdAt: "desc" });
-    // const updatePosts = posts.filter((post) => {
-    //   console.log(post._id.toString() === id);
-    //   if (post._id.toString() !== id) {
-    //     return true;
-    //   }
-    //   return false;
-    // });
 
     res.status(200).json(posts);
   } catch (err) {
