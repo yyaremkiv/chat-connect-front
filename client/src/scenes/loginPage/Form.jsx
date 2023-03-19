@@ -10,21 +10,30 @@ import {
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
+import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Dropzone from "react-dropzone";
 import FlexBetween from "../../components/FlexBetween";
-
+import { FormHelperText } from "@mui/material";
 import { registerUser, loginUser } from "redux/auth/authOperations";
+import FormControl from "@mui/material/FormControl";
 
-const registerSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
-  location: yup.string().required("required"),
-  occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
+const registerSchema = Yup.object().shape({
+  firstName: Yup.string().required("required"),
+  lastName: Yup.string().required("required"),
+  email: Yup.string().email("invalid email").required("required"),
+  password: Yup.string().required("required"),
+  location: Yup.string().required("required"),
+  occupation: Yup.string().required("required"),
+  // picture: Yup.string().required("required Please load image"),
 });
 
 const loginSchema = yup.object().shape({
@@ -49,6 +58,9 @@ const initialValuesLogin = {
 
 export const Form = () => {
   const [pageType, setPageType] = useState("login");
+
+  const [image, setImage] = useState(null);
+
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,51 +68,24 @@ export const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
+
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    formData.append("picturePath", values.picture.name);
 
-    // const savedUserResponse = await fetch(
-    //   `${process.env.REACT_APP_BASE_URL}/auth/register`,
-    //   {
-    //     method: "POST",
-    //     body: formData,
-    //   }
-    // );
-    // const savedUser = await savedUserResponse.json();
-    // onSubmitProps.resetForm();
-
-    const data = dispatch(registerUser(formData));
-
-    if (data) {
-      setPageType("login");
+    if (image) {
+      formData.append("picture", image);
     }
+    console.log(formData);
+    dispatch(registerUser(formData));
+    onSubmitProps.resetForm();
   };
 
   const login = async (values, onSubmitProps) => {
-    // const loggedInResponse = await fetch(
-    //   `${process.env.REACT_APP_BASE_URL}/auth/login`,
-    //   {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(values),
-    //   }
-    // );
-    // const loggedIn = await loggedInResponse.json();
-    // onSubmitProps.resetForm();
-    // if (loggedIn) {
-    //   dispatch(
-    //     setLogin({
-    //       user: loggedIn.user,
-    //       token: loggedIn.token,
-    //     })
-    //   );
-    //   navigate("/home");
-    // }
-
     const data = await dispatch(loginUser(values));
 
     if (data) {
@@ -113,11 +98,19 @@ export const Form = () => {
     if (isRegister) await register(values, onSubmitProps);
   };
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Formik
       onSubmit={handleFormSubmit}
-      initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-      validationSchema={isLogin ? loginSchema : registerSchema}
+      initialValues={
+        pageType === "login" ? initialValuesLogin : initialValuesRegister
+      }
+      validationSchema={pageType === "login" ? loginSchema : registerSchema}
     >
       {({
         values,
@@ -146,9 +139,7 @@ export const Form = () => {
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
-                  error={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
-                  }
+                  error={Boolean(touched.firstName && errors.firstName)}
                   helperText={touched.firstName && errors.firstName}
                   sx={{ gridColumn: "span 2" }}
                 />
@@ -184,6 +175,8 @@ export const Form = () => {
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
                 />
+
+                {/* Donwload photo - start */}
                 <Box
                   gridColumn="span 4"
                   border={`1px solid ${palette.neutral.medium}`}
@@ -193,9 +186,7 @@ export const Form = () => {
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
-                    onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles[0])
-                    }
+                    onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
                   >
                     {({ getRootProps, getInputProps }) => (
                       <Box
@@ -216,7 +207,19 @@ export const Form = () => {
                       </Box>
                     )}
                   </Dropzone>
+                  <FormHelperText
+                    error={Boolean(touched.picture && errors.picture)}
+                    sx={{
+                      visibility:
+                        touched.picture && errors.picture
+                          ? "visible"
+                          : "hidden",
+                    }}
+                  >
+                    {errors.picture}
+                  </FormHelperText>
                 </Box>
+                {/* Donwload photo - end */}
               </>
             )}
 
@@ -230,17 +233,47 @@ export const Form = () => {
               helperText={touched.email && errors.email}
               sx={{ gridColumn: "span 4" }}
             />
-            <TextField
-              label="Password"
-              type="text"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.password}
-              name="password"
-              error={Boolean(touched.password) && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
-              sx={{ gridColumn: "span 4" }}
-            />
+
+            {/* Password - start */}
+            <FormControl sx={{ gridColumn: "span 4" }} variant="outlined">
+              <InputLabel
+                htmlFor="outlined-adornment-password"
+                error={Boolean(touched.password && errors.password)}
+              >
+                Password
+              </InputLabel>
+              <OutlinedInput
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={values.password}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                error={Boolean(touched.password && errors.password)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormHelperText
+                error={Boolean(touched.password && errors.password)}
+                sx={{
+                  visibility:
+                    touched.password && errors.password ? "visible" : "hidden",
+                }}
+              >
+                {errors.password}
+              </FormHelperText>
+            </FormControl>
+            {/* Password - end */}
           </Box>
 
           {/* BUTTONS */}
@@ -253,7 +286,9 @@ export const Form = () => {
                 p: "1rem",
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,
-                "&:hover": { color: palette.primary.main },
+                "&:hover": {
+                  backgroundColor: palette.primary.dark,
+                },
               }}
             >
               {isLogin ? "LOGIN" : "REGISTER"}

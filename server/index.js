@@ -11,12 +11,19 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
-import { register } from "./controllers/auth.js";
-import { createPost } from "./controllers/posts.js";
+// import { register } from "./controllers/auth.js";
+// import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
 import User from "./models/User.js";
 import Post from "./models/Post.js";
 import { users, posts } from "./data/index.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+// import { v4 } from "uuid";
+// const uuid = v4();
+
+import { Storage } from "@google-cloud/storage";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -32,18 +39,169 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/assets");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
+const storage = new Storage({
+  projectId: "your-project-id",
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 });
-const upload = multer({ storage });
+
+// const storage2 = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "public/assets");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname);
+//   },
+// });
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
+
+async function createPost(req, res) {
+  try {
+    if (req.file) {
+      const bucketName = "chat-connect";
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      const bucket = storage.bucket(bucketName);
+      const file = bucket.file(fileName);
+      const stream = file.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype,
+        },
+      });
+      stream.on("error", (err) => {
+        next(err);
+      });
+      stream.on("finish", async () => {
+        const publicUrl = `https://storage.cloud.google.com/${bucketName}/${fileName}`;
+
+        const { userId, description, picturePath } = req.body;
+        const user = await User.findById(userId);
+        const newPost = new Post({
+          userId,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          location: user.location,
+          description,
+          userPicturePath: user.picturePath,
+          picturePath: publicUrl,
+          likes: {},
+          comments: [],
+        });
+        await newPost.save();
+        const posts = await Post.find().sort({ createdAt: "desc" });
+        res.status(201).json(posts);
+      });
+
+      stream.end(req.file.buffer);
+    } else {
+      const { userId, description, picturePath } = req.body;
+      const user = await User.findById(userId);
+      const newPost = new Post({
+        userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        location: user.location,
+        description,
+        userPicturePath: user.picturePath,
+        picturePath: "",
+        likes: {},
+        comments: [],
+      });
+      await newPost.save();
+      const posts = await Post.find().sort({ createdAt: "desc" });
+      res.status(201).json(posts);
+    }
+  } catch (err) {
+    res.status(409).json({ message: err.message });
+  }
+}
+
+async function register(req, res) {
+  try {
+    if (req.file) {
+      const bucketName = "chat-connect";
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      const bucket = storage.bucket(bucketName);
+      const file = bucket.file(fileName);
+      const stream = file.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype,
+        },
+      });
+      stream.on("error", (err) => {
+        next(err);
+      });
+      stream.on("finish", async () => {
+        const publicUrl = `https://storage.cloud.google.com/${bucketName}/${fileName}`;
+
+        const {
+          firstName,
+          lastName,
+          email,
+          password,
+          // picturePath,
+          friends,
+          location,
+          occupation,
+        } = req.body;
+
+        const salt = await bcrypt.genSalt();
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        const newUser = new User({
+          firstName,
+          lastName,
+          email,
+          password: passwordHash,
+          picturePath: publicUrl,
+          friends,
+          location,
+          occupation,
+          viewedProfile: Math.floor(Math.random() * 10000),
+          impressions: Math.floor(Math.random() * 10000),
+        });
+
+        const savedUser = await newUser.save();
+        res.status(201).json({ message: "Succes" });
+      });
+      stream.end(req.file.buffer);
+    } else {
+      const {
+        firstName,
+        lastName,
+        email,
+        password,
+        // picturePath,
+        friends,
+        location,
+        occupation,
+      } = req.body;
+
+      const salt = await bcrypt.genSalt();
+      const passwordHash = await bcrypt.hash(password, salt);
+
+      const newUser = new User({
+        firstName,
+        lastName,
+        email,
+        password: passwordHash,
+        picturePath:
+          "https://storage.cloud.google.com/chat-connect/no-user-image.jpg",
+        friends,
+        location,
+        occupation,
+        viewedProfile: Math.floor(Math.random() * 10000),
+        impressions: Math.floor(Math.random() * 10000),
+      });
+
+      const savedUser = await newUser.save();
+      res.status(201).json({ message: "Succes" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);

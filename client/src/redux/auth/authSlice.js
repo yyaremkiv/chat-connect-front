@@ -67,6 +67,12 @@ const authSlice = createSlice({
       state.isLoading = false;
     });
   },
+  reducers: {
+    logout: (state) => {
+      state.token = null;
+    },
+  },
 });
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

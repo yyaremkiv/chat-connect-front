@@ -27,6 +27,7 @@ import FlexBetween from "../../components/FlexBetween";
 import { setModeTheme } from "redux/theme/themeSlice";
 
 import { logoutUser } from "redux/auth/authOperations";
+import { logout } from "redux/auth/authSlice";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -110,8 +111,9 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
+              <MenuItem onClick={() => dispatch(logout())}>Log Out</MenuItem>
               <MenuItem onClick={() => dispatch(logoutUser())}>
-                Log Out
+                Log out on all devices
               </MenuItem>
             </Select>
           </FormControl>
