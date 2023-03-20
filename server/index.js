@@ -43,7 +43,7 @@ const credentials = process.env.GOOGLE_CREDENTIALS;
 
 const storage = new Storage({
   projectId: "your-project-id",
-  keyFilename: credentials,
+  keyFilename: "./gcp.json",
 });
 
 // const storage2 = multer.diskStorage({
