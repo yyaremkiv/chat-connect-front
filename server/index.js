@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+const credentials = process.env.GOOGLE_CREDENTIALS;
 
 const storage = new Storage({
   projectId: "your-project-id",
