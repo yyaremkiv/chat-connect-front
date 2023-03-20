@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "phrasal-bruin-381116",
+  "private_key_id": "8e68e02a0d2b5e6646e437d0048c2723bfe4f790",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDCPbGeIeD+oHPw\ng2UYm0QxzEABb/NhIsil+Z4c+GH70eEKF8hX/IomTcjNAVK2aRFQs5WQ18QDWP2i\nTpM7E5a1Fx6BUPaqXRQafFY3npNrkcSTdObu3FkL5pM1y+5uNSjBGm6EY+opAJLn\nuLE/9vP34BdD/RYEpom5YzVhV+30b9t1mTx14pceejG33XbRbPvvZeYPyDWvo+r9\nfMIEE0dZTt+L2hrxHh/m95OKPxRE+NT4tFUf/T5VlNI3HF3v8KFWGE75GJH+plUD\nII5Yk2IWRQA1DfY+X4X9IBJpz4ToVjDeOrDOu3lkyUcufFvsgR5uF5jrwvC0q0pO\n8q0loL1DAgMBAAECggEAAs/EU6zOE6uSRWvrlGKMpzRMZlqcR3cJAiuASO2X5epL\nz5uxyJegetNadtZ26D63MrX0Opdya/M/E5CuwpQnRazTyNgKVPLcYikhUU2goUiB\nMFjN5a0eNh13dbfjcRyFjyDzPMq3Iqu/4GkauI2sqLAuixVlENO/CBO6fyEqfaZs\n20UY0RXmngjaUDDPuycABfwm8QSHa/MPZjZK9pm66QHO0oY94UGpGiGSRW21K6S7\ngWDLSy5CrOV8xkj+dfbLJtr8fvDOEFsl3fGtzvWwLrjDPH187Ct+nwMoCCws1WD/\nESEbzL+EQPweYnsUs+XSMlbgzPYL6V5LKNeGW2XQgQKBgQD/9c40+Kk9+tuQXHvv\n+4Njp4AZaukb8cadxyMzRC4CXDlCr9jWzaBk5VCmJFZ3L8r2MZKRduYr32wHIZit\nMRrOx7cURMT9CtM/Fqt2fF73qL2qlGOkYupkLWjMldans3zZqaXoHjEBOPxjvLp/\nbOI+2CUg1Xs7xfWn/QiHB/4V+wKBgQDCRW4dy762RfbS9RHIPL7sYe1yR46I2kh0\n3Yx8Ypd7eOnpo01meb5t2oZg4o/3KiQZzicYCOmEtoqhDAD9RRZJ0QND17X+xB2J\nL9jA4JoAeW59dNZdy40JKOMpxeImwf2GIKYzvF8/kEJSJ0cGP2wkZmN5qhP/oRNn\nWp8H5dr7WQKBgQC7as2hhc3Of0eTzdRGJUDQkE5AzkJ/3qnSz4Rbvnl96u9WgBHj\nPs9J8Yr7DDJvtQQE/slWT9w7la2xDw2PCxyY+i143t3qdqm1UTEdYfXbm6e9JkhL\njs4XqhRJcRGq28b4TbsYWjsBrStJEGDyetSytWuCPi6s1seISMOcs+J9TwKBgQCF\nYzKWVrydXjB47DfHap4Uo7BrFOKy6F1zkGLTTMaByqWg+7U7NUAhITe+8hCzPkYH\nSdrhz8y2iLdqmFldjMAe8tnxDP0y7ejxtt52oEBdLwNENKKzR/2QWniOyAXdYrj2\nDRjQ0Pf9JsnCqqFDkuxnmb2XXcXZcPlnr3sd6x6OEQKBgQC3APRfLySs7RW9I75i\nPqKOOqpD5dTUlBwbKUGcVB+SpLydnikZQrTECQooDyIGgWbyRyl8j2bYiQ6AIEpM\noG3rjL1BAdMuO8cKCgXJO6CIWA8ElAHk8m4IYMPJlzzGI4cgu8H2mWdKSxfpWz5B\nq5NNMddzvyjc/Q+O6Fs7tdfxkQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "chat-507@phrasal-bruin-381116.iam.gserviceaccount.com",
+  "client_id": "115958479830150153096",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/chat-507%40phrasal-bruin-381116.iam.gserviceaccount.com"
+}
