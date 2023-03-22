@@ -1,23 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
-
-const setAuthHeader = (token) => {
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
-const clearAuthHeader = () => {
-  axios.defaults.headers.common.Authorization = "";
-};
+import { axiosAPI } from "config/axios.config";
+import { setAuthorizationHeader } from "config/axios.config";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (formData, thunkAPI) => {
     try {
-      console.log("operations", formData);
-      const response = await axios.post("/auth/register", formData);
-      return response;
+      const { data } = await axiosAPI.post("/auth/register", formData);
+      return data;
     } catch (err) {
       return err.message;
     }
@@ -28,9 +18,9 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (values, thunkAPI) => {
     try {
-      const response = await axios.post("/auth/login", values);
-      setAuthHeader(response.data.token);
-      return response.data;
+      const { data } = await axiosAPI.post("/auth/login", values);
+      setAuthorizationHeader(data.token);
+      return data;
     } catch (err) {
       return err.message;
     }
@@ -41,9 +31,9 @@ export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get("/auth/logout");
-      clearAuthHeader();
-      return response.data;
+      const { data } = await axiosAPI.get("/auth/logout");
+      setAuthorizationHeader(null);
+      return data;
     } catch (err) {
       return err.message;
     }
@@ -61,13 +51,9 @@ export const refreshUser = createAsyncThunk(
     }
 
     try {
-      setAuthHeader(persistedToken);
-      const response = await axios.get("auth/refresh", {
-        headers: {
-          Authorization: `Bearer ${persistedToken}`,
-        },
-      });
-      return response.data;
+      setAuthorizationHeader(persistedToken);
+      const { data } = await axiosAPI.get("auth/refresh");
+      return data;
     } catch (err) {
       return err.message;
     }
