@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosAPI } from "config/axios.config";
+import { axiosAPI } from "configs/axios.configs";
 
 export const getPosts = createAsyncThunk(
   "posts/getPosts",

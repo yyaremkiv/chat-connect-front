@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 
-const AdvertWidgets = () => {
+export const WidgetAdvert = () => {
   const { palette } = useTheme();
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
+
+  const [errorImage, setErrorImage] = useState(false);
 
   return (
     <WidgetWrapper>
@@ -20,8 +23,14 @@ const AdvertWidgets = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src={`${process.env.REACT_APP_BASE_URL}/assets/info4.jpeg`}
+        src={
+          errorImage
+            ? "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_960_720.jpg"
+            : `${process.env.REACT_APP_BASE_URL}/assets/info4.jpeg`
+        }
         style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
+        onError={() => setErrorImage(true)}
+        onLoad={() => console.log("donload succes")}
       />
       <FlexBetween>
         <Typography color={main}>MikaCosmetics</Typography>
@@ -34,5 +43,3 @@ const AdvertWidgets = () => {
     </WidgetWrapper>
   );
 };
-
-export default AdvertWidgets;

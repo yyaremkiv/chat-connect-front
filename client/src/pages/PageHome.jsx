@@ -5,10 +5,11 @@ import Navbar from "scenes/navbar";
 import UserWidget from "../scenes/widgets/UserWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
-import AdvertWidget from "../scenes/widgets/AdvertWidgets";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 
 import { refreshUser } from "redux/auth/authOperations";
+
+import { WidgetAdvert } from "components/WidgetAdvert/WidgetAdvert";
 
 export const PageHome = () => {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ export const PageHome = () => {
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">
-            <AdvertWidget />
+            <WidgetAdvert />
             <Box m="2rem 0" />
             {_id && <FriendListWidget userId={_id} />}
           </Box>

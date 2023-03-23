@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosAPI } from "config/axios.config";
-import { setAuthorizationHeader } from "config/axios.config";
+import { axiosAPI } from "configs/axios.configs";
+import { setAuthorizationHeader } from "configs/axios.configs";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
