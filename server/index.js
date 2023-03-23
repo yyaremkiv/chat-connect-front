@@ -61,7 +61,7 @@ async function createPost(req, res) {
         },
       });
       stream.on("error", (err) => {
-        console.log("this 3 console", fileName);
+        console.log("this 3 console", err.message);
         next(err);
       });
       stream.on("finish", async () => {
