@@ -62,6 +62,7 @@ async function createPost(req, res) {
       });
       stream.on("error", (err) => {
         console.log("this 3 console", err.message);
+        res.status(500).json({ message: err.message });
       });
       stream.on("finish", async () => {
         const publicUrl = `https://storage.cloud.google.com/${bucketName}/${fileName}`;
