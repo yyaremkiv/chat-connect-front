@@ -11,17 +11,12 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
-// import { register } from "./controllers/auth.js";
-// import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
 import User from "./models/User.js";
 import Post from "./models/Post.js";
 import { users, posts } from "./data/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-// import { v4 } from "uuid";
-// const uuid = v4();
 
 import { Storage } from "@google-cloud/storage";
 
@@ -43,17 +38,9 @@ const credentials = process.env.GOOGLE_CREDENTIALS;
 
 const storage = new Storage({
   projectId: "your-project-id",
-  keyFilename: "./gcp.json",
+  keyFilename: path.resolve("./gcp.json"),
 });
 
-// const storage2 = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "public/assets");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   },
-// });
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.post("/auth/register", upload.single("picture"), register);
