@@ -1,18 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { refreshUser } from "redux/auth/authOperations.js";
-
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
-import { Form } from "./Form.jsx";
+import { FormContainer } from "components/FormContainer/FormContainer";
 
-const LoginPage = () => {
+import { refreshUser } from "redux/auth/authOperations.js";
+import { FormLogin } from "components/FormLogin/FormLogin";
+import { FormRegister } from "components/FormRegister/FormRegister";
+
+export const PageAuth = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-
-  useEffect(() => {
-    dispatch(refreshUser());
-  }, [dispatch]);
 
   return (
     <Box>
@@ -37,10 +35,8 @@ const LoginPage = () => {
         <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
           Welcome to Sociopedia, the Social Media for Sociopaths!
         </Typography>
-        <Form />
+        <FormContainer />
       </Box>
     </Box>
   );
 };
-
-export default LoginPage;

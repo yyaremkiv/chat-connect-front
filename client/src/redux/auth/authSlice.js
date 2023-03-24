@@ -38,7 +38,11 @@ const authSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(loginUser.rejected, (state, action) => {
+      state.token = null;
+      state.isLogged = false;
+      state.isLoading = false;
       state.error = action.payload;
+
       state.isLoading = false;
     });
     builder.addCase(refreshUser.pending, (state) => {

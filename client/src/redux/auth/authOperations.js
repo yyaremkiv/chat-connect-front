@@ -9,7 +9,7 @@ export const registerUser = createAsyncThunk(
       const { data } = await axiosAPI.post("/auth/register", formData);
       return data;
     } catch (err) {
-      return err.message;
+      return thunkAPI.rejectWithValue("Unable to fetch user");
     }
   }
 );
@@ -22,7 +22,7 @@ export const loginUser = createAsyncThunk(
       setAuthorizationHeader(data.token);
       return data;
     } catch (err) {
-      return err.message;
+      return thunkAPI.rejectWithValue(err.response.data.message);
     }
   }
 );
@@ -35,7 +35,7 @@ export const logoutUser = createAsyncThunk(
       setAuthorizationHeader(null);
       return data;
     } catch (err) {
-      return err.message;
+      return thunkAPI.rejectWithValue("Unable to fetch user");
     }
   }
 );
@@ -55,7 +55,7 @@ export const refreshUser = createAsyncThunk(
       const { data } = await axiosAPI.get("auth/refresh");
       return data;
     } catch (err) {
-      return err.message;
+      return thunkAPI.rejectWithValue("Unable to fetch user");
     }
   }
 );

@@ -16,10 +16,13 @@ export const PageHome = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.auth.user);
   const user = useSelector((state) => state.auth.user);
+  const isLogged = useSelector((state) => state.auth.isLogged);
 
   useEffect(() => {
-    dispatch(refreshUser());
-  }, [dispatch]);
+    if (isLogged) {
+      dispatch(refreshUser());
+    }
+  }, [dispatch, isLogged]);
 
   return (
     <Box>
