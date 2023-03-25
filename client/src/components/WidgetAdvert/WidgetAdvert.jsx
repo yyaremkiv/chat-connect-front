@@ -1,44 +1,39 @@
-import { useState } from "react";
-import { Typography, useTheme } from "@mui/material";
+import { Link, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 
 export const WidgetAdvert = () => {
   const { palette } = useTheme();
-  const dark = palette.neutral.dark;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
-
-  const [errorImage, setErrorImage] = useState(false);
 
   return (
     <WidgetWrapper>
       <FlexBetween>
-        <Typography color={dark} variant="h5" fontWeight="500">
+        <Typography color={palette.neutral.dark} variant="h5" fontWeight="500">
           Sponsored
         </Typography>
-        <Typography color={medium}>Create Ad</Typography>
       </FlexBetween>
       <img
+        src="../assets/building.jpg"
         width="100%"
         height="auto"
         alt="advert"
-        src={
-          errorImage
-            ? "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_960_720.jpg"
-            : `${process.env.REACT_APP_BASE_URL}/assets/info4.jpeg`
-        }
-        style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
-        onError={() => setErrorImage(true)}
-        onLoad={() => console.log("donload succes")}
+        style={{ borderRadius: "0.5rem", margin: "0.75rem 0" }}
       />
       <FlexBetween>
-        <Typography color={main}>MikaCosmetics</Typography>
-        <Typography color={medium}>mikacosmetics.com</Typography>
+        <Typography color={palette.neutral.main}>IntergalBud</Typography>
+        <Link
+          href="https://intergal-bud.com.ua/"
+          color={palette.neutral.medium}
+          underline="hover"
+        >
+          https://intergal-bud.com.ua
+        </Link>
       </FlexBetween>
-      <Typography color={medium} m="0.5rem 0">
-        Your pathway to stunning and immaculate beauty and made sure your skin
-        is exfoligation skin and shining like light
+      <Typography color={palette.neutral.medium} m="0.75rem 0 0.5rem 0">
+        A reliable partner in the construction of commercial and residential
+        buildings. A full range of services from design to construction. Our
+        team of professionals guarantees quality and adherence to deadlines.
+        Contact us to realize your project!
       </Typography>
     </WidgetWrapper>
   );

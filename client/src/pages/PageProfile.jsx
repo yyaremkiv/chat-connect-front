@@ -2,17 +2,18 @@ import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Navbar from "scenes/navbar";
-import FriendListWidget from "scenes/widgets/FriendListWidget";
-import MyPostWidget from "scenes/widgets/MyPostWidget";
-import PostsWidget from "scenes/widgets/PostsWidget";
-import UserWidget from "scenes/widgets/UserWidget";
+import { Navbar } from "components/Navbar/Navbar";
+import { WidgetNewPost } from "components/WidgetNewPost/WidgetNewPost";
 import { useDispatch } from "react-redux";
 
 import { refreshUser } from "redux/auth/authOperations";
 import { getUser } from "redux/posts/postsOperations";
 
-const ProfilePage = () => {
+import { WidgetPosts } from "components/WidgetPosts/WidgetPosts";
+import { WidgetUser } from "components/WidgetUser/WidgetUser";
+import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
+
+export const PageProfile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.posts.currentUser);
   const { userId } = useParams();
@@ -39,21 +40,18 @@ const ProfilePage = () => {
         justifyContent="center"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={userId} picturePath={user.picturePath} />
+          <WidgetUser userId={userId} picturePath={user.picturePath} />
           <Box m="2rem 0" />
-          <FriendListWidget userId={userId} />
+          <WidgetFriendList userId={userId} />
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
+          mt={isNonMobileScreens ? undefined : "0"}
         >
-          <MyPostWidget picturePath={user.picturePath} />
-          <Box m="2rem 0" />
-          <PostsWidget userId={userId} isProfile />
+          <Box mt="-2rem" />
+          <WidgetPosts userId={userId} isProfile />
         </Box>
       </Box>
     </Box>
   );
 };
-
-export default ProfilePage;

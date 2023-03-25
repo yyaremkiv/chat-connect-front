@@ -14,6 +14,18 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  "auth/update",
+  async (formData, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.patch("/auth/update", formData);
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue("Unable to fetch user");
+    }
+  }
+);
+
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (values, thunkAPI) => {

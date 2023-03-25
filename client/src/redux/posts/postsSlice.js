@@ -19,6 +19,7 @@ const initialState = {
   posts: [],
   isLoading: false,
   error: null,
+  errorComments: null,
 };
 
 const postsSlice = createSlice({
@@ -96,17 +97,32 @@ const postsSlice = createSlice({
       state.posts = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(deletePost.rejected, (state, action) => {});
-    builder.addCase(addComment.pending, (state) => {});
+    builder.addCase(deletePost.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(addComment.pending, (state) => {
+      state.isLoading = true;
+    });
     builder.addCase(addComment.fulfilled, (state, action) => {
       state.posts = action.payload;
+      state.isLoading = false;
     });
-    builder.addCase(addComment.rejected, (state, action) => {});
-    builder.addCase(deleteComment.pending, (state) => {});
+    builder.addCase(addComment.rejected, (state, action) => {
+      state.errorComments = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(deleteComment.pending, (state) => {
+      state.isLoading = true;
+    });
     builder.addCase(deleteComment.fulfilled, (state, action) => {
       state.posts = action.payload;
+      state.isLoading = false;
     });
-    builder.addCase(deleteComment.rejected, (state, action) => {});
+    builder.addCase(deleteComment.rejected, (state, action) => {
+      state.errorComments = action.payload;
+      state.isLoading = false;
+    });
   },
 });
 

@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, InputBase } from "@mui/material";
-import { useTheme } from "@emotion/react";
-
 import { addComment } from "redux/posts/postsOperations";
+import { useTheme } from "@emotion/react";
+import { Button, TextField } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SendIcon from "@mui/icons-material/Send";
 
 export const WidgetNewComment = ({ postId }) => {
-  const dispatch = useDispatch();
   const [commentText, setCommentText] = useState("");
-  const { palette } = useTheme();
+  const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.user._id);
+  const isLoading = useSelector((state) => state.posts.isLoading);
+  const { palette } = useTheme();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!commentText.length) return;
     dispatch(addComment({ postId, userId, text: commentText }));
     setCommentText("");
   };
@@ -26,22 +29,29 @@ export const WidgetNewComment = ({ postId }) => {
       onSubmit={handleSubmit}
       style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
     >
-      <InputBase
+      <TextField
         placeholder="Your comment"
         fullWidth={true}
         value={commentText}
         onChange={handleChangeInput}
+        multiline
+        disabled={isLoading}
         sx={{
           backgroundColor: palette.neutral.light,
-          borderRadius: "2rem",
-          padding: "0.5rem 1rem",
         }}
       />
-      <Button
+      <LoadingButton
+        type="submit"
+        endIcon={<SendIcon />}
+        loading={isLoading}
+        disabled={isLoading}
+        loadingPosition="center"
         sx={{
           color: palette.background.alt,
           backgroundColor: palette.primary.main,
-          borderRadius: "2rem",
+          borderRadius: "0.5rem",
+          padding: "0.5rem 4rem",
+          fontSize: "0.75rem",
           "&:hover": {
             backgroundColor: palette.primary.dark,
           },
@@ -49,10 +59,9 @@ export const WidgetNewComment = ({ postId }) => {
             backgroundColor: palette.primary.dark,
           },
         }}
-        type="sumbit"
       >
-        Send comment
-      </Button>
+        <span>{isLoading ? "Send comment" : "Send"}</span>
+      </LoadingButton>
     </form>
   );
 };

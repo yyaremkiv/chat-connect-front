@@ -1,20 +1,17 @@
 import { useEffect } from "react";
-import { Box, useMediaQuery } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import Navbar from "scenes/navbar";
-import UserWidget from "../scenes/widgets/UserWidget";
-import MyPostWidget from "scenes/widgets/MyPostWidget";
-import PostsWidget from "scenes/widgets/PostsWidget";
-import FriendListWidget from "scenes/widgets/FriendListWidget";
-
-import { refreshUser } from "redux/auth/authOperations";
-
+import { Navbar } from "components/Navbar/Navbar";
+import { WidgetUser } from "components/WidgetUser/WidgetUser";
+import { WidgetNewPost } from "components/WidgetNewPost/WidgetNewPost";
+import { WidgetPosts } from "components/WidgetPosts/WidgetPosts";
 import { WidgetAdvert } from "components/WidgetAdvert/WidgetAdvert";
+import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
+import { Box, useMediaQuery } from "@mui/material";
+import { refreshUser } from "redux/auth/authOperations";
 
 export const PageHome = () => {
   const dispatch = useDispatch();
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-  const { _id, picturePath } = useSelector((state) => state.auth.user);
   const user = useSelector((state) => state.auth.user);
   const isLogged = useSelector((state) => state.auth.isLogged);
 
@@ -26,7 +23,7 @@ export const PageHome = () => {
 
   return (
     <Box>
-      {_id && <Navbar />}
+      {user._id && <Navbar />}
       <Box
         width="100%"
         padding="2rem 6%"
@@ -35,22 +32,24 @@ export const PageHome = () => {
         justifyContent="space-between"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          {_id && picturePath && (
-            <UserWidget userId={_id} picturePath={picturePath} />
+          {user._id && user.picturePath && (
+            <Box sx={{ gap: "40px" }}>
+              <WidgetUser userId={user._id} picturePath={user.picturePath} />
+            </Box>
           )}
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <MyPostWidget picturePath={picturePath} />
-          {_id && <PostsWidget userId={_id} />}
+          <WidgetNewPost picturePath={user.picturePath} />
+          {user._id && <WidgetPosts userId={user._id} />}
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">
             <WidgetAdvert />
             <Box m="2rem 0" />
-            {_id && <FriendListWidget userId={_id} />}
+            {user._id && <WidgetFriendList userId={user._id} />}
           </Box>
         )}
       </Box>

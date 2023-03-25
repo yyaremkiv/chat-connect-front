@@ -4,32 +4,33 @@ import {
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
-import UserImage from "../../components/UserImage";
-import FlexBetween from "../../components/FlexBetween";
-import WidgetWrapper from "../../components/WidgetWrapper";
+import Link from "@mui/material/Link";
+import { Box, Typography, Divider, useTheme, IconButton } from "@mui/material";
+import UserImage from "../UserImage";
+import FlexBetween from "../FlexBetween";
+import WidgetWrapper from "../WidgetWrapper";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getUser } from "redux/posts/postsOperations";
 
-const UserWidget = ({ userId, picturePath }) => {
+export const WidgetUser = ({ userId, picturePath }) => {
   const dispatch = useDispatch();
-  // const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
 
-  const user = useSelector((state) => state.posts.currentUser);
+  const user = useSelector((state) => state.auth.user);
+  const currentUser = useSelector((state) => state.posts.currentUser);
 
   useEffect(() => {
     dispatch(getUser(userId));
   }, [dispatch, userId]);
 
-  if (!user) {
+  if (!currentUser) {
     return null;
   }
 
@@ -41,16 +42,14 @@ const UserWidget = ({ userId, picturePath }) => {
     viewedProfile,
     impressions,
     friends,
-  } = user;
+    twitter,
+    linkedin,
+  } = currentUser;
 
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
-      <FlexBetween
-        gap="0.5rem"
-        pb="1.1rem"
-        onClick={() => navigate(`/profile/${userId}`)}
-      >
+      <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} />
           <Box>
@@ -58,6 +57,7 @@ const UserWidget = ({ userId, picturePath }) => {
               variant="h4"
               color={dark}
               fontWeight="500"
+              onClick={() => navigate(`/profile/${userId}`)}
               sx={{
                 "&:hover": {
                   color: palette.primary.light,
@@ -70,7 +70,11 @@ const UserWidget = ({ userId, picturePath }) => {
             <Typography color={medium}>{friends?.length} friends</Typography>
           </Box>
         </FlexBetween>
-        <ManageAccountsOutlined />
+        {user._id === currentUser._id ? (
+          <IconButton onClick={() => navigate("/config")}>
+            <ManageAccountsOutlined />
+          </IconButton>
+        ) : null}
       </FlexBetween>
 
       <Divider />
@@ -120,10 +124,11 @@ const UserWidget = ({ userId, picturePath }) => {
               <Typography color={main} fontWeight="500">
                 Twitter
               </Typography>
-              <Typography color={medium}>Social Network</Typography>
+              <Link href={twitter} color={medium} underline="hover">
+                {twitter}
+              </Link>
             </Box>
           </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
         </FlexBetween>
 
         <FlexBetween gap="1rem">
@@ -133,14 +138,13 @@ const UserWidget = ({ userId, picturePath }) => {
               <Typography color={main} fontWeight="500">
                 Linkedin
               </Typography>
-              <Typography color={medium}>Network Platform</Typography>
+              <Link href={linkedin} color={medium} underline="hover">
+                {linkedin}
+              </Link>
             </Box>
           </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
         </FlexBetween>
       </Box>
     </WidgetWrapper>
   );
 };
-
-export default UserWidget;

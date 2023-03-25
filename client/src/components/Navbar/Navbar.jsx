@@ -29,7 +29,7 @@ import { setModeTheme } from "redux/theme/themeSlice";
 import { logoutUser } from "redux/auth/authOperations";
 import { logout } from "redux/auth/authSlice";
 
-const Navbar = () => {
+export const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -200,5 +200,3 @@ const Navbar = () => {
     </FlexBetween>
   );
 };
-
-export default Navbar;

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts, getUserPosts } from "redux/posts/postsOperations";
-import PostWidget from "./PostWidget";
+import { WidgetPost } from "components/WidgetPost/WidgetPost";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+export const WidgetPosts = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
 
@@ -30,8 +30,9 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             userPicturePath,
             likes,
             comments,
+            createdAt,
           }) => (
-            <PostWidget
+            <WidgetPost
               key={_id}
               postId={_id}
               postUserId={userId}
@@ -42,11 +43,10 @@ const PostsWidget = ({ userId, isProfile = false }) => {
               userPicturePath={userPicturePath}
               likes={likes}
               comments={comments}
+              created={createdAt}
             />
           )
         )}
     </>
   );
 };
-
-export default PostsWidget;

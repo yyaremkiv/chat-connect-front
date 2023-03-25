@@ -5,7 +5,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 
-const FriendListWidget = ({ userId }) => {
+export const WidgetFriendList = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const friends = useSelector((state) => state.posts.friends.data);
@@ -32,11 +32,10 @@ const FriendListWidget = ({ userId }) => {
             name={`${friend.firstName} ${friend.lastName}`}
             subtitle={friend.occupation}
             userPicturePath={friend.picturePath}
+            showFriendList={true}
           />
         ))}
       </Box>
     </WidgetWrapper>
   );
 };
-
-export default FriendListWidget;

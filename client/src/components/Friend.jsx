@@ -7,7 +7,14 @@ import UserImage from "./UserImage";
 
 import { patchFriend } from "redux/posts/postsOperations";
 
-const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({
+  friendId,
+  name,
+  subtitle,
+  userPicturePath,
+  date = null,
+  showFriendList = false,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.auth.user);
@@ -51,9 +58,16 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           <Typography color={medium} fontSize="0.75rem">
             {subtitle}
           </Typography>
+
+          {date && (
+            <Typography color={medium} fontSize="0.75rem">
+              Posted: {date}
+            </Typography>
+          )}
         </Box>
       </FlexBetween>
-      {_id !== friendId ? (
+
+      {_id !== friendId && showFriendList ? (
         isFriend ? (
           <IconButton
             onClick={() => handlePatchFriend()}

@@ -4,6 +4,7 @@ import {
   loginUser,
   refreshUser,
   logoutUser,
+  updateUser,
 } from "./authOperations";
 
 const initialState = {
@@ -43,6 +44,17 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
 
+      state.isLoading = false;
+    });
+    builder.addCase(updateUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateUser.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.isLogged = true;
+      state.isLoading = false;
+    });
+    builder.addCase(updateUser.rejected, (state, action) => {
       state.isLoading = false;
     });
     builder.addCase(refreshUser.pending, (state) => {

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import ProfilePage from "./scenes/profilePage";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -10,9 +9,12 @@ import { themeSettings } from "./theme";
 
 import { PageHome } from "pages/PageHome";
 import { PageAuth } from "pages/PageAuth";
+import { PageConfig } from "pages/PageConfig";
 
 import { refreshUser } from "redux/auth/authOperations";
 import { Loader } from "components/Loader/Loader";
+
+import { PageProfile } from "pages/PageProfile";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,14 +40,14 @@ function App() {
           <Routes>
             <Route path="/" element={isLogged ? <PageHome /> : <PageAuth />} />
             <Route
-              path="/login"
-              element={isLogged ? <PageHome /> : <PageAuth />}
-            />
-            <Route
               path="/home"
               element={isLogged ? <PageHome /> : <Navigate to="/" />}
             />
-            <Route path="/profile/:userId" element={<ProfilePage />} />
+            <Route
+              path="/config"
+              element={isLogged ? <PageConfig /> : <PageAuth />}
+            />
+            <Route path="/profile/:userId" element={<PageProfile />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
