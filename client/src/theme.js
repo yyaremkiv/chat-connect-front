@@ -28,14 +28,12 @@ export const colorTokens = {
   },
 };
 
-// mui theme settings
 export const themeSettings = (mode) => {
   return {
     palette: {
       mode: mode,
       ...(mode === "dark"
         ? {
-            // palette values for dark mode
             primary: {
               dark: colorTokens.primary[200],
               main: colorTokens.primary[500],
@@ -52,9 +50,11 @@ export const themeSettings = (mode) => {
               default: colorTokens.grey[900],
               alt: colorTokens.grey[800],
             },
+            textColor: {
+              primary: colorTokens.grey[0],
+            },
           }
         : {
-            // palette values for light mode
             primary: {
               dark: colorTokens.primary[700],
               main: colorTokens.primary[500],
@@ -70,6 +70,9 @@ export const themeSettings = (mode) => {
             background: {
               default: colorTokens.grey[10],
               alt: colorTokens.grey[0],
+            },
+            textColor: {
+              primary: colorTokens.grey[0],
             },
           }),
     },
