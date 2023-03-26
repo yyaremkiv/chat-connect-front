@@ -5,6 +5,8 @@ import {
   refreshUser,
   logoutUser,
   updateUser,
+  deleteAvatar,
+  changeAvatar,
 } from "./authOperations";
 
 const initialState = {
@@ -12,6 +14,7 @@ const initialState = {
   token: null,
   isLogged: false,
   isLoading: false,
+  isRedirect: false,
   error: null,
 };
 
@@ -20,18 +23,22 @@ const authSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder.addCase(registerUser.pending, (state) => {
-      state.isLoading = true;
       state.error = null;
+      state.isRedirect = false;
+      state.isLoading = true;
     });
-    builder.addCase(registerUser.fulfilled, (state, action) => {
+    builder.addCase(registerUser.fulfilled, (state) => {
+      state.isRedirect = true;
       state.isLoading = false;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isRedirect = false;
       state.isLoading = false;
     });
     builder.addCase(loginUser.pending, (state) => {
-      state.isLoading = true;
       state.error = null;
+      state.isLoading = true;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.token = action.payload.token;
@@ -40,10 +47,8 @@ const authSlice = createSlice({
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.token = null;
-      state.isLogged = false;
-      state.isLoading = false;
       state.error = action.payload;
-
+      state.isLogged = false;
       state.isLoading = false;
     });
     builder.addCase(updateUser.pending, (state) => {
@@ -79,7 +84,30 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.isLogged = false;
     });
-    builder.addCase(logoutUser.rejected, (state) => {
+    builder.addCase(logoutUser.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(deleteAvatar.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deleteAvatar.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(deleteAvatar.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(changeAvatar.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(changeAvatar.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(changeAvatar.rejected, (state, action) => {
+      state.error = action.payload;
       state.isLoading = false;
     });
   },

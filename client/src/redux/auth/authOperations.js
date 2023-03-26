@@ -9,19 +9,7 @@ export const registerUser = createAsyncThunk(
       const { data } = await axiosAPI.post("/auth/register", formData);
       return data;
     } catch (err) {
-      return thunkAPI.rejectWithValue("Unable to fetch user");
-    }
-  }
-);
-
-export const updateUser = createAsyncThunk(
-  "auth/update",
-  async (formData, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.patch("/auth/update", formData);
-      return data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue("Unable to fetch user");
+      return thunkAPI.rejectWithValue(err.response.data.message);
     }
   }
 );
@@ -35,19 +23,6 @@ export const loginUser = createAsyncThunk(
       return data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message);
-    }
-  }
-);
-
-export const logoutUser = createAsyncThunk(
-  "auth/logout",
-  async (_, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.get("/auth/logout");
-      setAuthorizationHeader(null);
-      return data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue("Unable to fetch user");
     }
   }
 );
@@ -67,7 +42,56 @@ export const refreshUser = createAsyncThunk(
       const { data } = await axiosAPI.get("auth/refresh");
       return data;
     } catch (err) {
-      return thunkAPI.rejectWithValue("Unable to fetch user");
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.get("/auth/logout");
+      setAuthorizationHeader(null);
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  "auth/update",
+  async (formData, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.patch("/auth/update", formData);
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const deleteAvatar = createAsyncThunk(
+  "auth/avatar",
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.delete("/auth/avatar");
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const changeAvatar = createAsyncThunk(
+  "auth/changeAvatar",
+  async (formData, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.patch("/auth/avatar", formData);
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );

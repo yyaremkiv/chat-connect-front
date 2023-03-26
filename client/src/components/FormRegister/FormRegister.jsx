@@ -48,8 +48,6 @@ export const FormRegister = () => {
         handleBlur,
         handleChange,
         handleSubmit,
-        setFieldValue,
-        resetForm,
       }) => (
         <form
           onSubmit={handleSubmit}
@@ -63,7 +61,7 @@ export const FormRegister = () => {
             name="firstName"
             error={Boolean(touched.firstName && errors.firstName)}
             helperText={touched.firstName && errors.firstName}
-            sx={{ gridColumn: "span 2" }}
+            sx={{ height: "60px" }}
           />
           <TextField
             label="Last Name"
@@ -73,7 +71,7 @@ export const FormRegister = () => {
             name="lastName"
             error={Boolean(touched.lastName && errors.lastName)}
             helperText={touched.lastName && errors.lastName}
-            sx={{ gridColumn: "span 2" }}
+            sx={{ height: "60px" }}
           />
           <TextField
             label="Location"
@@ -83,7 +81,7 @@ export const FormRegister = () => {
             name="location"
             error={Boolean(touched.location && errors.location)}
             helperText={touched.location && errors.location}
-            sx={{ gridColumn: "span 4" }}
+            sx={{ height: "60px" }}
           />
           <TextField
             label="Occupation"
@@ -93,7 +91,7 @@ export const FormRegister = () => {
             name="occupation"
             error={Boolean(touched.occupation && errors.occupation)}
             helperText={touched.occupation && errors.occupation}
-            sx={{ gridColumn: "span 4" }}
+            sx={{ height: "60px" }}
           />
 
           {/* Donwload photo - start */}
@@ -160,7 +158,7 @@ export const FormRegister = () => {
             name="email"
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
-            sx={{ gridColumn: "span 4" }}
+            sx={{ height: "60px" }}
           />
 
           {/* Password - start */}
@@ -197,6 +195,7 @@ export const FormRegister = () => {
               sx={{
                 visibility:
                   touched.password && errors.password ? "visible" : "hidden",
+                height: "12px",
               }}
             >
               {errors.password}

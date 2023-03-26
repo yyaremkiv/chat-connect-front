@@ -72,7 +72,7 @@ export const themeSettings = (mode) => {
               alt: colorTokens.grey[0],
             },
             textColor: {
-              primary: colorTokens.grey[0],
+              primary: "#000",
             },
           }),
     },

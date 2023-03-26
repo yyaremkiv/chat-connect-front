@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { themeSettings } from "./theme";
+import { themeSettings } from "./configs/theme";
 
 import { PageHome } from "pages/PageHome";
 import { PageAuth } from "pages/PageAuth";

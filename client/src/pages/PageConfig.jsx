@@ -1,4 +1,14 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Formik } from "formik";
+import {
+  updateUser,
+  deleteAvatar,
+  changeAvatar,
+} from "redux/auth/authOperations";
+import { FormConfig } from "components/FormContainer/Form.config";
+import { Navbar } from "components/Navbar/Navbar";
+import { formatDate } from "helper/dateFunction";
 import {
   LocationOnOutlined,
   WorkOutlineOutlined,
@@ -14,45 +24,29 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import FlexBetween from "components/FlexBetween";
+import DeleteIcon from "@mui/icons-material/Delete";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useDispatch, useSelector } from "react-redux";
-import Dropzone from "react-dropzone";
-
-import { updateUser } from "redux/auth/authOperations";
-
-import { FormConfig } from "components/FormContainer/Form.config";
-import { Formik } from "formik";
-
-import { Navbar } from "components/Navbar/Navbar";
 import UserImage from "components/UserImage";
-
-import { formatDate } from "helper/dateFunction";
+import FlexBetween from "components/FlexBetween";
+import Dropzone from "react-dropzone";
+import SaveIcon from "@mui/icons-material/Save";
 
 export const PageConfig = () => {
   const [image, setImage] = useState(null);
-
   const dispatch = useDispatch();
-  const { palette } = useTheme();
-  const main = palette.neutral.main;
-
   const user = useSelector((state) => state.auth.user);
+  const { palette } = useTheme();
 
-  const handleFormSubmit = (values, onSubmitProps) => {
-    const formData = new FormData();
-
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    if (image) {
-      formData.append("picture", image);
-    }
-
-    dispatch(updateUser(formData));
+  const handleFormSubmit = (values) => {
+    dispatch(updateUser(values));
   };
 
-  const handleSetImage = (image) => {
-    setImage(image);
+  const handleChangeAvatar = () => {
+    const formData = new FormData();
+    if (image) {
+      formData.append("picture", image);
+      dispatch(changeAvatar(formData));
+    }
   };
 
   return (
@@ -61,11 +55,17 @@ export const PageConfig = () => {
       <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" mt="2rem">
         <WidgetWrapper gridColumn="2/4">
           <Box>
-            <Typography mb="0.25rem">
-              Profil create: {formatDate(user.createdAt)}
+            <Typography fontWeight="bold">
+              {"Profil create:  "}
+              <span style={{ fontWeight: "400", color: palette.neutral.main }}>
+                {formatDate(user.createdAt)}
+              </span>
             </Typography>
-            <Typography mb="1rem">
-              Profil updated: {formatDate(user.updatedAt)}
+            <Typography fontWeight="bold">
+              {"Profil updated: "}
+              <span style={{ fontWeight: "400", color: palette.neutral.main }}>
+                {formatDate(user.updatedAt)}
+              </span>
             </Typography>
           </Box>
           <Box
@@ -73,34 +73,53 @@ export const PageConfig = () => {
             justifyContent="space-between"
             gap="1rem"
             alignItems="center"
+            mt="0.75rem"
           >
-            <UserImage image={user.picturePath} size="80px" />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "1.5rem",
+              }}
+            >
+              <UserImage image={user.picturePath} size="80px" />
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                gap="0.25rem"
+              >
+                <Typography style={{ whiteSpace: "nowrap" }}>
+                  Delete avatar
+                </Typography>
+                <IconButton onClick={() => dispatch(deleteAvatar())}>
+                  <DeleteIcon size="large" />
+                </IconButton>
+              </Box>
+            </Box>
 
             {/* Donwloads photo - start */}
-            <Box
-              border={`1px solid ${palette.neutral.medium}`}
-              borderRadius="0.5rem"
-              p="0.75rem"
-              width="100%"
-            >
+            <Box>
               <Dropzone
                 acceptedFiles=".jpg,.jpeg,.png"
                 multiple={false}
-                onDrop={(acceptedFiles) => handleSetImage(acceptedFiles[0])}
+                onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
               >
                 {({ getRootProps, getInputProps }) => (
-                  <FlexBetween>
+                  <FlexBetween display="flex" gap="1.5rem">
                     <Box
                       {...getRootProps()}
                       border={`2px dashed ${palette.primary.main}`}
                       borderRadius="0.5rem"
-                      p="0.25rem 1rem"
+                      p="0 1rem"
                       width="100%"
                       sx={{ "&:hover": { cursor: "pointer" } }}
                     >
                       <input {...getInputProps()} />
                       {!image ? (
-                        <p>Add Image Here</p>
+                        <p>Add or change your avatar here</p>
                       ) : (
                         <FlexBetween>
                           <Typography>{image.name}</Typography>
@@ -110,19 +129,25 @@ export const PageConfig = () => {
                         </FlexBetween>
                       )}
                     </Box>
-                    {image && (
-                      <IconButton
-                        onClick={() => setImage(null)}
-                        sx={{ marginLeft: "1rem" }}
-                      >
-                        <DeleteOutlined />
-                      </IconButton>
-                    )}
+                    <Box>
+                      {!image ? null : (
+                        <FlexBetween display="flex" gap="0.5rem">
+                          <IconButton onClick={handleChangeAvatar}>
+                            <SaveIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => setImage(null)}
+                            sx={{ marginLeft: "1rem" }}
+                          >
+                            <DeleteOutlined />
+                          </IconButton>
+                        </FlexBetween>
+                      )}
+                    </Box>
                   </FlexBetween>
                 )}
               </Dropzone>
             </Box>
-            {/* Donwloads photo - end */}
           </Box>
 
           <Formik
@@ -143,162 +168,167 @@ export const PageConfig = () => {
               <form onSubmit={handleSubmit}>
                 <Box>
                   <WidgetWrapper>
-                    {/* General information - start */}
                     <Box
-                      display="flex"
-                      flexDirection="column"
-                      gap="1rem"
+                      display="grid"
+                      gridTemplateColumns="repeat(4, 1fr)"
+                      alignItems="center"
+                      gap="0.5rem"
                       mb="1rem"
                     >
-                      <Box display="flex" alignItems="center" gap="1rem">
-                        <Typography>First Name:</Typography>
-                        <TextField
-                          size="small"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.firstName}
-                          name="firstName"
-                          error={Boolean(touched.firstName || errors.firstName)}
-                          helperText={errors.firstName}
-                          sx={{ gridColumn: "span 2" }}
-                        />
+                      <Typography gridColumn="1/2">First Name:</Typography>
+                      <TextField
+                        size="small"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.firstName}
+                        name="firstName"
+                        error={Boolean(touched.firstName && errors.firstName)}
+                        helperText={touched.firstName && errors.firstName}
+                        sx={{ gridColumn: "2/5" }}
+                      />
+
+                      <Typography gridColumn="1/2">Last Name:</Typography>
+                      <TextField
+                        size="small"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.lastName}
+                        name="lastName"
+                        error={Boolean(touched.lastName && errors.lastName)}
+                        helperText={touched.lastName && errors.lastName}
+                        sx={{ gridColumn: "2/5" }}
+                      />
+
+                      <Typography gridColumn="1/2">Email:</Typography>
+                      <TextField
+                        size="small"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.email}
+                        name="email"
+                        error={Boolean(touched.email && errors.email)}
+                        helperText={touched.email && errors.email}
+                        sx={{ gridColumn: "2/5" }}
+                      />
+
+                      <Divider sx={{ gridColumn: "1/5", margin: "0.5rem 0" }} />
+
+                      <Box gridColumn="1/2">
+                        <Box display="flex" alignItems="center" gap="1rem">
+                          <LocationOnOutlined
+                            fontSize="large"
+                            sx={{ color: palette.neutral.main }}
+                          />
+                          <Typography color={palette.neutral.main}>
+                            Location:
+                          </Typography>
+                        </Box>
                       </Box>
 
-                      <Box display="flex" alignItems="center" gap="1rem">
-                        <Typography>Last Name:</Typography>
-                        <TextField
-                          size="small"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.lastName}
-                          name="firstName"
-                          error={Boolean(touched.lastName || errors.lastName)}
-                          helperText={errors.lastName}
-                          sx={{ gridColumn: "span 2" }}
-                        />
+                      <TextField
+                        size="small"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.location}
+                        name="location"
+                        error={Boolean(touched.location && errors.location)}
+                        helperText={touched.location && errors.location}
+                        sx={{ gridColumn: "2/5" }}
+                      />
+
+                      <Box gridColumn="1/2">
+                        <Box display="flex" alignItems="center" gap="1rem">
+                          <WorkOutlineOutlined
+                            fontSize="large"
+                            sx={{ color: palette.neutral.main }}
+                          />
+                          <Typography color={palette.neutral.main}>
+                            Occupation:
+                          </Typography>
+                        </Box>
                       </Box>
 
-                      <Box display="flex" alignItems="center" gap="1rem">
-                        <Typography>Email:</Typography>
-                        <TextField
-                          size="small"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.email}
-                          name="firstName"
-                          error={Boolean(touched.email || errors.email)}
-                          helperText={errors.email}
-                          sx={{ gridColumn: "span 2" }}
-                        />
+                      <TextField
+                        size="small"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.occupation}
+                        name="occupation"
+                        error={Boolean(touched.occupation && errors.occupation)}
+                        helperText={touched.occupation && errors.occupation}
+                        sx={{ gridColumn: "2/5" }}
+                      />
+
+                      <Divider sx={{ gridColumn: "1/5", margin: "0.5rem 0" }} />
+
+                      <Box>
+                        <Typography
+                          fontSize="1rem"
+                          color={palette.neutral.main}
+                          fontWeight="500"
+                        >
+                          Social Profiles
+                        </Typography>
                       </Box>
-                    </Box>
-                    {/* General information - end */}
 
-                    <Divider />
-
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      gap="1rem"
-                      m="1rem 0"
-                    >
-                      <Box display="flex" alignItems="center" gap="1rem">
-                        <LocationOnOutlined
-                          fontSize="large"
-                          sx={{ color: main }}
-                        />
-                        <Typography color={main}>Location:</Typography>
-                        <TextField
-                          size="small"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.location}
-                          name="location"
-                          error={Boolean(touched.location || errors.location)}
-                          helperText={errors.location}
-                          sx={{ gridColumn: "span 4" }}
-                        />
-                      </Box>
-                      <Box display="flex" alignItems="center" gap="1rem">
-                        <WorkOutlineOutlined
-                          fontSize="large"
-                          sx={{ color: main }}
-                        />
-                        <Typography color={main}>Occupation:</Typography>
-                        <TextField
-                          size="small"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.occupation}
-                          name="occupation"
-                          error={Boolean(
-                            touched.occupation || errors.occupation
-                          )}
-                          helperText={errors.occupation}
-                          sx={{ gridColumn: "span 4" }}
-                        />
-                      </Box>
-                    </Box>
-
-                    <Divider />
-
-                    {/* FOURTH ROW */}
-                    <Box p="1rem 0">
-                      <Typography
-                        fontSize="1rem"
-                        color={main}
-                        fontWeight="500"
-                        mb="1rem"
-                      >
-                        Social Profiles
-                      </Typography>
-
-                      <FlexBetween gap="1rem" mb="0.5rem">
-                        <FlexBetween gap="1rem">
+                      <Box gridColumn="1/2">
+                        <Box display="flex" alignItems="center" gap="1rem">
                           <img src="../assets/twitter.png" alt="twitter" />
-                          <Box display="flex" alignItems="center" gap="1rem">
-                            <Typography color={main} fontWeight="500">
-                              Twitter
-                            </Typography>
-                            <TextField
-                              size="small"
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              value={values.twitter}
-                              name="twitter"
-                              error={Boolean(touched.twitter || errors.twitter)}
-                              helperText={errors.twitter}
-                              sx={{ gridColumn: "span 2" }}
-                            />
-                          </Box>
-                        </FlexBetween>
-                      </FlexBetween>
+                          <Typography
+                            color={palette.neutral.main}
+                            fontWeight="500"
+                          >
+                            Twitter
+                          </Typography>
+                        </Box>
+                      </Box>
 
-                      <FlexBetween gap="1rem">
-                        <FlexBetween gap="1rem">
+                      <TextField
+                        size="small"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.twitter}
+                        name="twitter"
+                        error={Boolean(touched.twitter && errors.twitter)}
+                        helperText={touched.twitter && errors.twitter}
+                        sx={{ gridColumn: "2/5" }}
+                      />
+
+                      <Box gridColumn="1/2">
+                        <Box display="flex" alignItems="center" gap="1rem">
                           <img src="../assets/linkedin.png" alt="linkedin" />
-                          <Box display="flex" alignItems="center" gap="1rem">
-                            <Typography color={main} fontWeight="500">
-                              Linkedin
-                            </Typography>
-                            <TextField
-                              size="small"
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              value={values.linkedin}
-                              name="linkedin"
-                              error={Boolean(
-                                touched.linkedin || errors.linkedin
-                              )}
-                              helperText={errors.linkedin}
-                              sx={{ gridColumn: "span 2" }}
-                            />
-                          </Box>
-                        </FlexBetween>
-                      </FlexBetween>
-                    </Box>
-                    <Box display="flex" justifyContent="center">
-                      <Button type="submit">Update values</Button>
+                          <Typography
+                            color={palette.neutral.main}
+                            fontWeight="500"
+                          >
+                            Linkedin
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <TextField
+                        size="small"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.linkedin}
+                        name="linkedin"
+                        error={Boolean(touched.linkedin && errors.linkedin)}
+                        helperText={touched.linkedin && errors.linkedin}
+                        sx={{ gridColumn: "2/5" }}
+                      />
+
+                      <Box gridColumn="2/4" mt="1rem">
+                        <Button
+                          type="submit"
+                          fullWidth
+                          sx={{
+                            backgroundColor: palette.neutral.light,
+                            color: palette.textColor.primary,
+                          }}
+                        >
+                          Update values
+                        </Button>
+                      </Box>
                     </Box>
                   </WidgetWrapper>
                 </Box>

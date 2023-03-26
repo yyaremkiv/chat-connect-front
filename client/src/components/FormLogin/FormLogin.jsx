@@ -34,8 +34,6 @@ export const FormLogin = () => {
         handleBlur,
         handleChange,
         handleSubmit,
-        setFieldValue,
-        resetForm,
       }) => (
         <form
           onSubmit={handleSubmit}
@@ -47,14 +45,14 @@ export const FormLogin = () => {
             onChange={handleChange}
             value={values.email}
             name="email"
-            error={Boolean(touched.email) && Boolean(errors.email)}
+            error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
-            sx={{ gridColumn: "span 4" }}
             disabled={isLoading}
+            style={{ height: "60px" }}
           />
 
           {/* Password - start */}
-          <FormControl sx={{ gridColumn: "span 4" }} variant="outlined">
+          <FormControl variant="outlined">
             <InputLabel
               htmlFor="outlined-adornment-password"
               error={Boolean(touched.password && errors.password)}
@@ -88,6 +86,7 @@ export const FormLogin = () => {
               sx={{
                 visibility:
                   touched.password && errors.password ? "visible" : "hidden",
+                height: "12px",
               }}
             >
               {errors.password}
