@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   Box,
@@ -6,7 +7,6 @@ import {
   useMediaQuery,
   IconButton,
 } from "@mui/material";
-import { FormContainer } from "components/FormContainer/FormContainer";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { setModeTheme } from "redux/theme/themeSlice";
 
@@ -67,7 +67,7 @@ export const PageAuth = () => {
             )}
           </IconButton>
         </Box>
-        <FormContainer />
+        <Outlet />
       </Box>
     </Box>
   );

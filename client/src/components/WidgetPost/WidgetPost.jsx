@@ -6,20 +6,18 @@ import {
   FavoriteOutlined,
 } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
-import FlexBetween from "components/FlexBetween";
-import Friend from "components/Friend";
 import { WidgetNewComment } from "components/WidgetNewComment/WidgetNewComment";
-import WidgetWrapper from "components/WidgetWrapper";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { patchLike } from "redux/posts/postsOperations";
 import { deletePost } from "redux/posts/postsOperations";
-
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import AddCommentIcon from "@mui/icons-material/AddComment";
-
-import { formatDate } from "helper/dateFunction";
+import { formatDate } from "helper/dateFunction.ts";
 import { patchFriend } from "redux/posts/postsOperations";
 import { ListComments } from "components/ListComments/ListComments";
+import FlexBetween from "components/FlexBetween";
+import Friend from "components/Friend";
+import WidgetWrapper from "components/WidgetWrapper";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddCommentIcon from "@mui/icons-material/AddComment";
 
 export const WidgetPost = ({
   postId,

@@ -6,9 +6,9 @@ import {
   deleteAvatar,
   changeAvatar,
 } from "redux/auth/authOperations";
-import { FormConfig } from "components/FormContainer/Form.config";
+import { FormConfig } from "configs/Form.config";
 import { Navbar } from "components/Navbar/Navbar";
-import { formatDate } from "helper/dateFunction";
+import { formatDate } from "helper/dateFunction.ts";
 import {
   LocationOnOutlined,
   WorkOutlineOutlined,

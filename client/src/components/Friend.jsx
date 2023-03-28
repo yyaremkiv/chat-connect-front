@@ -2,10 +2,9 @@ import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { patchFriend } from "redux/posts/postsOperations";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
-
-import { patchFriend } from "redux/posts/postsOperations";
 
 const Friend = ({
   friendId,

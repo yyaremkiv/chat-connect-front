@@ -6,25 +6,23 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./configs/theme";
-
 import { PageHome } from "pages/PageHome";
 import { PageAuth } from "pages/PageAuth";
 import { PageConfig } from "pages/PageConfig";
-
 import { refreshUser } from "redux/auth/authOperations";
-import { Loader } from "components/Loader/Loader";
-
 import { PageProfile } from "pages/PageProfile";
+import { PublicRoute } from "PublicRoute";
+import { PrivateRoute } from "PrivateRoute";
+
+import { FormLogin } from "components/FormLogin/FormLogin";
+import { FormRegister } from "components/FormRegister/FormRegister";
 
 function App() {
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.theme.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
-  const isLogged = useSelector((state) => state.auth.isLogged);
-
   const persistedToken = useSelector((state) => state.auth.token);
-  const isLoading = useSelector((state) => state.auth.isLoading);
 
   useEffect(() => {
     if (persistedToken) {
@@ -38,20 +36,36 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path="/" element={isLogged ? <PageHome /> : <PageAuth />} />
+            <Route
+              path="/"
+              element={
+                <PublicRoute redirectTo="/home" component={<PageAuth />} />
+              }
+            >
+              <Route path="login" element={<FormLogin />} />
+              <Route path="/register" element={<FormRegister />} />
+            </Route>
             <Route
               path="/home"
-              element={isLogged ? <PageHome /> : <Navigate to="/" />}
+              element={
+                <PrivateRoute redirectTo="/login" component={<PageHome />} />
+              }
             />
             <Route
               path="/config"
-              element={isLogged ? <PageConfig /> : <PageAuth />}
+              element={
+                <PrivateRoute redirectTo="/login" component={<PageConfig />} />
+              }
             />
-            <Route path="/profile/:userId" element={<PageProfile />} />
+            <Route
+              path="/profile/:userId"
+              element={
+                <PrivateRoute redirectTo="/login" component={<PageProfile />} />
+              }
+            />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
-      {/* {isLoading && <Loader />} */}
     </div>
   );
 }

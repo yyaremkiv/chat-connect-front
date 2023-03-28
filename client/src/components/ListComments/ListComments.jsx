@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import UserImage from "components/UserImage";
-import { formatDate } from "helper/dateFunction";
+import { formatDate } from "helper/dateFunction.ts";
 import { deleteComment } from "redux/posts/postsOperations";
 import DeleteIcon from "@mui/icons-material/Delete";
 
