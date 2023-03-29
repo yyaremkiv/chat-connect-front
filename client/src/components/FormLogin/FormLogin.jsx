@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import { FormConfig } from "configs/Form.config";
@@ -16,6 +16,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LoadingButton from "@mui/lab/LoadingButton";
+
+import { sendPasswordEmail } from "redux/auth/authOperations";
 
 export const FormLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -120,25 +122,32 @@ export const FormLogin = () => {
       </Formik>
 
       <Box>
-        <Typography
-          onClick={() => Navigate("register")}
-          sx={{
-            marginBottom: "0.25rem",
-            textDecoration: "underline",
-            color: palette.primary.main,
-            "&:hover": {
-              cursor: "pointer",
-              color: palette.primary.light,
-            },
-          }}
-        >
-          "Don't have an account? Sign Up here."
-        </Typography>
+        <Link to="/register">
+          <Typography
+            sx={{
+              marginBottom: "0.25rem",
+              textDecoration: "underline",
+              color: palette.primary.main,
+              "&:hover": {
+                cursor: "pointer",
+                color: palette.primary.light,
+              },
+            }}
+          >
+            "Don't have an account? Sign Up here."
+          </Typography>
+        </Link>
         {isErrorAuth && (
           <Typography sx={{ textAlign: "right", color: "red" }}>
             {isErrorAuth}
           </Typography>
         )}
+        <Typography
+          onClick={() => dispatch(sendPasswordEmail())}
+          sx={{ cursor: "pointer" }}
+        >
+          Send email to email
+        </Typography>
       </Box>
     </Box>
   );

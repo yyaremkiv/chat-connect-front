@@ -13,6 +13,7 @@ import storage from "redux-persist/lib/storage";
 import authSlice from "./auth/authSlice";
 import postsSlice from "./posts/postsSlice";
 import themeSlice from "./theme/themeSlice";
+import userSlice from "./user/userSlice";
 
 const persistAuthConfig = {
   key: "token",
@@ -29,6 +30,7 @@ export const store = configureStore({
   reducer: {
     auth: persistReducer(persistAuthConfig, authSlice),
     theme: persistReducer(persistThemeConfig, themeSlice),
+    user: userSlice,
     posts: postsSlice,
   },
   middleware: (getDefaultMiddleware) =>

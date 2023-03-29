@@ -41,9 +41,10 @@ function App() {
               element={
                 <PublicRoute redirectTo="/home" component={<PageAuth />} />
               }
+              exact
             >
               <Route path="login" element={<FormLogin />} />
-              <Route path="/register" element={<FormRegister />} />
+              <Route path="register" element={<FormRegister />} />
             </Route>
             <Route
               path="/home"

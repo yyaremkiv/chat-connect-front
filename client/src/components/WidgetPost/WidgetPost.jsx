@@ -19,18 +19,23 @@ import WidgetWrapper from "components/WidgetWrapper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 
-export const WidgetPost = ({
-  postId,
-  postUserId,
-  name,
-  description,
-  location,
-  picturePath,
-  userPicturePath,
-  likes,
-  comments,
-  created,
-}) => {
+export const WidgetPost = ({ post }) => {
+  const {
+    _id: postID,
+    author: {
+      _id: postUserID,
+      firstName,
+      lastName,
+      location,
+      picturePath: userPicturePath,
+    },
+    likes,
+    createdAt: created,
+    description,
+    picturePath,
+    comments,
+  } = post;
+
   const [isComments, setIsComments] = useState(false);
   const [addCommentShow, setAddCommentShow] = useState(false);
 
@@ -49,14 +54,16 @@ export const WidgetPost = ({
   const primaryDark = palette.primary.dark;
 
   const friends = useSelector((state) => state.posts.friends.data);
-  const isFriend = friends.find((friend) => friend._id === postUserId);
+
+  const isFriend = friends.friends?.find((friend) => friend._id === postUserID);
 
   const handlePatchLike = () => {
-    dispatch(patchLike({ postId, loggedInUserId }));
+    console.log("handele post", postID, "loggedIn User", loggedInUserId);
+    dispatch(patchLike({ postID, loggedInUserId }));
   };
 
   const handlePatchFriend = () => {
-    dispatch(patchFriend({ userId: user._id, postUserId }));
+    dispatch(patchFriend({ userID: user._id, postUserID: postUserID }));
   };
 
   const handleShowAddCommentWidget = () => {
@@ -73,21 +80,21 @@ export const WidgetPost = ({
         }}
       >
         <Friend
-          friendId={postUserId}
-          name={name}
+          friendId={postUserID}
+          name={`${firstName} ${lastName}`}
           subtitle={location}
           userPicturePath={userPicturePath}
           date={formatDate(created)}
           showFriendList={false}
         />
 
-        {user._id === postUserId ? (
-          <IconButton onClick={() => dispatch(deletePost(postId))}>
+        {user._id === postUserID ? (
+          <IconButton onClick={() => dispatch(deletePost(postID))}>
             <DeleteIcon />
           </IconButton>
         ) : null}
 
-        {user._id !== postUserId ? (
+        {user._id !== postUserID ? (
           isFriend ? (
             <IconButton
               onClick={() => handlePatchFriend()}
@@ -151,14 +158,14 @@ export const WidgetPost = ({
 
       {/* List comments - start */}
       {isComments && comments.length ? (
-        <ListComments comments={comments} postId={postId} />
+        <ListComments comments={comments} postId={postID} />
       ) : null}
       {/* List comments - end */}
 
       {/* Widget add new comment - start */}
       {addCommentShow ? (
         <Box sx={{ marginTop: "1rem" }}>
-          <WidgetNewComment postId={postId} />
+          <WidgetNewComment postId={postID} />
         </Box>
       ) : null}
       {/* Widget add new comment - end */}

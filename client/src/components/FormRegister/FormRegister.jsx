@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FormConfig } from "configs/Form.config";
 import { Formik } from "formik";
@@ -228,19 +229,21 @@ export const FormRegister = () => {
       </Formik>
 
       <Box>
-        <Typography
-          sx={{
-            marginBottom: "0.25rem",
-            textDecoration: "underline",
-            color: palette.primary.main,
-            "&:hover": {
-              cursor: "pointer",
-              color: palette.primary.light,
-            },
-          }}
-        >
-          "Already have an account? Login here."
-        </Typography>
+        <Link to="/login">
+          <Typography
+            sx={{
+              marginBottom: "0.25rem",
+              textDecoration: "underline",
+              color: palette.primary.main,
+              "&:hover": {
+                cursor: "pointer",
+                color: palette.primary.light,
+              },
+            }}
+          >
+            "Already have an account? Login here."
+          </Typography>
+        </Link>
         {isErrorAuth && (
           <Typography sx={{ textAlign: "right", color: "red" }}>
             {isErrorAuth}

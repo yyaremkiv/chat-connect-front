@@ -32,7 +32,7 @@ export const PageHome = () => {
         justifyContent="space-between"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          {user._id && user.picturePath && (
+          {user._id && (
             <Box sx={{ gap: "40px" }}>
               <WidgetUser userId={user._id} picturePath={user.picturePath} />
             </Box>

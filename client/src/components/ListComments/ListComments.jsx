@@ -20,7 +20,14 @@ export const ListComments = ({ comments = [], postId }) => {
       sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
     >
       {comments.map(
-        ({ userId, firstName, lastName, picturePath, text, create }, index) => (
+        (
+          {
+            author: { _id: userID, firstName, lastName, picturePath },
+            created,
+            text,
+          },
+          index
+        ) => (
           <Box
             key={`${index}-${firstName}`}
             sx={{
@@ -36,10 +43,10 @@ export const ListComments = ({ comments = [], postId }) => {
                 <Box>
                   <Typography fontSize="h5">{`${firstName} ${lastName}`}</Typography>
                   <Typography fontSize="0.75rem" color={palette.neutral.medium}>
-                    Commented: {formatDate(create)}
+                    Commented: {formatDate(created)}
                   </Typography>
                 </Box>
-                {user._id === userId ? (
+                {user._id === userID ? (
                   <IconButton
                     onClick={() => handleDeleteComment(postId, text)}
                     sx={{ marginLeft: "auto" }}

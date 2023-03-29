@@ -18,35 +18,7 @@ export const WidgetPosts = ({ userId, isProfile = false }) => {
   return (
     <>
       {posts?.length > 0 &&
-        posts.map(
-          ({
-            _id,
-            userId,
-            firstName,
-            lastName,
-            description,
-            location,
-            picturePath,
-            userPicturePath,
-            likes,
-            comments,
-            createdAt,
-          }) => (
-            <WidgetPost
-              key={_id}
-              postId={_id}
-              postUserId={userId}
-              name={`${firstName} ${lastName}`}
-              description={description}
-              location={location}
-              picturePath={picturePath}
-              userPicturePath={userPicturePath}
-              likes={likes}
-              comments={comments}
-              created={createdAt}
-            />
-          )
-        )}
+        posts.map((post) => <WidgetPost key={post._id} post={post} />)}
     </>
   );
 };

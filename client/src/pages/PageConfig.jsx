@@ -24,6 +24,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import WidgetWrapper from "components/WidgetWrapper";
 import UserImage from "components/UserImage";
@@ -35,6 +36,7 @@ export const PageConfig = () => {
   const [image, setImage] = useState(null);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { palette } = useTheme();
 
   const handleFormSubmit = (values) => {
@@ -52,8 +54,12 @@ export const PageConfig = () => {
   return (
     <Box>
       <Navbar />
-      <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" mt="2rem">
-        <WidgetWrapper gridColumn="2/4">
+      <Box
+        display="grid"
+        gridTemplateColumns={isNonMobileScreens ? "repeat(4, 1fr)" : "1fr"}
+        mt="2rem"
+      >
+        <WidgetWrapper gridColumn={isNonMobileScreens ? "2/4" : "1"}>
           <Box>
             <Typography fontWeight="bold">
               {"Profil create:  "}

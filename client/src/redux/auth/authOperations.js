@@ -95,3 +95,17 @@ export const changeAvatar = createAsyncThunk(
     }
   }
 );
+
+export const sendPasswordEmail = createAsyncThunk(
+  "auth/sendPassword",
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.patch("/auth/send", {
+        email: "y.yaremkiv@gmail.com",
+      });
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);

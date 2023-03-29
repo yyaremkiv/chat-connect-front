@@ -25,7 +25,7 @@ const Friend = ({
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
 
-  const isFriend = friends.find((friend) => friend._id === friendId);
+  const isFriend = friends.friends?.find((friend) => friend._id === friendId);
 
   const handlePatchFriend = () => {
     dispatch(patchFriend({ userId: _id, friendId }));

@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getPosts,
   getUserPosts,
-  getFriends,
   createNewPost,
   patchLike,
   getUser,
@@ -23,7 +22,7 @@ const initialState = {
 };
 
 const postsSlice = createSlice({
-  name: "auth",
+  name: "posts",
   initialState,
   reducers: {
     setLogin: (state, action) => {
@@ -58,12 +57,6 @@ const postsSlice = createSlice({
       state.error = action.payload;
       state.isLoading = false;
     });
-
-    builder.addCase(getFriends.pending, (state) => {});
-    builder.addCase(getFriends.fulfilled, (state, action) => {
-      state.friends.data = action.payload;
-    });
-    builder.addCase(getFriends.rejected, (state, action) => {});
     builder.addCase(createNewPost.pending, (state) => {});
     builder.addCase(createNewPost.fulfilled, (state, action) => {
       state.posts = action.payload;

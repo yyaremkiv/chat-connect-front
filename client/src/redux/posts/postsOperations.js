@@ -25,17 +25,17 @@ export const getUserPosts = createAsyncThunk(
   }
 );
 
-export const getFriends = createAsyncThunk(
-  "posts/getFriends",
-  async (userId, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.get(`/users/${userId}/friends`);
-      return data;
-    } catch (err) {
-      return err.message;
-    }
-  }
-);
+// export const getFriends = createAsyncThunk(
+//   "posts/getFriends",
+//   async (userId, thunkAPI) => {
+//     try {
+//       const { data } = await axiosAPI.get(`/users/${userId}/friends`);
+//       return data;
+//     } catch (err) {
+//       return err.message;
+//     }
+//   }
+// );
 
 export const createNewPost = createAsyncThunk(
   "posts/createNewPost",
@@ -51,10 +51,10 @@ export const createNewPost = createAsyncThunk(
 
 export const patchLike = createAsyncThunk(
   "posts/patchLike",
-  async ({ postId, loggedInUserId }, thunkAPI) => {
+  async ({ postID, loggedInUserId }, thunkAPI) => {
     try {
       const { data } = await axiosAPI.patch(
-        `/posts/${postId}/like`,
+        `/posts/${postID}/like`,
         { userId: loggedInUserId },
         {
           headers: {
@@ -112,12 +112,12 @@ export const getUser = createAsyncThunk(
 
 export const patchFriend = createAsyncThunk(
   "post/patchFriend",
-  async ({ userId, friendId }, thunkAPI) => {
+  async ({ userID, postUserID }, thunkAPI) => {
     try {
-      const { data } = await axiosAPI.patch(`/users/${userId}/${friendId}`);
+      const { data } = await axiosAPI.patch(`/users/${userID}/${postUserID}`);
       return data;
     } catch (err) {
-      return err.message;
+      thunkAPI.rejectWithValue(err.message);
     }
   }
 );

@@ -7,6 +7,7 @@ import {
   updateUser,
   deleteAvatar,
   changeAvatar,
+  sendPasswordEmail,
 } from "./authOperations";
 
 const initialState = {
@@ -110,6 +111,9 @@ const authSlice = createSlice({
       state.error = action.payload;
       state.isLoading = false;
     });
+    builder.addCase(sendPasswordEmail.pending, (state) => {});
+    builder.addCase(sendPasswordEmail.fulfilled, (state, action) => {});
+    builder.addCase(sendPasswordEmail.rejected, (state, action) => {});
   },
   reducers: {
     logout: (state) => {
