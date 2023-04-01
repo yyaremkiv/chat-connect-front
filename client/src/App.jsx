@@ -59,11 +59,12 @@ function App() {
               }
             />
             <Route
-              path="/profile/:userId"
+              path="profile/:userId"
               element={
                 <PrivateRoute redirectTo="/login" component={<PageProfile />} />
               }
             />
+            <Route path="*" element={<p>Nothing found</p>} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

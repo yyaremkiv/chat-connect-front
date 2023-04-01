@@ -1,4 +1,4 @@
-import { Link, Typography, useTheme } from "@mui/material";
+import { Link, Typography, Box, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 
@@ -19,7 +19,12 @@ export const WidgetAdvert = () => {
         alt="advert"
         style={{ borderRadius: "0.5rem", margin: "0.75rem 0" }}
       />
-      <FlexBetween>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        flexWrap="wrap"
+        gap="1rem"
+      >
         <Typography color={palette.neutral.main}>IntergalBud</Typography>
         <Link
           href="https://intergal-bud.com.ua/"
@@ -28,7 +33,7 @@ export const WidgetAdvert = () => {
         >
           https://intergal-bud.com.ua
         </Link>
-      </FlexBetween>
+      </Box>
       <Typography color={palette.neutral.medium} m="0.75rem 0 0.5rem 0">
         A reliable partner in the construction of commercial and residential
         buildings. A full range of services from design to construction. Our

@@ -16,9 +16,9 @@ import themeSlice from "./theme/themeSlice";
 import userSlice from "./user/userSlice";
 
 const persistAuthConfig = {
-  key: "token",
+  key: "auth",
   storage,
-  whitelist: ["token"],
+  whitelist: ["token", "isLogged"],
 };
 
 const persistThemeConfig = {

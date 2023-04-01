@@ -1,5 +1,7 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import {
   Box,
   Typography,
@@ -11,9 +13,16 @@ import { DarkMode, LightMode } from "@mui/icons-material";
 import { setModeTheme } from "redux/theme/themeSlice";
 
 export const PageAuth = () => {
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const dispatch = useDispatch();
+  const isRegistred = useSelector((state) => state.auth.isRegistred);
+  const navigate = useNavigate();
+
+  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const { palette } = useTheme();
+
+  useEffect(() => {
+    if (isRegistred) navigate("/login", { replace: true });
+  }, [navigate, isRegistred]);
 
   return (
     <Box>

@@ -72,29 +72,29 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-export const deleteAvatar = createAsyncThunk(
-  "auth/avatar",
-  async (_, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.delete("/auth/avatar");
-      return data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.message);
-    }
-  }
-);
+// export const deleteAvatar = createAsyncThunk(
+//   "auth/avatar",
+//   async (_, thunkAPI) => {
+//     try {
+//       const { data } = await axiosAPI.delete("/auth/avatar");
+//       return data;
+//     } catch (err) {
+//       return thunkAPI.rejectWithValue(err.message);
+//     }
+//   }
+// );
 
-export const changeAvatar = createAsyncThunk(
-  "auth/changeAvatar",
-  async (formData, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.patch("/auth/avatar", formData);
-      return data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.message);
-    }
-  }
-);
+// export const changeAvatar = createAsyncThunk(
+//   "auth/changeAvatar",
+//   async (formData, thunkAPI) => {
+//     try {
+//       const { data } = await axiosAPI.patch("/auth/avatar", formData);
+//       return data;
+//     } catch (err) {
+//       return thunkAPI.rejectWithValue(err.message);
+//     }
+//   }
+// );
 
 export const sendPasswordEmail = createAsyncThunk(
   "auth/sendPassword",

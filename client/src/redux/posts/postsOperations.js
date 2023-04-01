@@ -1,120 +1,35 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosAPI } from "configs/axios.configs";
 
-export const getPosts = createAsyncThunk(
-  "posts/getPosts",
-  async (_, thunkAPI) => {
+export const fetchPosts = createAsyncThunk(
+  "posts/fetchPosts",
+  async (
+    { userId = null, page = 1, limit = 10, sort = "desc", isLoadMore = false },
+    thunkAPI
+  ) => {
     try {
-      const { data } = await axiosAPI.get("/posts");
-      return data;
+      const url = userId
+        ? `/posts/${userId}/posts?page=${page}&limit=${limit}&sort=${sort}`
+        : `/posts?page=${page}&limit=${limit}&sort=${sort}`;
+      const { data } = await axiosAPI.get(url);
+
+      return isLoadMore
+        ? { data, isLoadMore: true }
+        : { data, isLoadMore: false };
     } catch (err) {
-      return err.message;
+      thunkAPI.rejectWithValue(err.message);
     }
   }
 );
-
-export const getUserPosts = createAsyncThunk(
-  "posts/getUserPosts",
-  async (userId, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.get(`/posts/${userId}/posts`);
-      return data;
-    } catch (err) {
-      return err.message;
-    }
-  }
-);
-
-// export const getFriends = createAsyncThunk(
-//   "posts/getFriends",
-//   async (userId, thunkAPI) => {
-//     try {
-//       const { data } = await axiosAPI.get(`/users/${userId}/friends`);
-//       return data;
-//     } catch (err) {
-//       return err.message;
-//     }
-//   }
-// );
 
 export const createNewPost = createAsyncThunk(
   "posts/createNewPost",
-  async (formData, thunkAPI) => {
+  async ({ page = 1, limit = 10, sort = "desc", formData }, thunkAPI) => {
     try {
-      const { data } = await axiosAPI.post("/posts", formData);
-      return data;
-    } catch (err) {
-      return err.message;
-    }
-  }
-);
-
-export const patchLike = createAsyncThunk(
-  "posts/patchLike",
-  async ({ postID, loggedInUserId }, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.patch(
-        `/posts/${postID}/like`,
-        { userId: loggedInUserId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      const { data } = await axiosAPI.post(
+        `/posts?page=${page}&limit=${limit}&sort=${sort}`,
+        formData
       );
-      return data;
-    } catch (err) {
-      return err.message;
-    }
-  }
-);
-
-export const addComment = createAsyncThunk(
-  "posts/addComment",
-  async ({ postId, userId, text }, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.patch(`/posts/${postId}/comment`, {
-        text,
-        userId,
-      });
-      return data;
-    } catch (err) {
-      return err.message;
-    }
-  }
-);
-
-export const deleteComment = createAsyncThunk(
-  "posts/deleteComment",
-  async ({ postId, text }, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.patch(`/posts/${postId}/comment/delete`, {
-        text,
-      });
-      return data;
-    } catch (err) {
-      return err.message;
-    }
-  }
-);
-
-export const getUser = createAsyncThunk(
-  "posts/getUser",
-  async (userId, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.get(`/users/${userId}`);
-      return data;
-    } catch (err) {
-      return err.message;
-    }
-  }
-);
-
-export const patchFriend = createAsyncThunk(
-  "post/patchFriend",
-  async ({ userID, postUserID }, thunkAPI) => {
-    try {
-      const { data } = await axiosAPI.patch(`/users/${userID}/${postUserID}`);
       return data;
     } catch (err) {
       thunkAPI.rejectWithValue(err.message);
@@ -124,12 +39,56 @@ export const patchFriend = createAsyncThunk(
 
 export const deletePost = createAsyncThunk(
   "post/deletePost",
-  async (postId, thunkAPI) => {
+  async ({ postId, page = 1, limit = 10, sort = "desc" }, thunkAPI) => {
     try {
-      const { data } = await axiosAPI.delete(`/posts/${postId}/delete`);
+      const { data } = await axiosAPI.delete(
+        `/posts/${postId}/delete?page=${page}&limit=${limit}&sort=${sort}`
+      );
       return data;
     } catch (err) {
-      return err.message;
+      thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const patchLike = createAsyncThunk(
+  "posts/patchLike",
+  async ({ postId, userId }, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.patch(`/posts/${postId}/like`, {
+        userId,
+      });
+      return data;
+    } catch (err) {
+      thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const addComment = createAsyncThunk(
+  "posts/addComment",
+  async ({ postId, text }, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.patch(`/posts/${postId}/comment`, {
+        text,
+      });
+      return data;
+    } catch (err) {
+      thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  "posts/deleteComment",
+  async ({ postId, created }, thunkAPI) => {
+    try {
+      const { data } = await axiosAPI.patch(`/posts/${postId}/comment/delete`, {
+        created,
+      });
+      return data;
+    } catch (err) {
+      thunkAPI.rejectWithValue(err.message);
     }
   }
 );

@@ -1,48 +1,42 @@
-import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { patchFriend } from "redux/posts/postsOperations";
+import { addRemoveUserFriend } from "redux/user/userOperations";
+import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
 const Friend = ({
-  friendId,
-  name,
-  subtitle,
-  userPicturePath,
+  friend: { _id: friendId, firstName, lastName, picturePath, occupation },
   date = null,
-  showFriendList = false,
+  showList = false,
+  hideAdmin = false,
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.auth.user);
-  const friends = useSelector((state) => state.posts.friends.data);
-
+  const friends = useSelector((state) => state.user.friends.data);
+  const isFriend = friends?.find((friend) => friend.friendId._id === friendId);
   const { palette } = useTheme();
-  const primaryLight = palette.primary.light;
-  const primaryDark = palette.primary.dark;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
-
-  const isFriend = friends.friends?.find((friend) => friend._id === friendId);
 
   const handlePatchFriend = () => {
-    dispatch(patchFriend({ userId: _id, friendId }));
+    dispatch(addRemoveUserFriend({ userId: _id, friendId }));
   };
 
+  const handleClick = () => {
+    navigate(`/profile/${friendId}`);
+    navigate(0);
+  };
+
+  if (_id === friendId && hideAdmin) return null;
+
   return (
-    <FlexBetween>
-      <FlexBetween gap="1rem">
-        <UserImage image={userPicturePath} size="55px" />
-        <Box
-          onClick={() => {
-            navigate(`/profile/${friendId}`);
-            navigate(0);
-          }}
-        >
+    <FlexBetween gap="1rem" sx={{ width: "100%" }}>
+      <Box display="flex" gap="0.75rem">
+        <UserImage image={picturePath} size="55px" />
+        <Box onClick={handleClick}>
           <Typography
-            color={main}
+            color={palette.neutral.main}
             variant="h5"
             fontWeight="500"
             sx={{
@@ -52,34 +46,34 @@ const Friend = ({
               },
             }}
           >
-            {name}
+            {`${firstName} ${lastName}`}
           </Typography>
-          <Typography color={medium} fontSize="0.75rem">
-            {subtitle}
+          <Typography color={palette.neutral.medium} fontSize="0.75rem">
+            {occupation}
           </Typography>
 
           {date && (
-            <Typography color={medium} fontSize="0.75rem">
+            <Typography color={palette.neutral.medium} fontSize="0.75rem">
               Posted: {date}
             </Typography>
           )}
         </Box>
-      </FlexBetween>
+      </Box>
 
-      {_id !== friendId && showFriendList ? (
+      {_id !== friendId && showList ? (
         isFriend ? (
           <IconButton
             onClick={() => handlePatchFriend()}
-            sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+            sx={{ backgroundColor: palette.primary.light, p: "0.6rem" }}
           >
-            <PersonRemoveOutlined sx={{ color: primaryDark }} />
+            <PersonRemoveOutlined sx={{ color: palette.primary.dark }} />
           </IconButton>
         ) : (
           <IconButton
             onClick={() => handlePatchFriend()}
-            sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+            sx={{ backgroundColor: palette.primary.light, p: "0.6rem" }}
           >
-            <PersonAddOutlined sx={{ color: primaryDark }} />
+            <PersonAddOutlined sx={{ color: palette.primary.dark }} />
           </IconButton>
         )
       ) : null}

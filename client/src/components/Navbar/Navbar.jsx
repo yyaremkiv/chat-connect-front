@@ -22,12 +22,9 @@ import {
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FlexBetween from "../../components/FlexBetween";
-
-import { setModeTheme } from "redux/theme/themeSlice";
-
 import { logoutUser } from "redux/auth/authOperations";
-import { logout } from "redux/auth/authSlice";
+import { setModeTheme } from "redux/theme/themeSlice";
+import FlexBetween from "../../components/FlexBetween";
 
 export const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -88,8 +85,6 @@ export const Navbar = () => {
             )}
           </IconButton>
           <Message sx={{ fontSize: "25px" }} />
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -111,9 +106,8 @@ export const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(logout())}>Log Out</MenuItem>
               <MenuItem onClick={() => dispatch(logoutUser())}>
-                Log out on all devices
+                Log out
               </MenuItem>
             </Select>
           </FormControl>

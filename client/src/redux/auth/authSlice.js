@@ -5,8 +5,6 @@ import {
   refreshUser,
   logoutUser,
   updateUser,
-  deleteAvatar,
-  changeAvatar,
   sendPasswordEmail,
 } from "./authOperations";
 
@@ -15,7 +13,7 @@ const initialState = {
   token: null,
   isLogged: false,
   isLoading: false,
-  isRedirect: false,
+  isRegistred: false,
   error: null,
 };
 
@@ -29,7 +27,7 @@ const authSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(registerUser.fulfilled, (state) => {
-      state.isRedirect = true;
+      state.isRegistred = true;
       state.isLoading = false;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
@@ -86,28 +84,6 @@ const authSlice = createSlice({
       state.isLogged = false;
     });
     builder.addCase(logoutUser.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    });
-    builder.addCase(deleteAvatar.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(deleteAvatar.fulfilled, (state, action) => {
-      state.user = action.payload;
-      state.isLoading = false;
-    });
-    builder.addCase(deleteAvatar.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    });
-    builder.addCase(changeAvatar.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(changeAvatar.fulfilled, (state, action) => {
-      state.user = action.payload;
-      state.isLoading = false;
-    });
-    builder.addCase(changeAvatar.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });

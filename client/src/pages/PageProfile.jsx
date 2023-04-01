@@ -1,29 +1,23 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Navbar } from "components/Navbar/Navbar";
-import { WidgetNewPost } from "components/WidgetNewPost/WidgetNewPost";
 import { useDispatch } from "react-redux";
-
 import { refreshUser } from "redux/auth/authOperations";
-import { getUser } from "redux/posts/postsOperations";
-
+import { getUser } from "redux/user/userOperations";
 import { WidgetPosts } from "components/WidgetPosts/WidgetPosts";
 import { WidgetUser } from "components/WidgetUser/WidgetUser";
 import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
 
 export const PageProfile = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.posts.currentUser);
+  const user = useSelector((state) => state.user.user.data);
   const { userId } = useParams();
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
   useEffect(() => {
     dispatch(refreshUser());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getUser(userId));
   }, [dispatch, userId]);
 
@@ -48,8 +42,7 @@ export const PageProfile = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "0"}
         >
-          <Box mt="-2rem" />
-          <WidgetPosts userId={userId} isProfile />
+          <WidgetPosts userId={userId} />
         </Box>
       </Box>
     </Box>

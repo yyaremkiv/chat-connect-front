@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
-import UserImage from "components/UserImage";
 import { formatDate } from "helper/dateFunction.ts";
 import { deleteComment } from "redux/posts/postsOperations";
+import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import UserImage from "components/UserImage";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export const ListComments = ({ comments = [], postId }) => {
@@ -10,8 +10,8 @@ export const ListComments = ({ comments = [], postId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
 
-  const handleDeleteComment = (postId, text) => {
-    dispatch(deleteComment({ postId, text }));
+  const handleDeleteComment = (postId, created) => {
+    dispatch(deleteComment({ postId, created }));
   };
 
   return (
@@ -48,7 +48,7 @@ export const ListComments = ({ comments = [], postId }) => {
                 </Box>
                 {user._id === userID ? (
                   <IconButton
-                    onClick={() => handleDeleteComment(postId, text)}
+                    onClick={() => handleDeleteComment(postId, created)}
                     sx={{ marginLeft: "auto" }}
                   >
                     <DeleteIcon />

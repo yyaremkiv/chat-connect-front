@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createNewPost } from "redux/posts/postsOperations";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -16,32 +19,27 @@ import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
-import { createNewPost } from "redux/posts/postsOperations";
-
-export const WidgetNewPost = ({ picturePath }) => {
-  const dispatch = useDispatch();
-  const [isImage, setIsImage] = useState(false);
-  const [image, setImage] = useState(null);
+export const WidgetNewPost = ({ page, limit, sort, picturePath }) => {
   const [post, setPost] = useState("");
+  const [image, setImage] = useState(null);
+  const [isImage, setIsImage] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   const { palette } = useTheme();
-  const { _id } = useSelector((state) => state.auth.user);
-  const mediumMain = palette.neutral.mediumMain;
-  const medium = palette.neutral.medium;
 
   const handlePost = async () => {
     const formData = new FormData();
-    formData.append("userId", _id);
+    formData.append("userId", user._id);
     formData.append("description", post);
     if (image) {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
     }
 
-    dispatch(createNewPost(formData));
+    dispatch(createNewPost({ page, limit, sort, formData }));
     setImage(null);
+    setIsImage(false);
     setPost("");
   };
 
@@ -112,10 +110,12 @@ export const WidgetNewPost = ({ picturePath }) => {
 
       <FlexBetween>
         <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
-          <ImageOutlined sx={{ color: mediumMain }} />
+          <ImageOutlined sx={{ color: palette.neutral.mediumMain }} />
           <Typography
-            color={mediumMain}
-            sx={{ "&:hover": { cursor: "pointer", color: medium } }}
+            color={palette.neutral.mediumMain}
+            sx={{
+              "&:hover": { cursor: "pointer", color: palette.neutral.medium },
+            }}
           >
             Image
           </Typography>

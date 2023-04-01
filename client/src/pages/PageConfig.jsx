@@ -1,11 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
-import {
-  updateUser,
-  deleteAvatar,
-  changeAvatar,
-} from "redux/auth/authOperations";
+import { updateUser } from "redux/auth/authOperations";
 import { FormConfig } from "configs/Form.config";
 import { Navbar } from "components/Navbar/Navbar";
 import { formatDate } from "helper/dateFunction.ts";
@@ -31,6 +27,9 @@ import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import SaveIcon from "@mui/icons-material/Save";
+import { changeUserAvatar } from "redux/user/userOperations";
+import { refreshUser } from "redux/auth/authOperations";
+import cloudConfig from "configs/cloudConfig";
 
 export const PageConfig = () => {
   const [image, setImage] = useState(null);
@@ -38,17 +37,27 @@ export const PageConfig = () => {
   const user = useSelector((state) => state.auth.user);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { palette } = useTheme();
+  const isLogged = useSelector((state) => state.auth.isLogged);
 
-  const handleFormSubmit = (values) => {
-    dispatch(updateUser(values));
+  const handleFormSubmit = async (values) => {
+    await dispatch(updateUser(values));
+    await dispatch(refreshUser());
   };
 
-  const handleChangeAvatar = () => {
-    const formData = new FormData();
+  useEffect(() => {
+    dispatch(refreshUser());
+  }, [dispatch, isLogged]);
+
+  const handleChangeAvatar = async () => {
     if (image) {
+      const formData = new FormData();
       formData.append("picture", image);
-      dispatch(changeAvatar(formData));
+      await dispatch(await changeUserAvatar(formData));
+    } else {
+      await dispatch(changeUserAvatar());
     }
+    await dispatch(refreshUser());
+    setImage(null);
   };
 
   return (
@@ -90,20 +99,25 @@ export const PageConfig = () => {
               }}
             >
               <UserImage image={user.picturePath} size="80px" />
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="0.25rem"
-              >
-                <Typography style={{ whiteSpace: "nowrap" }}>
-                  Delete avatar
-                </Typography>
-                <IconButton onClick={() => dispatch(deleteAvatar())}>
-                  <DeleteIcon size="large" />
-                </IconButton>
-              </Box>
+
+              {/* Delete avatar - start */}
+              {user.picturePath !== cloudConfig.publicImagePathDefault ? (
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  gap="0.25rem"
+                >
+                  <Typography style={{ whiteSpace: "nowrap" }}>
+                    Delete avatar
+                  </Typography>
+                  <IconButton onClick={handleChangeAvatar}>
+                    <DeleteIcon size="large" />
+                  </IconButton>
+                </Box>
+              ) : null}
+              {/* Delete avatar - end */}
             </Box>
 
             {/* Donwloads photo - start */}
@@ -317,7 +331,7 @@ export const PageConfig = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.linkedin}
-                        name="linkedin"
+                        name="linkendin"
                         error={Boolean(touched.linkedin && errors.linkedin)}
                         helperText={touched.linkedin && errors.linkedin}
                         sx={{ gridColumn: "2/5" }}

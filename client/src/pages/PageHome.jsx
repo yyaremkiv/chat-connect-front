@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navbar } from "components/Navbar/Navbar";
 import { WidgetUser } from "components/WidgetUser/WidgetUser";
@@ -8,9 +8,13 @@ import { WidgetAdvert } from "components/WidgetAdvert/WidgetAdvert";
 import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
 import { Box, useMediaQuery } from "@mui/material";
 import { refreshUser } from "redux/auth/authOperations";
+import { WidgetAllUsers } from "components/WidgerAllUsers/WidgetAllUsers";
 
 export const PageHome = () => {
+  const [type, setType] = useState("allPosts");
+
   const dispatch = useDispatch();
+
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const user = useSelector((state) => state.auth.user);
   const isLogged = useSelector((state) => state.auth.isLogged);
@@ -42,9 +46,18 @@ export const PageHome = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <WidgetNewPost picturePath={user.picturePath} />
-          {user._id && <WidgetPosts userId={user._id} />}
+          {type === "allPosts" ? (
+            <Box display="flex" flexDirection="column" gap="1.5rem">
+              {/* <WidgetNewPost picturePath={user.picturePath} /> */}
+              {user._id ? <WidgetPosts /> : null}
+            </Box>
+          ) : (
+            <>
+              <WidgetAllUsers />
+            </>
+          )}
         </Box>
+
         {isNonMobileScreens && (
           <Box flexBasis="26%">
             <WidgetAdvert />

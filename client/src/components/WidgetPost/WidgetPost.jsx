@@ -11,67 +11,47 @@ import { patchLike } from "redux/posts/postsOperations";
 import { deletePost } from "redux/posts/postsOperations";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { formatDate } from "helper/dateFunction.ts";
-import { patchFriend } from "redux/posts/postsOperations";
 import { ListComments } from "components/ListComments/ListComments";
+import { addRemoveUserFriend } from "redux/user/userOperations";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 
-export const WidgetPost = ({ post }) => {
+export const WidgetPost = ({ post, page, limit, sort }) => {
   const {
-    _id: postID,
-    author: {
-      _id: postUserID,
-      firstName,
-      lastName,
-      location,
-      picturePath: userPicturePath,
-    },
+    _id: postId,
+    author,
     likes,
     createdAt: created,
     description,
     picturePath,
     comments,
   } = post;
-
   const [isComments, setIsComments] = useState(false);
   const [addCommentShow, setAddCommentShow] = useState(false);
-
   const user = useSelector((state) => state.auth.user);
-
-  const dispatch = useDispatch();
-  const loggedInUserId = useSelector((state) => state.auth.user._id);
-  const isLiked = Boolean(likes[loggedInUserId]);
+  const isLiked = Boolean(likes[user._id]);
   const likeCount = Object.keys(likes).length;
-
+  const dispatch = useDispatch();
+  const friends = useSelector((state) => state.user.friends.data);
+  const isFriend = friends?.find(({ friendId }) => friendId._id === author._id);
   const { palette } = useTheme();
-  const main = palette.neutral.main;
-  const primary = palette.primary.main;
 
-  const primaryLight = palette.primary.light;
-  const primaryDark = palette.primary.dark;
+  const handlePatchLike = () =>
+    dispatch(patchLike({ postId, userId: user._id }));
 
-  const friends = useSelector((state) => state.posts.friends.data);
+  const handlePatchFriend = () =>
+    dispatch(addRemoveUserFriend({ userId: user._id, friendId: author._id }));
 
-  const isFriend = friends.friends?.find((friend) => friend._id === postUserID);
+  const handleShowAddCommentWidget = () => setAddCommentShow(!addCommentShow);
 
-  const handlePatchLike = () => {
-    console.log("handele post", postID, "loggedIn User", loggedInUserId);
-    dispatch(patchLike({ postID, loggedInUserId }));
-  };
-
-  const handlePatchFriend = () => {
-    dispatch(patchFriend({ userID: user._id, postUserID: postUserID }));
-  };
-
-  const handleShowAddCommentWidget = () => {
-    setAddCommentShow(!addCommentShow);
-  };
+  const handleDeletePost = () =>
+    dispatch(deletePost({ postId, page, limit, sort }));
 
   return (
-    <WidgetWrapper m="2rem 0">
+    <WidgetWrapper>
       <Box
         sx={{
           display: "flex",
@@ -79,40 +59,33 @@ export const WidgetPost = ({ post }) => {
           alignItems: "center",
         }}
       >
-        <Friend
-          friendId={postUserID}
-          name={`${firstName} ${lastName}`}
-          subtitle={location}
-          userPicturePath={userPicturePath}
-          date={formatDate(created)}
-          showFriendList={false}
-        />
+        <Friend friend={author} date={formatDate(created)} showList={false} />
 
-        {user._id === postUserID ? (
-          <IconButton onClick={() => dispatch(deletePost(postID))}>
+        {user._id === author._id ? (
+          <IconButton onClick={handleDeletePost}>
             <DeleteIcon />
           </IconButton>
         ) : null}
 
-        {user._id !== postUserID ? (
+        {user._id !== author._id ? (
           isFriend ? (
             <IconButton
               onClick={() => handlePatchFriend()}
-              sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+              sx={{ backgroundColor: palette.primary.light, p: "0.6rem" }}
             >
-              <PersonRemoveOutlined sx={{ color: primaryDark }} />
+              <PersonRemoveOutlined sx={{ color: palette.primary.dark }} />
             </IconButton>
           ) : (
             <IconButton
               onClick={() => handlePatchFriend()}
-              sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+              sx={{ backgroundColor: palette.primary.light, p: "0.6rem" }}
             >
-              <PersonAddOutlined sx={{ color: primaryDark }} />
+              <PersonAddOutlined sx={{ color: palette.primary.dark }} />
             </IconButton>
           )
         ) : null}
       </Box>
-      <Typography color={main} sx={{ mt: "1rem" }}>
+      <Typography color={palette.neutral.main} sx={{ mt: "1rem" }}>
         {description}
       </Typography>
 
@@ -130,7 +103,7 @@ export const WidgetPost = ({ post }) => {
           <FlexBetween gap="0.3rem">
             <IconButton onClick={handlePatchLike}>
               {isLiked ? (
-                <FavoriteOutlined sx={{ color: primary }} />
+                <FavoriteOutlined sx={{ color: palette.primary.main }} />
               ) : (
                 <FavoriteBorderOutlined />
               )}
@@ -156,19 +129,15 @@ export const WidgetPost = ({ post }) => {
         </FlexBetween>
       </FlexBetween>
 
-      {/* List comments - start */}
       {isComments && comments.length ? (
-        <ListComments comments={comments} postId={postID} />
+        <ListComments comments={comments} postId={postId} />
       ) : null}
-      {/* List comments - end */}
 
-      {/* Widget add new comment - start */}
       {addCommentShow ? (
         <Box sx={{ marginTop: "1rem" }}>
-          <WidgetNewComment postId={postID} />
+          <WidgetNewComment postId={postId} />
         </Box>
       ) : null}
-      {/* Widget add new comment - end */}
     </WidgetWrapper>
   );
 };
