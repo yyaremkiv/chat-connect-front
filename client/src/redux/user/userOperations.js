@@ -1,19 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosAPI } from "configs/axios.configs";
-import { setAuthorizationHeader } from "configs/axios.configs";
 
-export const getUser = createAsyncThunk(
-  "user/getUser",
+export const getUserData = createAsyncThunk(
+  "user/getUserData",
   async (userId, thunkAPI) => {
     try {
-      // const state = thunkAPI.getState();
-      // const persistedToken = state.auth.token;
-
-      // if (persistedToken === null) {
-      //   return thunkAPI.rejectWithValue("Unable to fetch user");
-      // }
-
-      // setAuthorizationHeader(persistedToken);
       const { data } = await axiosAPI.get(`/user/${userId}`);
       return data;
     } catch (err) {
@@ -24,9 +15,11 @@ export const getUser = createAsyncThunk(
 
 export const getAllUsers = createAsyncThunk(
   "user/getAllUsers",
-  async (_, thunkAPI) => {
+  async ({ page = 1, limit = 10, sort = "desc" }, thunkAPI) => {
     try {
-      const { data } = await axiosAPI.get("/user/list");
+      const { data } = await axiosAPI.get(
+        `/user/list?page=${page}&limit=${limit}&sort=${sort}`
+      );
       return data;
     } catch (err) {
       thunkAPI.rejectWithValue(err.message);

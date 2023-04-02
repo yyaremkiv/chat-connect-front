@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navbar } from "components/Navbar/Navbar";
 import { WidgetUser } from "components/WidgetUser/WidgetUser";
 import { WidgetNewPost } from "components/WidgetNewPost/WidgetNewPost";
-import { WidgetPosts } from "components/WidgetPosts/WidgetPosts";
+import { WidgetGeneral } from "components/WidgetGeneral/WidgetGeneral";
 import { WidgetAdvert } from "components/WidgetAdvert/WidgetAdvert";
 import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
 import { Box, useMediaQuery } from "@mui/material";
@@ -49,12 +49,10 @@ export const PageHome = () => {
           {type === "allPosts" ? (
             <Box display="flex" flexDirection="column" gap="1.5rem">
               {/* <WidgetNewPost picturePath={user.picturePath} /> */}
-              {user._id ? <WidgetPosts /> : null}
+              {user._id ? <WidgetGeneral /> : null}
             </Box>
           ) : (
-            <>
-              <WidgetAllUsers />
-            </>
+            <>{/* <WidgetAllUsers /> */}</>
           )}
         </Box>
 
@@ -62,7 +60,7 @@ export const PageHome = () => {
           <Box flexBasis="26%">
             <WidgetAdvert />
             <Box m="2rem 0" />
-            {user._id && <WidgetFriendList userId={user._id} />}
+            {user._id && <WidgetFriendList user={user._id} />}
           </Box>
         )}
       </Box>

@@ -1,13 +1,12 @@
 import WidgetWrapper from "components/WidgetWrapper";
-import { Box, IconButton, useMediaQuery, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
+import { useTheme } from "@mui/material";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useTheme } from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
@@ -31,26 +30,6 @@ export const WidgetControl = ({
         justifyContent="space-between"
         alignItems="center"
       >
-        <Box display="flex" justifyContent="right" gap="1rem" p="0.25rem 0">
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-            value={type}
-            onChange={handleChangeType}
-          >
-            <FormControlLabel
-              value="allUsers"
-              control={<Radio />}
-              label="All Users"
-            />
-            <FormControlLabel
-              value="allPosts"
-              control={<Radio />}
-              label="All Posts"
-            />
-          </RadioGroup>
-        </Box>
         <FormControl>
           <Select
             value={limit}
@@ -88,11 +67,13 @@ export const WidgetControl = ({
       {page && limit && totalCounts && (
         <Box display="flex" justifyContent="right" gap="1rem" p="0.5rem 0">
           <Typography color={palette.neutral.main}>
-            Posts shown:{" "}
+            {type === "allPosts" ? "Posts shown: " : "Users shown: "}
             {page * limit > totalCounts ? totalCounts : page * limit}
           </Typography>
           <Typography color={palette.neutral.main}>
-            Total Posts: {totalCounts}
+            {type === "allPosts"
+              ? `Total Posts: ${totalCounts}`
+              : `Total Users: ${totalCounts - 1}`}
           </Typography>
         </Box>
       )}

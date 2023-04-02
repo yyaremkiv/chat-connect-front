@@ -20,7 +20,7 @@ import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 
-export const WidgetNewPost = ({ page, limit, sort, picturePath }) => {
+export const WidgetNewPost = ({ page, limit, sort }) => {
   const [post, setPost] = useState("");
   const [image, setImage] = useState(null);
   const [isImage, setIsImage] = useState(false);
@@ -45,8 +45,9 @@ export const WidgetNewPost = ({ page, limit, sort, picturePath }) => {
 
   return (
     <WidgetWrapper>
+      <Typography mb="0.5rem">Add New Post!</Typography>
       <FlexBetween gap="1.5rem">
-        <UserImage image={picturePath} />
+        <UserImage image={user.picturePath} />
         <TextField
           placeholder="What's on your mind..."
           onChange={(e) => setPost(e.target.value)}
@@ -105,9 +106,7 @@ export const WidgetNewPost = ({ page, limit, sort, picturePath }) => {
           </Dropzone>
         </Box>
       )}
-
       <Divider sx={{ margin: "1.25rem 0" }} />
-
       <FlexBetween>
         <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
           <ImageOutlined sx={{ color: palette.neutral.mediumMain }} />

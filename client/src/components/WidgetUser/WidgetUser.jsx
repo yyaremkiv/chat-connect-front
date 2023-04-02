@@ -11,7 +11,7 @@ import WidgetWrapper from "../WidgetWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "redux/user/userOperations";
+import { getUserData } from "redux/user/userOperations";
 
 export const WidgetUser = ({ userId, picturePath }) => {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export const WidgetUser = ({ userId, picturePath }) => {
   const { palette } = useTheme();
 
   useEffect(() => {
-    dispatch(getUser(userId));
+    dispatch(getUserData(userId));
   }, [dispatch, userId]);
 
   if (!currentUser) {
@@ -35,7 +35,6 @@ export const WidgetUser = ({ userId, picturePath }) => {
     occupation,
     viewedProfile,
     impressions,
-    friends,
     twitter,
     linkendin,
   } = currentUser;

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  getUser,
+  getUserData,
   getAllUsers,
   getUserFriends,
   addRemoveUserFriend,
@@ -8,7 +8,7 @@ import {
 } from "./userOperations";
 
 const initialState = {
-  allUsers: { data: [], isLoading: false, error: null },
+  allUsers: { data: [], totalCounts: 0, isLoading: false, error: null },
   user: { data: [], isLoading: false, error: null },
   friends: { data: [], isLoading: false, error: null },
 };
@@ -17,15 +17,15 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(getUser.pending, (state) => {
+    builder.addCase(getUserData.pending, (state) => {
       state.user.error = null;
       state.user.isLoading = true;
     });
-    builder.addCase(getUser.fulfilled, (state, action) => {
+    builder.addCase(getUserData.fulfilled, (state, action) => {
       state.user.data = action.payload;
       state.user.isLoading = false;
     });
-    builder.addCase(getUser.rejected, (state, action) => {
+    builder.addCase(getUserData.rejected, (state, action) => {
       state.user.error = action.payload;
       state.user.isLoading = false;
     });
@@ -34,8 +34,8 @@ const userSlice = createSlice({
       state.allUsers.error = null;
     });
     builder.addCase(getAllUsers.fulfilled, (state, action) => {
-      console.log(action.payload);
-      state.allUsers.data = action.payload;
+      state.allUsers.data = action.payload.users;
+      state.allUsers.totalCounts = action.payload.totalCounts;
       state.allUsers.isLoading = false;
     });
     builder.addCase(getAllUsers.rejected, (state, action) => {

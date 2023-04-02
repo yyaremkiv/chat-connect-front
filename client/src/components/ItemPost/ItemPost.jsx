@@ -19,7 +19,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 
-export const WidgetPost = ({ post, page, limit, sort }) => {
+export const ItemPost = ({ post, page, limit, sort }) => {
   const {
     _id: postId,
     author,

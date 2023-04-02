@@ -5,8 +5,8 @@ import { useParams } from "react-router-dom";
 import { Navbar } from "components/Navbar/Navbar";
 import { useDispatch } from "react-redux";
 import { refreshUser } from "redux/auth/authOperations";
-import { getUser } from "redux/user/userOperations";
-import { WidgetPosts } from "components/WidgetPosts/WidgetPosts";
+import { getUserData } from "redux/user/userOperations";
+import { WidgetGeneral } from "components/WidgetGeneral/WidgetGeneral";
 import { WidgetUser } from "components/WidgetUser/WidgetUser";
 import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
 
@@ -18,7 +18,7 @@ export const PageProfile = () => {
 
   useEffect(() => {
     dispatch(refreshUser());
-    dispatch(getUser(userId));
+    dispatch(getUserData(userId));
   }, [dispatch, userId]);
 
   if (!user) return null;
@@ -42,7 +42,7 @@ export const PageProfile = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "0"}
         >
-          <WidgetPosts userId={userId} />
+          <WidgetGeneral />
         </Box>
       </Box>
     </Box>

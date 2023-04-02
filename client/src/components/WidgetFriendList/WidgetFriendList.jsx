@@ -1,18 +1,22 @@
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserFriends } from "redux/user/userOperations";
 import { Box, Typography, useTheme } from "@mui/material";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 
-export const WidgetFriendList = ({ userId }) => {
+export const WidgetFriendList = ({ user }) => {
   const dispatch = useDispatch();
   const friends = useSelector((state) => state.user.friends.data);
+  const { userId } = useParams();
   const { palette } = useTheme();
 
+  const currentUser = user ? user : userId;
+
   useEffect(() => {
-    dispatch(getUserFriends(userId));
-  }, [dispatch, userId]);
+    if (currentUser) dispatch(getUserFriends(currentUser));
+  }, [dispatch, currentUser]);
 
   return (
     <WidgetWrapper>
