@@ -26,11 +26,10 @@ const postsSlice = createSlice({
     builder.addCase(fetchPosts.fulfilled, (state, action) => {
       if (action.payload.isLoadMore) {
         state.posts = [...state.posts, ...action.payload.data.posts];
-        state.totalCounts = action.payload.data.totalCounts;
       } else {
         state.posts = action.payload.data.posts;
-        state.totalCounts = action.payload.data.totalCounts;
       }
+      state.totalCounts = action.payload.data.totalCounts;
       state.isLoading = false;
     });
     builder.addCase(fetchPosts.rejected, (state, action) => {

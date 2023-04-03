@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { addRemoveUserFriend } from "redux/user/userOperations";
 import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
@@ -12,7 +13,6 @@ import { deletePost } from "redux/posts/postsOperations";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { formatDate } from "helper/dateFunction.ts";
 import { ListComments } from "components/ListComments/ListComments";
-import { addRemoveUserFriend } from "redux/user/userOperations";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";

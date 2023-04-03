@@ -17,7 +17,7 @@ export const fetchPosts = createAsyncThunk(
         ? { data, isLoadMore: true }
         : { data, isLoadMore: false };
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -32,7 +32,7 @@ export const createNewPost = createAsyncThunk(
       );
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -46,7 +46,7 @@ export const deletePost = createAsyncThunk(
       );
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -60,7 +60,7 @@ export const patchLike = createAsyncThunk(
       });
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -74,7 +74,7 @@ export const addComment = createAsyncThunk(
       });
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -88,7 +88,7 @@ export const deleteComment = createAsyncThunk(
       });
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );

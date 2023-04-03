@@ -45,7 +45,9 @@ export const WidgetNewPost = ({ page, limit, sort }) => {
 
   return (
     <WidgetWrapper>
-      <Typography mb="0.5rem">Add New Post!</Typography>
+      <Typography mb="0.5rem" textAlign="right">
+        Hello, Add New Post!
+      </Typography>
       <FlexBetween gap="1.5rem">
         <UserImage image={user.picturePath} />
         <TextField

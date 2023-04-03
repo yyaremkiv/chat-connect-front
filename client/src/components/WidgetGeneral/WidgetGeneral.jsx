@@ -7,7 +7,10 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 
-export const WidgetGeneral = () => {
+export const WidgetGeneral = ({
+  controlCategory = true,
+  addNewPost = false,
+}) => {
   const [type, setType] = useState(localStorage.getItem("type") || "allPosts");
   const { palette } = useTheme();
 
@@ -26,35 +29,41 @@ export const WidgetGeneral = () => {
 
   return (
     <Box display="flex" flexDirection="column">
-      <Box
-        display="flex"
-        justifyContent="right"
-        p="0.5rem"
-        mb="1.5rem"
-        bgcolor={palette.background.alt}
-        borderRadius="0.5rem"
-      >
-        <RadioGroup
-          row
-          aria-labelledby="demo-row-radio-buttons-group-label"
-          name="row-radio-buttons-group"
-          value={type}
-          onChange={handleChangeType}
+      {controlCategory ? (
+        <Box
+          display="flex"
+          justifyContent="right"
+          p="0.5rem"
+          mb="1.5rem"
+          bgcolor={palette.background.alt}
+          borderRadius="0.5rem"
         >
-          <FormControlLabel
-            value="allUsers"
-            control={<Radio />}
-            label="All Users"
-          />
-          <FormControlLabel
-            value="allPosts"
-            control={<Radio />}
-            label="All Posts"
-          />
-        </RadioGroup>
-      </Box>
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+            value={type}
+            onChange={handleChangeType}
+          >
+            <FormControlLabel
+              value="allUsers"
+              control={<Radio />}
+              label="All Users"
+            />
+            <FormControlLabel
+              value="allPosts"
+              control={<Radio />}
+              label="All Posts"
+            />
+          </RadioGroup>
+        </Box>
+      ) : null}
 
-      {type === "allPosts" ? <WidgetPosts /> : <WidgetAllUsers />}
+      {type === "allUsers" && controlCategory ? (
+        <WidgetAllUsers />
+      ) : (
+        <WidgetPosts addNewPost={addNewPost} />
+      )}
     </Box>
   );
 };

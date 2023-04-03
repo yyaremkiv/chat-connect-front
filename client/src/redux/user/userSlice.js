@@ -18,6 +18,7 @@ const userSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder.addCase(getUserData.pending, (state) => {
+      state.user.data = [];
       state.user.error = null;
       state.user.isLoading = true;
     });
@@ -30,12 +31,20 @@ const userSlice = createSlice({
       state.user.isLoading = false;
     });
     builder.addCase(getAllUsers.pending, (state) => {
+      state.allUsers.data = [];
       state.allUsers.isLoading = true;
       state.allUsers.error = null;
     });
     builder.addCase(getAllUsers.fulfilled, (state, action) => {
-      state.allUsers.data = action.payload.users;
-      state.allUsers.totalCounts = action.payload.totalCounts;
+      if (action.payload.isLoadMore) {
+        state.allUsers.data = [
+          ...state.allUsers.data,
+          ...action.payload.data.users,
+        ];
+      } else {
+        state.allUsers.data = action.payload.data.users;
+      }
+      state.allUsers.totalCounts = action.payload.data.totalCounts;
       state.allUsers.isLoading = false;
     });
     builder.addCase(getAllUsers.rejected, (state, action) => {
@@ -51,6 +60,7 @@ const userSlice = createSlice({
       state.friends.isLoading = false;
     });
     builder.addCase(getUserFriends.rejected, (state, action) => {
+      console.log("slice error", action.payload);
       state.friends.error = action.payload;
       state.friends.isLoading = false;
     });

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, useTheme } from "@mui/material";
 import UserImage from "components/UserImage";
+import { formatDate } from "helper/dateFunction.ts";
 
 export const ItemUser = ({
   user: {
@@ -12,6 +13,7 @@ export const ItemUser = ({
     occupation,
     friends,
     posts,
+    createdAt: created,
   },
 }) => {
   const navigate = useNavigate();
@@ -23,14 +25,18 @@ export const ItemUser = ({
   };
 
   return (
-    <Box display="flex" gap="0.75rem">
-      <UserImage image={picturePath} size="55px" />
-      <Box onClick={handleClick}>
-        <Box display="flex" justifyContent="space-between">
+    <Box display="flex" alignItems="center" gap="0.75rem">
+      <Box>
+        <UserImage image={picturePath} size="75px" />
+      </Box>
+
+      <Box sx={{ width: "100%" }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography
             color={palette.neutral.main}
             variant="h5"
             fontWeight="500"
+            onClick={handleClick}
             sx={{
               "&:hover": {
                 color: palette.primary.dark,
@@ -40,7 +46,20 @@ export const ItemUser = ({
           >
             {`${firstName} ${lastName}`}
           </Typography>
+          <Typography color={palette.neutral.medium} variant="h7">
+            Account created: {formatDate(created).slice(0, 10)}
+          </Typography>
+        </Box>
 
+        <Box display="flex" gap="1.5rem">
+          <Box>
+            <Typography color={palette.neutral.medium} fontSize="0.75rem">
+              Location: {location}
+            </Typography>
+            <Typography color={palette.neutral.medium} fontSize="0.75rem">
+              Occupation: {occupation}
+            </Typography>
+          </Box>
           <Box>
             <Typography color={palette.neutral.medium} fontSize="0.75rem">
               Total Friends: {friends}
@@ -50,13 +69,6 @@ export const ItemUser = ({
             </Typography>
           </Box>
         </Box>
-
-        <Typography color={palette.neutral.medium} fontSize="0.75rem">
-          Location: {location}
-        </Typography>
-        <Typography color={palette.neutral.medium} fontSize="0.75rem">
-          {occupation}
-        </Typography>
       </Box>
     </Box>
   );

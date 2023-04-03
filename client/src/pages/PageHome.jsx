@@ -1,69 +1,50 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Navbar } from "components/Navbar/Navbar";
 import { WidgetUser } from "components/WidgetUser/WidgetUser";
-import { WidgetNewPost } from "components/WidgetNewPost/WidgetNewPost";
 import { WidgetGeneral } from "components/WidgetGeneral/WidgetGeneral";
 import { WidgetAdvert } from "components/WidgetAdvert/WidgetAdvert";
 import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
 import { Box, useMediaQuery } from "@mui/material";
-import { refreshUser } from "redux/auth/authOperations";
-import { WidgetAllUsers } from "components/WidgerAllUsers/WidgetAllUsers";
 
 export const PageHome = () => {
-  const [type, setType] = useState("allPosts");
-
-  const dispatch = useDispatch();
-
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const user = useSelector((state) => state.auth.user);
-  const isLogged = useSelector((state) => state.auth.isLogged);
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
-  useEffect(() => {
-    if (isLogged) {
-      dispatch(refreshUser());
-    }
-  }, [dispatch, isLogged]);
+  console.log("user", user._id);
 
   return (
-    <Box>
-      {user._id && <Navbar />}
-      <Box
-        width="100%"
-        padding="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
-        gap="0.5rem"
-        justifyContent="space-between"
-      >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          {user._id && (
-            <Box sx={{ gap: "40px" }}>
-              <WidgetUser userId={user._id} picturePath={user.picturePath} />
+    <>
+      {user._id && (
+        <Box>
+          <Navbar />
+          <Box
+            display="flex"
+            flexDirection={isNonMobileScreens ? "row" : "column"}
+            gap="1.5rem"
+            padding="1.5rem 5%"
+          >
+            <Box flexBasis={isNonMobileScreens ? "25%" : "100%"}>
+              <WidgetUser />
             </Box>
-          )}
-        </Box>
-        <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
-        >
-          {type === "allPosts" ? (
-            <Box display="flex" flexDirection="column" gap="1.5rem">
-              {/* <WidgetNewPost picturePath={user.picturePath} /> */}
-              {user._id ? <WidgetGeneral /> : null}
-            </Box>
-          ) : (
-            <>{/* <WidgetAllUsers /> */}</>
-          )}
-        </Box>
 
-        {isNonMobileScreens && (
-          <Box flexBasis="26%">
-            <WidgetAdvert />
-            <Box m="2rem 0" />
-            {user._id && <WidgetFriendList user={user._id} />}
+            <Box flexBasis={isNonMobileScreens ? "45%" : "100%"}>
+              <WidgetGeneral controlCategory={true} addNewPost={true} />
+            </Box>
+
+            {isNonMobileScreens && (
+              <Box
+                display="flex"
+                flexDirection="column"
+                gap="1.5rem"
+                flexBasis="30%"
+              >
+                <WidgetAdvert />
+                <WidgetFriendList />
+              </Box>
+            )}
           </Box>
-        )}
-      </Box>
-    </Box>
+        </Box>
+      )}
+    </>
   );
 };

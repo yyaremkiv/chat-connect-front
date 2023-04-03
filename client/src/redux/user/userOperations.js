@@ -8,21 +8,26 @@ export const getUserData = createAsyncThunk(
       const { data } = await axiosAPI.get(`/user/${userId}`);
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
 
 export const getAllUsers = createAsyncThunk(
   "user/getAllUsers",
-  async ({ page = 1, limit = 10, sort = "desc" }, thunkAPI) => {
+  async (
+    { page = 1, limit = 10, sort = "desc", isLoadMore = false },
+    thunkAPI
+  ) => {
     try {
       const { data } = await axiosAPI.get(
         `/user/list?page=${page}&limit=${limit}&sort=${sort}`
       );
-      return data;
+      return isLoadMore
+        ? { data, isLoadMore: true }
+        : { data, isLoadMore: false };
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -34,7 +39,7 @@ export const getUserFriends = createAsyncThunk(
       const { data } = await axiosAPI.get(`/user/${userId}/friends`);
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -46,7 +51,7 @@ export const addRemoveUserFriend = createAsyncThunk(
       const { data } = await axiosAPI.patch(`/user/${userId}/${friendId}`);
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
@@ -58,7 +63,7 @@ export const changeUserAvatar = createAsyncThunk(
       const { data } = await axiosAPI.patch("/user/avatar", formData);
       return data;
     } catch (err) {
-      thunkAPI.rejectWithValue(err.message);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
