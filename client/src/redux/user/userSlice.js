@@ -60,7 +60,6 @@ const userSlice = createSlice({
       state.friends.isLoading = false;
     });
     builder.addCase(getUserFriends.rejected, (state, action) => {
-      console.log("slice error", action.payload);
       state.friends.error = action.payload;
       state.friends.isLoading = false;
     });

@@ -19,7 +19,16 @@ import WidgetWrapper from "components/WidgetWrapper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 
-export const ItemPost = ({ post, page, limit, sort }) => {
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditIcon from "@mui/icons-material/Edit";
+
+const options = ["None", "Atria", "Callisto", "Dione"];
+
+const ITEM_HEIGHT = 48;
+
+export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   const {
     _id: postId,
     author,
@@ -38,6 +47,8 @@ export const ItemPost = ({ post, page, limit, sort }) => {
   const friends = useSelector((state) => state.user.friends.data);
   const isFriend = friends?.find(({ friendId }) => friendId._id === author._id);
   const { palette } = useTheme();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const handlePatchLike = () =>
     dispatch(patchLike({ postId, userId: user._id }));
@@ -47,8 +58,23 @@ export const ItemPost = ({ post, page, limit, sort }) => {
 
   const handleShowAddCommentWidget = () => setAddCommentShow(!addCommentShow);
 
-  const handleDeletePost = () =>
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleDeletePost = () => {
     dispatch(deletePost({ postId, page, limit, sort }));
+    setAnchorEl(null);
+  };
+
+  const handleEdit = (postId) => {
+    handleEditPost(postId);
+    setAnchorEl(null);
+  };
 
   return (
     <WidgetWrapper>
@@ -61,11 +87,32 @@ export const ItemPost = ({ post, page, limit, sort }) => {
       >
         <Friend friend={author} date={formatDate(created)} showList={false} />
 
-        {user._id === author._id ? (
+        <IconButton
+          aria-label="more"
+          id="long-button"
+          aria-controls={open ? "long-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <MoreVertIcon sx={{ fontSize: "1.5rem" }} />
+        </IconButton>
+        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+          <MenuItem onClick={handleDeletePost}>
+            <DeleteIcon sx={{ color: palette.neutral.main }} />{" "}
+            <Typography sx={{ ml: 1 }}>Delete Post</Typography>
+          </MenuItem>
+          <MenuItem onClick={() => handleEdit(postId)}>
+            <EditIcon sx={{ color: palette.neutral.main }} />
+            <Typography sx={{ ml: 1 }}>Edit Post</Typography>
+          </MenuItem>
+        </Menu>
+
+        {/* {user._id === author._id ? (
           <IconButton onClick={handleDeletePost}>
-            <DeleteIcon />
+            <EditIcon />
           </IconButton>
-        ) : null}
+        ) : null} */}
 
         {user._id !== author._id ? (
           isFriend ? (

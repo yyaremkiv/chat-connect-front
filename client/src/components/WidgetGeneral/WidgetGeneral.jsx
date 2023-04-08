@@ -10,6 +10,7 @@ import Radio from "@mui/material/Radio";
 export const WidgetGeneral = ({
   controlCategory = true,
   addNewPost = false,
+  handleEditPost,
 }) => {
   const [type, setType] = useState(localStorage.getItem("type") || "allPosts");
   const { palette } = useTheme();
@@ -62,7 +63,7 @@ export const WidgetGeneral = ({
       {type === "allUsers" && controlCategory ? (
         <WidgetAllUsers />
       ) : (
-        <WidgetPosts addNewPost={addNewPost} />
+        <WidgetPosts addNewPost={addNewPost} handleEditPost={handleEditPost} />
       )}
     </Box>
   );

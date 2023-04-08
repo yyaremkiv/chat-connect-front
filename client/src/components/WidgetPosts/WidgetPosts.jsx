@@ -13,7 +13,11 @@ import Select from "@mui/material/Select";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
-export const WidgetPosts = ({ user = null, addNewPost = true }) => {
+export const WidgetPosts = ({
+  user = null,
+  addNewPost = true,
+  handleEditPost,
+}) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(localStorage.getItem("limit") || 10);
   const [sort, setSort] = useState(localStorage.getItem("sortType") || "desc");
@@ -111,12 +115,13 @@ export const WidgetPosts = ({ user = null, addNewPost = true }) => {
               page={page}
               limit={limit}
               sort={sort}
+              handleEditPost={handleEditPost}
             />
           ))}
         </Box>
       ) : null}
 
-      {posts.length > 0 && page * limit < totalCounts ? (
+      {posts?.length > 0 && page * limit < totalCounts ? (
         <Box display="flex" justifyContent="center" p="1.5rem">
           <LoadingButton
             size="large"

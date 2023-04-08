@@ -142,12 +142,9 @@ export const FormLogin = () => {
             {isErrorAuth}
           </Typography>
         )}
-        <Typography
-          onClick={() => dispatch(sendPasswordEmail())}
-          sx={{ cursor: "pointer" }}
-        >
-          Send email to email
-        </Typography>
+        <Typography mt="1rem">User to test:</Typography>
+        <Typography>email: phonelist@mail.com</Typography>
+        <Typography>password: phonelist</Typography>
       </Box>
     </Box>
   );
