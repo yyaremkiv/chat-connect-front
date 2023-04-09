@@ -6,6 +6,7 @@ import {
   patchLike,
   addComment,
   deleteComment,
+  updatePost,
 } from "./postsOperations";
 
 const initialState = {
@@ -46,6 +47,19 @@ const postsSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(createNewPost.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(updatePost.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updatePost.fulfilled, (state, action) => {
+      state.posts = action.payload.posts;
+      state.totalCounts = action.payload.totalCounts;
+      state.isLoading = false;
+    });
+    builder.addCase(updatePost.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });

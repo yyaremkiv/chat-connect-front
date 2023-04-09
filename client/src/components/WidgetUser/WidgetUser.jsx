@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { getUserData } from "redux/user/userOperations";
 import { Box, Typography, Divider, useTheme, IconButton } from "@mui/material";
 import {
   ManageAccountsOutlined,
@@ -14,6 +13,8 @@ import FlexBetween from "../FlexBetween";
 import WidgetWrapper from "../WidgetWrapper";
 import Loader from "components/Loader";
 import Link from "@mui/material/Link";
+
+import UserOperations from "redux/user/userOperations";
 
 export const WidgetUser = () => {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ export const WidgetUser = () => {
   const activeUser = userId ? userId : user._id;
 
   useEffect(() => {
-    dispatch(getUserData(activeUser));
+    dispatch(UserOperations.getUser(activeUser));
   }, [dispatch, activeUser]);
 
   const {

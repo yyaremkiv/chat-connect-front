@@ -24,7 +24,10 @@ export const fetchPosts = createAsyncThunk(
 
 export const createNewPost = createAsyncThunk(
   "posts/createNewPost",
-  async ({ page = 1, limit = 10, sort = "desc", formData }, thunkAPI) => {
+  async (
+    { page = 1, limit = 10, sort = "desc", formData },
+    { rejectWithValue }
+  ) => {
     try {
       const { data } = await axiosAPI.post(
         `/posts?page=${page}&limit=${limit}&sort=${sort}`,
@@ -32,7 +35,25 @@ export const createNewPost = createAsyncThunk(
       );
       return data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.message);
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const updatePost = createAsyncThunk(
+  "posts/updatePost",
+  async (
+    { page = 1, limit = 10, sort = "desc", formData },
+    { rejectWithValue }
+  ) => {
+    try {
+      const { data } = await axiosAPI.patch(
+        `/posts?page=${page}&limit=${limit}&sort=${sort}`,
+        formData
+      );
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
     }
   }
 );

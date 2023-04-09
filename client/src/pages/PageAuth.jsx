@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import {
   Box,
@@ -21,7 +21,7 @@ export const PageAuth = () => {
   const { palette } = useTheme();
 
   useEffect(() => {
-    if (isRegistred) navigate("/login", { replace: true });
+    if (isRegistred) navigate("/", { replace: true });
   }, [navigate, isRegistred]);
 
   return (
@@ -32,19 +32,24 @@ export const PageAuth = () => {
         p="1rem 6%"
         textAlign="center"
       >
-        <Typography fontWeight="bold" fontSize="2rem" color="primary">
-          Chat
+        <Link to="/" style={{ textDecoration: "none" }}>
           <Typography
-            component="span"
-            sx={{
-              color: palette.neutral.dark,
-              fontWeight: "bold",
-              fontSize: "2rem",
-            }}
+            color="primary"
+            sx={{ fontSize: "2rem", fontWeight: "bold" }}
           >
-            Connect
+            Chat
+            <Typography
+              component="span"
+              sx={{
+                color: palette.neutral.dark,
+                fontWeight: "bold",
+                fontSize: "2rem",
+              }}
+            >
+              Connect
+            </Typography>
           </Typography>
-        </Typography>
+        </Link>
       </Box>
 
       <Box

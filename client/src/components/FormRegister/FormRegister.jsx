@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { FormConfig } from "configs/Form.config";
 import { Formik } from "formik";
 import { registerUser } from "redux/auth/authOperations";
 import { Box, TextField, Typography, useTheme } from "@mui/material";
 import { FormHelperText } from "@mui/material";
-import Dropzone from "react-dropzone";
-import FlexBetween from "../FlexBetween";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -16,10 +14,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
 
 export const FormRegister = () => {
-  const [image, setImage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const isLoading = useSelector((state) => state.auth.isLoading);
   const isErrorAuth = useSelector((state) => state.auth.error);
@@ -30,9 +26,6 @@ export const FormRegister = () => {
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
-    }
-    if (image) {
-      formData.append("picture", image);
     }
     dispatch(registerUser(formData));
   };
@@ -76,82 +69,6 @@ export const FormRegister = () => {
               helperText={touched.lastName && errors.lastName}
               sx={{ height: "60px" }}
             />
-            <TextField
-              label="Location"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.location}
-              name="location"
-              error={Boolean(touched.location && errors.location)}
-              helperText={touched.location && errors.location}
-              sx={{ height: "60px" }}
-            />
-            <TextField
-              label="Occupation"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.occupation}
-              name="occupation"
-              error={Boolean(touched.occupation && errors.occupation)}
-              helperText={touched.occupation && errors.occupation}
-              sx={{ height: "60px" }}
-            />
-
-            {/* Donwload photo - start */}
-            <Box
-              border={`1px solid ${palette.neutral.medium}`}
-              borderRadius="0.5rem"
-              p="0.75rem"
-            >
-              <Dropzone
-                acceptedFiles=".jpg,.jpeg,.png"
-                multiple={false}
-                onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <FlexBetween>
-                    <Box
-                      {...getRootProps()}
-                      border={`2px dashed ${palette.primary.main}`}
-                      borderRadius="0.5rem"
-                      p="0.25rem 1rem"
-                      width="100%"
-                      sx={{ "&:hover": { cursor: "pointer" } }}
-                    >
-                      <input {...getInputProps()} />
-                      {!image ? (
-                        <p>Add Image Here</p>
-                      ) : (
-                        <FlexBetween>
-                          <Typography>{image.name}</Typography>
-                          <IconButton>
-                            <EditOutlined />
-                          </IconButton>
-                        </FlexBetween>
-                      )}
-                    </Box>
-                    {image && (
-                      <IconButton
-                        onClick={() => setImage(null)}
-                        sx={{ marginLeft: "1rem" }}
-                      >
-                        <DeleteOutlined />
-                      </IconButton>
-                    )}
-                  </FlexBetween>
-                )}
-              </Dropzone>
-              <FormHelperText
-                error={Boolean(touched.picture && errors.picture)}
-                sx={{
-                  visibility:
-                    touched.picture && errors.picture ? "visible" : "hidden",
-                }}
-              >
-                {errors.picture}
-              </FormHelperText>
-            </Box>
-            {/* Donwload photo - end */}
 
             <TextField
               label="Email"
@@ -229,7 +146,7 @@ export const FormRegister = () => {
       </Formik>
 
       <Box>
-        <Link to="/login">
+        <Link to="/">
           <Typography
             sx={{
               marginBottom: "0.25rem",

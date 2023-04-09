@@ -37,6 +37,7 @@ export const WidgetNewPost = ({ page, limit, sort }) => {
       formData.append("picturePath", image.name);
     }
 
+    console.log(formData);
     dispatch(createNewPost({ page, limit, sort, formData }));
     setImage(null);
     setIsImage(false);

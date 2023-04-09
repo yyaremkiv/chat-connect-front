@@ -9,13 +9,15 @@ import { themeSettings } from "./configs/theme";
 import { PageHome } from "pages/PageHome";
 import { PageAuth } from "pages/PageAuth";
 import { PageConfig } from "pages/PageConfig";
-import { refreshUser } from "redux/auth/authOperations";
+// import { refreshUser } from "redux/auth/authOperations";
 import { PageProfile } from "pages/PageProfile";
 import { PublicRoute } from "PublicRoute";
 import { PrivateRoute } from "PrivateRoute";
 
 import { FormLogin } from "components/FormLogin/FormLogin";
 import { FormRegister } from "components/FormRegister/FormRegister";
+
+import AuthOperations from "redux/auth/authOperations";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,7 +28,7 @@ function App() {
 
   useEffect(() => {
     if (persistedToken) {
-      dispatch(refreshUser());
+      dispatch(AuthOperations.refresh());
     }
   }, [dispatch, persistedToken]);
 
@@ -41,9 +43,8 @@ function App() {
               element={
                 <PublicRoute redirectTo="/home" component={<PageAuth />} />
               }
-              exact
             >
-              <Route path="login" element={<FormLogin />} />
+              <Route path="/" element={<FormLogin />} />
               <Route path="register" element={<FormRegister />} />
             </Route>
             <Route

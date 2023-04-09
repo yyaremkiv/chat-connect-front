@@ -1,199 +1,191 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { DropzoneUpload } from "components/DropzoneUpload";
 import { Formik } from "formik";
-import { updateUser } from "redux/auth/authOperations";
+import { refreshUser } from "redux/auth/authOperations";
+import WidgetWrapper from "components/WidgetWrapper";
 import { FormConfig } from "configs/Form.config";
 import { Navbar } from "components/Navbar/Navbar";
 import { formatDate } from "helper/dateFunction.ts";
-import {
-  LocationOnOutlined,
-  WorkOutlineOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@mui/icons-material";
+import { LocationOnOutlined, WorkOutlineOutlined } from "@mui/icons-material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
   Typography,
   Divider,
   useTheme,
   TextField,
-  Button,
   IconButton,
+  Tooltip,
+  useMediaQuery,
 } from "@mui/material";
-import { useMediaQuery } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import WidgetWrapper from "components/WidgetWrapper";
-import UserImage from "components/UserImage";
-import FlexBetween from "components/FlexBetween";
-import Dropzone from "react-dropzone";
-import SaveIcon from "@mui/icons-material/Save";
-import { changeUserAvatar } from "redux/user/userOperations";
-import { refreshUser } from "redux/auth/authOperations";
 import cloudConfig from "configs/cloudConfig";
+import CircularProgress from "@mui/material/CircularProgress";
+import UserOperations from "redux/user/userOperations";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SaveIcon from "@mui/icons-material/Save";
+import AuthOperations from "redux/auth/authOperations";
+
+function compareObjects(obj1, obj2) {
+  for (const key in obj1) {
+    if (obj1.hasOwnProperty(key) && obj2.hasOwnProperty(key)) {
+      if (obj1[key] !== obj2[key]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 export const PageConfig = () => {
   const [image, setImage] = useState(null);
+  const authUser = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.user.user.data);
+  const isLoading = useSelector((state) => state.auth.isLoading);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { palette } = useTheme();
-  const isLogged = useSelector((state) => state.auth.isLogged);
-
-  const handleFormSubmit = async (values) => {
-    await dispatch(updateUser(values));
-    await dispatch(refreshUser());
-  };
 
   useEffect(() => {
-    dispatch(refreshUser());
-  }, [dispatch, isLogged]);
+    if (authUser._id) dispatch(UserOperations.getUser(authUser._id));
+  }, [dispatch, authUser._id]);
 
-  const handleChangeAvatar = async () => {
-    if (image) {
-      const formData = new FormData();
-      formData.append("picture", image);
-      await dispatch(await changeUserAvatar(formData));
-    } else {
-      await dispatch(changeUserAvatar());
-    }
-    await dispatch(refreshUser());
+  const handleChangeAvatar = () => {
+    const formData = new FormData();
+    if (image) formData.append("picture", image);
+
+    dispatch(UserOperations.changeAvatar(formData));
+    dispatch(AuthOperations.refresh());
     setImage(null);
   };
 
+  const handleFormSubmit = async (values) => {
+    const compare = compareObjects(values, user);
+    if (!compare) {
+      dispatch(UserOperations.updateUser(values));
+      dispatch(AuthOperations.refresh());
+    }
+  };
+
   return (
-    <Box>
+    <>
       <Navbar />
       <Box
-        display="grid"
-        gridTemplateColumns={isNonMobileScreens ? "repeat(4, 1fr)" : "1fr"}
-        mt="2rem"
+        sx={{
+          display: "grid",
+          gridTemplateColumns: isNonMobileScreens ? "repeat(4, 1fr)" : "1fr",
+          gap: "1.5rem",
+          p: "1.5rem 0",
+        }}
       >
         <WidgetWrapper gridColumn={isNonMobileScreens ? "2/4" : "1"}>
-          <Box>
-            <Typography fontWeight="bold">
-              {"Profil create:  "}
-              <span style={{ fontWeight: "400", color: palette.neutral.main }}>
-                {formatDate(user.createdAt)}
-              </span>
-            </Typography>
-            <Typography fontWeight="bold">
-              {"Profil updated: "}
-              <span style={{ fontWeight: "400", color: palette.neutral.main }}>
-                {formatDate(user.updatedAt)}
-              </span>
-            </Typography>
-          </Box>
+          <Typography variant="h5">
+            General information about the account:
+          </Typography>
+          <Divider sx={{ my: "0.5rem" }} />
+
+          {user.createdAt && user.updatedAt && !isLoading && (
+            <Box>
+              <Typography fontWeight="bold">
+                Profil created:{" "}
+                <span style={{ fontWeight: 400, color: palette.neutral.main }}>
+                  {formatDate(user.createdAt)}
+                </span>
+              </Typography>
+              <Typography fontWeight="bold">
+                Profil updated:{" "}
+                <span style={{ fontWeight: 400, color: palette.neutral.main }}>
+                  {formatDate(user.updatedAt)}
+                </span>
+              </Typography>
+            </Box>
+          )}
+        </WidgetWrapper>
+
+        <WidgetWrapper gridColumn={isNonMobileScreens ? "2/4" : "1"}>
+          <Typography variant="h5">Choose a profile image:</Typography>
+          <Divider sx={{ my: "0.5rem" }} />
           <Box
-            display="flex"
-            justifyContent="space-between"
-            gap="1rem"
-            alignItems="center"
-            mt="0.75rem"
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "1rem",
+              mt: "0.75rem",
+            }}
           >
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "center",
                 alignItems: "center",
-                gap: "1.5rem",
+                gap: "1rem",
               }}
             >
-              <UserImage image={user.picturePath} size="80px" />
+              <Box sx={{ width: "100px", height: "100px" }}>
+                <img
+                  src={user.picturePath}
+                  alt={user.firstName}
+                  width="100%"
+                  height="100%"
+                  style={{ objectFit: "cover", borderRadius: "0.5rem" }}
+                />
+              </Box>
 
-              {/* Delete avatar - start */}
               {user.picturePath !== cloudConfig.publicImagePathDefault ? (
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems="center"
-                  gap="0.25rem"
-                >
-                  <Typography style={{ whiteSpace: "nowrap" }}>
-                    Delete avatar
-                  </Typography>
-                  <IconButton onClick={handleChangeAvatar}>
-                    <DeleteIcon size="large" />
-                  </IconButton>
-                </Box>
-              ) : null}
-              {/* Delete avatar - end */}
-            </Box>
-
-            {/* Donwloads photo - start */}
-            <Box>
-              <Dropzone
-                acceptedFiles=".jpg,.jpeg,.png"
-                multiple={false}
-                onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <FlexBetween display="flex" gap="1.5rem">
-                    <Box
-                      {...getRootProps()}
-                      border={`2px dashed ${palette.primary.main}`}
-                      borderRadius="0.5rem"
-                      p="0 1rem"
-                      width="100%"
-                      sx={{ "&:hover": { cursor: "pointer" } }}
+                <Tooltip title="Delete the current Avatar" placement="top">
+                  <span disabled={isLoading}>
+                    <IconButton
+                      onClick={handleChangeAvatar}
+                      disabled={isLoading}
                     >
-                      <input {...getInputProps()} />
-                      {!image ? (
-                        <p>Add or change your avatar here</p>
+                      {isLoading ? (
+                        <CircularProgress size={24} />
                       ) : (
-                        <FlexBetween>
-                          <Typography>{image.name}</Typography>
-                          <IconButton>
-                            <EditOutlined />
-                          </IconButton>
-                        </FlexBetween>
+                        <DeleteIcon size="large" />
                       )}
-                    </Box>
-                    <Box>
-                      {!image ? null : (
-                        <FlexBetween display="flex" gap="0.5rem">
-                          <IconButton onClick={handleChangeAvatar}>
-                            <SaveIcon />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => setImage(null)}
-                            sx={{ marginLeft: "1rem" }}
-                          >
-                            <DeleteOutlined />
-                          </IconButton>
-                        </FlexBetween>
-                      )}
-                    </Box>
-                  </FlexBetween>
-                )}
-              </Dropzone>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              ) : null}
             </Box>
-          </Box>
 
-          <Formik
-            onSubmit={handleFormSubmit}
-            initialValues={user}
-            validationSchema={FormConfig.updateSchema}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              setFieldValue,
-              resetForm,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box>
-                  <WidgetWrapper>
+            <DropzoneUpload
+              image={image}
+              setImage={setImage}
+              handleSend={handleChangeAvatar}
+            />
+          </Box>
+        </WidgetWrapper>
+
+        <WidgetWrapper gridColumn={isNonMobileScreens ? "2/4" : "1"}>
+          <Typography variant="h5">Basic profile data:</Typography>
+          <Divider sx={{ my: "0.5rem" }} />
+          {user._id ? (
+            <Formik
+              onSubmit={handleFormSubmit}
+              initialValues={user}
+              validationSchema={FormConfig.updateSchema}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                setFieldValue,
+                resetForm,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Box>
                     <Box
-                      display="grid"
-                      gridTemplateColumns="repeat(4, 1fr)"
-                      alignItems="center"
-                      gap="0.5rem"
-                      mb="1rem"
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(4, 1fr)",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        mb: "1rem",
+                      }}
                     >
                       <Typography gridColumn="1/2">First Name:</Typography>
                       <TextField
@@ -330,7 +322,7 @@ export const PageConfig = () => {
                         size="small"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.linkedin}
+                        value={values.linkendin}
                         name="linkendin"
                         error={Boolean(touched.linkedin && errors.linkedin)}
                         helperText={touched.linkedin && errors.linkedin}
@@ -338,25 +330,26 @@ export const PageConfig = () => {
                       />
 
                       <Box gridColumn="2/4" mt="1rem">
-                        <Button
+                        <LoadingButton
                           type="submit"
+                          color="primary"
+                          variant="contained"
+                          loadingPosition="start"
+                          loading={isLoading}
+                          startIcon={<SaveIcon />}
                           fullWidth
-                          sx={{
-                            backgroundColor: palette.neutral.light,
-                            color: palette.textColor.primary,
-                          }}
                         >
-                          Update values
-                        </Button>
+                          <span>Update Profile</span>
+                        </LoadingButton>
                       </Box>
                     </Box>
-                  </WidgetWrapper>
-                </Box>
-              </form>
-            )}
-          </Formik>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          ) : null}
         </WidgetWrapper>
       </Box>
-    </Box>
+    </>
   );
 };

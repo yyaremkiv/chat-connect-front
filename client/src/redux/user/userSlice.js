@@ -6,10 +6,11 @@ import {
   addRemoveUserFriend,
   changeUserAvatar,
 } from "./userOperations";
+import UserOperations from "./userOperations";
 
 const initialState = {
-  allUsers: { data: [], totalCounts: 0, isLoading: false, error: null },
   user: { data: [], isLoading: false, error: null },
+  allUsers: { data: [], totalCounts: 0, isLoading: false, error: null },
   friends: { data: [], isLoading: false, error: null },
 };
 
@@ -17,16 +18,16 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(getUserData.pending, (state) => {
+    builder.addCase(UserOperations.getUser.pending, (state) => {
       state.user.data = [];
       state.user.error = null;
       state.user.isLoading = true;
     });
-    builder.addCase(getUserData.fulfilled, (state, action) => {
+    builder.addCase(UserOperations.getUser.fulfilled, (state, action) => {
       state.user.data = action.payload;
       state.user.isLoading = false;
     });
-    builder.addCase(getUserData.rejected, (state, action) => {
+    builder.addCase(UserOperations.getUser.rejected, (state, action) => {
       state.user.error = action.payload;
       state.user.isLoading = false;
     });
@@ -75,15 +76,27 @@ const userSlice = createSlice({
       state.friends.error = action.payload;
       state.friends.isLoading = false;
     });
-    builder.addCase(changeUserAvatar.pending, (state) => {
+    builder.addCase(UserOperations.changeAvatar.pending, (state) => {
       state.user.isLoading = true;
       state.user.error = null;
     });
-    builder.addCase(changeUserAvatar.fulfilled, (state, action) => {
+    builder.addCase(UserOperations.changeAvatar.fulfilled, (state, action) => {
       state.user.data = action.payload;
       state.user.isLoading = false;
     });
-    builder.addCase(changeUserAvatar.rejected, (state, action) => {
+    builder.addCase(UserOperations.changeAvatar.rejected, (state, action) => {
+      state.user.error = action.payload;
+      state.user.isLoading = false;
+    });
+    builder.addCase(UserOperations.updateUser.pending, (state) => {
+      state.user.isLoading = true;
+      state.user.error = null;
+    });
+    builder.addCase(UserOperations.updateUser.fulfilled, (state, action) => {
+      state.user.data = action.payload;
+      state.user.isLoading = false;
+    });
+    builder.addCase(UserOperations.updateUser.rejected, (state, action) => {
       state.user.error = action.payload;
       state.user.isLoading = false;
     });

@@ -8,7 +8,8 @@ import UserImage from "./UserImage";
 
 const Friend = ({
   friend: { _id: friendId, firstName, lastName, picturePath, occupation },
-  date = null,
+  dataCreated = null,
+  dataUpdated = null,
   showList = false,
   hideAdmin = false,
 }) => {
@@ -52,9 +53,14 @@ const Friend = ({
             {occupation}
           </Typography>
 
-          {date && (
+          {dataCreated && (
             <Typography color={palette.neutral.medium} fontSize="0.75rem">
-              Posted: {date}
+              Posted: {dataCreated}
+            </Typography>
+          )}
+          {dataUpdated && (
+            <Typography color={palette.neutral.medium} fontSize="0.75rem">
+              Last Updated: {dataUpdated}
             </Typography>
           )}
         </Box>

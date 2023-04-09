@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import {
@@ -16,32 +16,103 @@ import {
   DeleteOutlined,
   ImageOutlined,
 } from "@mui/icons-material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
-export const ModalPostEdit = ({ postId }) => {
+import { updatePost } from "redux/posts/postsOperations";
+
+export const ModalPostEdit = ({
+  postId,
+  page = 1,
+  limit = 10,
+  sort = "desc",
+  handleClose,
+}) => {
+  const [image, setImage] = useState(null);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth.user);
+
+  const [deleteCurrentPhoto, setDeleteCurrentPhoto] = useState(false);
+
   const posts = useSelector((state) => state.posts.posts);
-  const currentPosts = posts.filter((post) => post._id === postId);
-  const [description, setDescription] = useState(currentPosts[0].description);
+  const currentPost = posts.filter((post) => post._id === postId);
+  const [postDescription, setPostDescription] = useState(
+    currentPost[0].description
+  );
   const { palette } = useTheme();
 
   const [isImage, setIsImage] = useState(false);
-  const [image, setImage] = useState(null);
-  console.log(currentPosts);
+
+  const handleChangePost = () => {
+    const formData = new FormData();
+    formData.append("userId", user._id);
+    formData.append("postId", postId);
+    formData.append("description", postDescription);
+    formData.append("deletePhoto", deleteCurrentPhoto);
+
+    if (image) {
+      formData.append("picture", image);
+      formData.append("picturePath", image.name);
+    }
+
+    dispatch(updatePost({ page, limit, sort, formData }));
+    // setImage(null);
+    // setIsImage(false);
+    setDeleteCurrentPhoto(false);
+    handleClose();
+    console.log(deleteCurrentPhoto);
+  };
+
+  const handleCheckboxChange = (event) => {
+    setDeleteCurrentPhoto(event.target.checked);
+  };
 
   return (
     <Box>
-      <Typography mb="0.5rem" textAlign="right">
-        Hello, Add New Post!
+      <Typography mb="0.5rem" textAlign="center">
+        Change your post
       </Typography>
-      <Box sx={{ width: "50%" }}>
-        <img
-          width="100%"
-          height="auto"
-          alt="post"
-          style={{ borderRadius: "0.5rem", marginTop: "0.75rem" }}
-          src={currentPosts[0].picturePath}
-        />
-        <Box>
+      <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        {/* SECTION PHOTO - start */}
+
+        {currentPost[0].picturePath ? (
+          <Box
+            sx={{
+              width: "50%",
+            }}
+          >
+            <img
+              width="100%"
+              height="auto"
+              alt="post"
+              style={{
+                borderRadius: "0.5rem",
+                marginTop: "0.75rem",
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
+              }}
+              src={currentPost[0].picturePath}
+            />
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={deleteCurrentPhoto}
+                    onChange={handleCheckboxChange}
+                  />
+                }
+                label="Delete current photo"
+              />
+            </FormGroup>
+          </Box>
+        ) : null}
+        {/* SECTION PHOTO - end */}
+
+        <Box sx={{ width: "50%" }}>
           {/* {isImage && ( */}
+
           <Box
             border={`1px solid ${palette.neutral.medium}`}
             borderRadius="0.5rem"
@@ -59,7 +130,7 @@ export const ModalPostEdit = ({ postId }) => {
                     {...getRootProps()}
                     border={`2px dashed ${palette.primary.main}`}
                     borderRadius="0.5rem"
-                    p="0.25rem 1rem"
+                    p="0.1rem 1rem"
                     width="100%"
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   >
@@ -75,26 +146,23 @@ export const ModalPostEdit = ({ postId }) => {
                       </FlexBetween>
                     )}
                   </Box>
-                  {image && (
-                    <IconButton
-                      onClick={() => setImage(null)}
-                      sx={{ marginLeft: "1rem" }}
-                    >
-                      <DeleteOutlined />
-                    </IconButton>
-                  )}
+                  <IconButton
+                    onClick={() => setImage(null)}
+                    sx={{ marginLeft: "1rem" }}
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
                 </FlexBetween>
               )}
             </Dropzone>
           </Box>
-          {/* )} */}
         </Box>
       </Box>
-      <FlexBetween gap="1.5rem">
+      <FlexBetween mt="1.5rem">
         <TextField
           placeholder="What's on your mind..."
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={postDescription}
+          onChange={(e) => setPostDescription(e.target.value)}
           multiline
           sx={{
             width: "100%",
@@ -102,6 +170,23 @@ export const ModalPostEdit = ({ postId }) => {
           }}
         />
       </FlexBetween>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "1rem",
+        }}
+      >
+        <Button
+          onClick={handleChangePost}
+          sx={{
+            backgroundColor: palette.neutral.light,
+            fontSize: "1rem",
+          }}
+        >
+          Update Post
+        </Button>
+      </Box>
     </Box>
   );
 };

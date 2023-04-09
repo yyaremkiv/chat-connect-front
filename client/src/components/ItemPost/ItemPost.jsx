@@ -24,16 +24,13 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 
-const options = ["None", "Atria", "Callisto", "Dione"];
-
-const ITEM_HEIGHT = 48;
-
 export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   const {
     _id: postId,
     author,
     likes,
     createdAt: created,
+    updatedAt: updated,
     description,
     picturePath,
     comments,
@@ -85,7 +82,12 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
           alignItems: "center",
         }}
       >
-        <Friend friend={author} date={formatDate(created)} showList={false} />
+        <Friend
+          friend={author}
+          dataCreated={formatDate(created)}
+          dataUpdated={created === updated ? null : formatDate(updated)}
+          showList={false}
+        />
 
         <IconButton
           aria-label="more"
@@ -107,12 +109,6 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
             <Typography sx={{ ml: 1 }}>Edit Post</Typography>
           </MenuItem>
         </Menu>
-
-        {/* {user._id === author._id ? (
-          <IconButton onClick={handleDeletePost}>
-            <EditIcon />
-          </IconButton>
-        ) : null} */}
 
         {user._id !== author._id ? (
           isFriend ? (

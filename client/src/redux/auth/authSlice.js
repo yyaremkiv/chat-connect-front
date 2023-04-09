@@ -7,6 +7,7 @@ import {
   updateUser,
   sendPasswordEmail,
 } from "./authOperations";
+import AuthOperations from "./authOperations";
 
 const initialState = {
   user: [],
@@ -50,27 +51,27 @@ const authSlice = createSlice({
       state.isLogged = false;
       state.isLoading = false;
     });
-    builder.addCase(updateUser.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(updateUser.fulfilled, (state, action) => {
-      state.user = action.payload;
-      state.isLogged = true;
-      state.isLoading = false;
-    });
-    builder.addCase(updateUser.rejected, (state, action) => {
-      state.isLoading = false;
-    });
-    builder.addCase(refreshUser.pending, (state) => {
+    // builder.addCase(updateUser.pending, (state) => {
+    //   state.isLoading = true;
+    // });
+    // builder.addCase(updateUser.fulfilled, (state, action) => {
+    //   state.user = action.payload;
+    //   state.isLogged = true;
+    //   state.isLoading = false;
+    // });
+    // builder.addCase(updateUser.rejected, (state, action) => {
+    //   state.isLoading = false;
+    // });
+    builder.addCase(AuthOperations.refresh.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(refreshUser.fulfilled, (state, action) => {
+    builder.addCase(AuthOperations.refresh.fulfilled, (state, action) => {
       state.user = action.payload.user;
       state.isLogged = true;
       state.isLoading = false;
     });
-    builder.addCase(refreshUser.rejected, (state, action) => {
+    builder.addCase(AuthOperations.refresh.rejected, (state, action) => {
       state.error = action.payload;
       state.isLogged = false;
       state.isLoading = false;
