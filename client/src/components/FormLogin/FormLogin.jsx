@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import { FormConfig } from "configs/Form.config";
-import { loginUser } from "redux/auth/authOperations";
+
+import AuthOperations from "redux/auth/AuthOperations";
+
 import { TextField } from "@mui/material";
 import { FormHelperText } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
@@ -17,8 +19,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import { sendPasswordEmail } from "redux/auth/authOperations";
-
 export const FormLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const isLoading = useSelector((state) => state.auth.isLoading);
@@ -29,7 +29,7 @@ export const FormLogin = () => {
   return (
     <Box>
       <Formik
-        onSubmit={(values) => dispatch(loginUser(values))}
+        onSubmit={(values) => dispatch(AuthOperations.login(values))}
         initialValues={FormConfig.initialValuesLogin}
         validationSchema={FormConfig.loginSchema}
       >

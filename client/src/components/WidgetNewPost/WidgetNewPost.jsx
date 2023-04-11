@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createNewPost } from "redux/posts/postsOperations";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -20,11 +19,13 @@ import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 
+import PostsOperation from "redux/posts/postsOperations";
+
 export const WidgetNewPost = ({ page, limit, sort }) => {
   const [post, setPost] = useState("");
   const [image, setImage] = useState(null);
   const [isImage, setIsImage] = useState(false);
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.user.user.data);
   const dispatch = useDispatch();
   const { palette } = useTheme();
 
@@ -37,8 +38,7 @@ export const WidgetNewPost = ({ page, limit, sort }) => {
       formData.append("picturePath", image.name);
     }
 
-    console.log(formData);
-    dispatch(createNewPost({ page, limit, sort, formData }));
+    dispatch(PostsOperation.createPost({ page, limit, sort, formData }));
     setImage(null);
     setIsImage(false);
     setPost("");

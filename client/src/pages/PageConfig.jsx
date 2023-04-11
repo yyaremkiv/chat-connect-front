@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DropzoneUpload } from "components/DropzoneUpload";
 import { Formik } from "formik";
-import { refreshUser } from "redux/auth/authOperations";
 import WidgetWrapper from "components/WidgetWrapper";
 import { FormConfig } from "configs/Form.config";
 import { Navbar } from "components/Navbar/Navbar";
@@ -24,7 +23,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import UserOperations from "redux/user/userOperations";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
-import AuthOperations from "redux/auth/authOperations";
 
 function compareObjects(obj1, obj2) {
   for (const key in obj1) {
@@ -54,8 +52,7 @@ export const PageConfig = () => {
     const formData = new FormData();
     if (image) formData.append("picture", image);
 
-    dispatch(UserOperations.changeAvatar(formData));
-    dispatch(AuthOperations.refresh());
+    dispatch(UserOperations.changeAvatarUser(formData));
     setImage(null);
   };
 
@@ -63,7 +60,6 @@ export const PageConfig = () => {
     const compare = compareObjects(values, user);
     if (!compare) {
       dispatch(UserOperations.updateUser(values));
-      dispatch(AuthOperations.refresh());
     }
   };
 

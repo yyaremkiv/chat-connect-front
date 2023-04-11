@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addComment } from "redux/posts/postsOperations";
 import { useTheme } from "@emotion/react";
 import { TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
+import PostsOperations from "redux/posts/postsOperations";
 
 export const WidgetNewComment = ({ postId }) => {
   const [commentText, setCommentText] = useState("");
@@ -15,7 +15,7 @@ export const WidgetNewComment = ({ postId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!commentText.length) return;
-    dispatch(addComment({ postId, text: commentText }));
+    dispatch(PostsOperations.addComment({ postId, text: commentText }));
     setCommentText("");
   };
 
@@ -26,7 +26,12 @@ export const WidgetNewComment = ({ postId }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        marginBottom: "1.5rem",
+      }}
     >
       <TextField
         placeholder="Your comment"

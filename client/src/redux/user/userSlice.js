@@ -31,12 +31,12 @@ const userSlice = createSlice({
       state.user.error = action.payload;
       state.user.isLoading = false;
     });
-    builder.addCase(getAllUsers.pending, (state) => {
+    builder.addCase(UserOperations.getAllUsers.pending, (state) => {
       state.allUsers.data = [];
       state.allUsers.isLoading = true;
       state.allUsers.error = null;
     });
-    builder.addCase(getAllUsers.fulfilled, (state, action) => {
+    builder.addCase(UserOperations.getAllUsers.fulfilled, (state, action) => {
       if (action.payload.isLoadMore) {
         state.allUsers.data = [
           ...state.allUsers.data,
@@ -48,46 +48,61 @@ const userSlice = createSlice({
       state.allUsers.totalCounts = action.payload.data.totalCounts;
       state.allUsers.isLoading = false;
     });
-    builder.addCase(getAllUsers.rejected, (state, action) => {
+    builder.addCase(UserOperations.getAllUsers.rejected, (state, action) => {
       state.allUsers.error = action.payload;
       state.allUsers.isLoading = false;
     });
-    builder.addCase(getUserFriends.pending, (state) => {
+    builder.addCase(UserOperations.getUserFriends.pending, (state) => {
       state.friends.error = null;
       state.friends.isLoading = true;
     });
-    builder.addCase(getUserFriends.fulfilled, (state, action) => {
-      state.friends.data = action.payload.friends;
-      state.friends.isLoading = false;
-    });
-    builder.addCase(getUserFriends.rejected, (state, action) => {
+    builder.addCase(
+      UserOperations.getUserFriends.fulfilled,
+      (state, action) => {
+        state.friends.data = action.payload.friends;
+        state.friends.isLoading = false;
+      }
+    );
+    builder.addCase(UserOperations.getUserFriends.rejected, (state, action) => {
       state.friends.error = action.payload;
       state.friends.isLoading = false;
     });
-    builder.addCase(addRemoveUserFriend.pending, (state) => {
+    builder.addCase(UserOperations.addRemoveUserFriend.pending, (state) => {
       state.friends.error = null;
       state.friends.isLoading = true;
     });
-    builder.addCase(addRemoveUserFriend.fulfilled, (state, action) => {
-      state.friends.data = action.payload.friends;
-      state.friends.isLoading = false;
-    });
-    builder.addCase(addRemoveUserFriend.rejected, (state, action) => {
-      state.friends.error = action.payload;
-      state.friends.isLoading = false;
-    });
-    builder.addCase(UserOperations.changeAvatar.pending, (state) => {
+    builder.addCase(
+      UserOperations.addRemoveUserFriend.fulfilled,
+      (state, action) => {
+        state.friends.data = action.payload.friends;
+        state.friends.isLoading = false;
+      }
+    );
+    builder.addCase(
+      UserOperations.addRemoveUserFriend.rejected,
+      (state, action) => {
+        state.friends.error = action.payload;
+        state.friends.isLoading = false;
+      }
+    );
+    builder.addCase(UserOperations.changeAvatarUser.pending, (state) => {
       state.user.isLoading = true;
       state.user.error = null;
     });
-    builder.addCase(UserOperations.changeAvatar.fulfilled, (state, action) => {
-      state.user.data = action.payload;
-      state.user.isLoading = false;
-    });
-    builder.addCase(UserOperations.changeAvatar.rejected, (state, action) => {
-      state.user.error = action.payload;
-      state.user.isLoading = false;
-    });
+    builder.addCase(
+      UserOperations.changeAvatarUser.fulfilled,
+      (state, action) => {
+        state.user.data = action.payload;
+        state.user.isLoading = false;
+      }
+    );
+    builder.addCase(
+      UserOperations.changeAvatarUser.rejected,
+      (state, action) => {
+        state.user.error = action.payload;
+        state.user.isLoading = false;
+      }
+    );
     builder.addCase(UserOperations.updateUser.pending, (state) => {
       state.user.isLoading = true;
       state.user.error = null;

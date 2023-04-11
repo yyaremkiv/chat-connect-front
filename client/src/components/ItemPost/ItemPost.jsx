@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addRemoveUserFriend } from "redux/user/userOperations";
 import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
@@ -8,8 +7,6 @@ import {
 } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { WidgetNewComment } from "components/WidgetNewComment/WidgetNewComment";
-import { patchLike } from "redux/posts/postsOperations";
-import { deletePost } from "redux/posts/postsOperations";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { formatDate } from "helper/dateFunction.ts";
 import { ListComments } from "components/ListComments/ListComments";
@@ -23,6 +20,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
+
+import UserOperations from "redux/user/userOperations";
+import PostsOperation from "redux/posts/postsOperations";
 
 export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   const {
@@ -48,10 +48,15 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   const open = Boolean(anchorEl);
 
   const handlePatchLike = () =>
-    dispatch(patchLike({ postId, userId: user._id }));
+    dispatch(PostsOperation.patchLike({ postId, userId: user._id }));
 
   const handlePatchFriend = () =>
-    dispatch(addRemoveUserFriend({ userId: user._id, friendId: author._id }));
+    dispatch(
+      UserOperations.addRemoveUserFriend({
+        userId: user._id,
+        friendId: author._id,
+      })
+    );
 
   const handleShowAddCommentWidget = () => setAddCommentShow(!addCommentShow);
 
@@ -64,7 +69,7 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   };
 
   const handleDeletePost = () => {
-    dispatch(deletePost({ postId, page, limit, sort }));
+    dispatch(PostsOperation.deletePost({ postId, page, limit, sort }));
     setAnchorEl(null);
   };
 
@@ -172,14 +177,14 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
         </FlexBetween>
       </FlexBetween>
 
-      {isComments && comments.length ? (
-        <ListComments comments={comments} postId={postId} />
-      ) : null}
-
       {addCommentShow ? (
         <Box sx={{ marginTop: "1rem" }}>
           <WidgetNewComment postId={postId} />
         </Box>
+      ) : null}
+
+      {isComments && comments.length ? (
+        <ListComments comments={comments} postId={postId} />
       ) : null}
     </WidgetWrapper>
   );

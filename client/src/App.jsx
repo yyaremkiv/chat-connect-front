@@ -17,7 +17,10 @@ import { PrivateRoute } from "PrivateRoute";
 import { FormLogin } from "components/FormLogin/FormLogin";
 import { FormRegister } from "components/FormRegister/FormRegister";
 
-import AuthOperations from "redux/auth/authOperations";
+import AuthOperations from "redux/auth/AuthOperations";
+
+import { WidgetPosts } from "components/WidgetPosts/WidgetPosts";
+import { WidgetAllUsers } from "components/WidgerAllUsers/WidgetAllUsers";
 
 function App() {
   const dispatch = useDispatch();
@@ -49,20 +52,21 @@ function App() {
             </Route>
             <Route
               path="/home"
-              element={
-                <PrivateRoute redirectTo="/login" component={<PageHome />} />
-              }
-            />
+              element={<PrivateRoute redirectTo="/" component={<PageHome />} />}
+            >
+              <Route path="/home" element={<WidgetPosts />} />
+              <Route path="/home/users" element={<WidgetAllUsers />} />
+            </Route>
             <Route
               path="/config"
               element={
-                <PrivateRoute redirectTo="/login" component={<PageConfig />} />
+                <PrivateRoute redirectTo="/" component={<PageConfig />} />
               }
             />
             <Route
               path="profile/:userId"
               element={
-                <PrivateRoute redirectTo="/login" component={<PageProfile />} />
+                <PrivateRoute redirectTo="/" component={<PageProfile />} />
               }
             />
             <Route path="*" element={<p>Nothing found</p>} />

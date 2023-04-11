@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "redux/auth/authOperations";
+// import { logoutUser } from "redux/auth/authOperations22222";
+import AuthOperations from "redux/auth/AuthOperations";
 import { setModeTheme } from "redux/theme/themeSlice";
 import {
   Box,
@@ -101,7 +102,7 @@ export const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(logoutUser())}>
+              <MenuItem onClick={() => dispatch(AuthOperations.logout())}>
                 Log out
               </MenuItem>
             </Select>
@@ -177,7 +178,7 @@ export const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(logoutUser())}>
+                <MenuItem onClick={() => dispatch(AuthOperations.logout())}>
                   Log Out
                 </MenuItem>
               </Select>

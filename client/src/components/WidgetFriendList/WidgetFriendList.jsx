@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserFriends } from "redux/user/userOperations";
 import { Box, Typography, useTheme } from "@mui/material";
 import Loader from "components/Loader";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
+
+import UserOperations from "redux/user/userOperations";
 
 export const WidgetFriendList = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ export const WidgetFriendList = () => {
   const currentUser = userId ? userId : user._id;
 
   useEffect(() => {
-    if (currentUser) dispatch(getUserFriends(currentUser));
+    if (currentUser) dispatch(UserOperations.getUserFriends(currentUser));
   }, [dispatch, currentUser]);
 
   return (

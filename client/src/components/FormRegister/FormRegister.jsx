@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FormConfig } from "configs/Form.config";
 import { Formik } from "formik";
-import { registerUser } from "redux/auth/authOperations";
 import { Box, TextField, Typography, useTheme } from "@mui/material";
 import { FormHelperText } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
@@ -15,6 +14,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LoadingButton from "@mui/lab/LoadingButton";
 
+import AuthOperations from "redux/auth/AuthOperations";
+
 export const FormRegister = () => {
   const [showPassword, setShowPassword] = useState(false);
   const isLoading = useSelector((state) => state.auth.isLoading);
@@ -23,11 +24,7 @@ export const FormRegister = () => {
   const { palette } = useTheme();
 
   const handleFormSubmit = (values) => {
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    dispatch(registerUser(formData));
+    dispatch(AuthOperations.register(values));
   };
 
   return (

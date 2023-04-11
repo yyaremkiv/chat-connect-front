@@ -9,6 +9,8 @@ import {
   updatePost,
 } from "./postsOperations";
 
+import PostsOperation from "./postsOperations";
+
 const initialState = {
   posts: [],
   totalCounts: 1,
@@ -20,11 +22,11 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(fetchPosts.pending, (state) => {
+    builder.addCase(PostsOperation.fetchPosts.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(fetchPosts.fulfilled, (state, action) => {
+    builder.addCase(PostsOperation.fetchPosts.fulfilled, (state, action) => {
       if (action.payload.isLoadMore) {
         state.posts = [...state.posts, ...action.payload.data.posts];
       } else {
@@ -33,41 +35,41 @@ const postsSlice = createSlice({
       state.totalCounts = action.payload.data.totalCounts;
       state.isLoading = false;
     });
-    builder.addCase(fetchPosts.rejected, (state, action) => {
+    builder.addCase(PostsOperation.fetchPosts.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(createNewPost.pending, (state) => {
+    builder.addCase(PostsOperation.createPost.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(createNewPost.fulfilled, (state, action) => {
+    builder.addCase(PostsOperation.createPost.fulfilled, (state, action) => {
       state.posts = action.payload.posts;
       state.totalCounts = action.payload.totalCounts;
       state.isLoading = false;
     });
-    builder.addCase(createNewPost.rejected, (state, action) => {
+    builder.addCase(PostsOperation.createPost.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(updatePost.pending, (state) => {
+    builder.addCase(PostsOperation.updatePost.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(updatePost.fulfilled, (state, action) => {
+    builder.addCase(PostsOperation.updatePost.fulfilled, (state, action) => {
       state.posts = action.payload.posts;
       state.totalCounts = action.payload.totalCounts;
       state.isLoading = false;
     });
-    builder.addCase(updatePost.rejected, (state, action) => {
+    builder.addCase(PostsOperation.updatePost.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(patchLike.pending, (state) => {
+    builder.addCase(PostsOperation.patchLike.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(patchLike.fulfilled, (state, action) => {
+    builder.addCase(PostsOperation.patchLike.fulfilled, (state, action) => {
       const updatedPost = action.payload;
       const postIndex = state.posts.findIndex(
         (post) => post._id === updatedPost._id
@@ -77,28 +79,28 @@ const postsSlice = createSlice({
       }
       state.isLoading = false;
     });
-    builder.addCase(patchLike.rejected, (state, action) => {
+    builder.addCase(PostsOperation.patchLike.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(deletePost.pending, (state) => {
+    builder.addCase(PostsOperation.deletePost.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(deletePost.fulfilled, (state, action) => {
+    builder.addCase(PostsOperation.deletePost.fulfilled, (state, action) => {
       state.posts = action.payload.posts;
       state.totalCounts = action.payload.totalCounts;
       state.isLoading = false;
     });
-    builder.addCase(deletePost.rejected, (state, action) => {
+    builder.addCase(PostsOperation.deletePost.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(addComment.pending, (state) => {
+    builder.addCase(PostsOperation.addComment.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(addComment.fulfilled, (state, action) => {
+    builder.addCase(PostsOperation.addComment.fulfilled, (state, action) => {
       const updatedPost = action.payload;
       const postIndex = state.posts.findIndex(
         (post) => post._id === updatedPost._id
@@ -108,15 +110,15 @@ const postsSlice = createSlice({
       }
       state.isLoading = false;
     });
-    builder.addCase(addComment.rejected, (state, action) => {
+    builder.addCase(PostsOperation.addComment.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(deleteComment.pending, (state) => {
+    builder.addCase(PostsOperation.deleteComment.pending, (state) => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(deleteComment.fulfilled, (state, action) => {
+    builder.addCase(PostsOperation.deleteComment.fulfilled, (state, action) => {
       const updatedPost = action.payload;
       const postIndex = state.posts.findIndex(
         (post) => post._id === updatedPost._id
@@ -127,7 +129,7 @@ const postsSlice = createSlice({
       }
       state.isLoading = false;
     });
-    builder.addCase(deleteComment.rejected, (state, action) => {
+    builder.addCase(PostsOperation.deleteComment.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });

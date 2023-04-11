@@ -1,36 +1,14 @@
-import { useState } from "react";
+import { Link, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Navbar } from "components/Navbar/Navbar";
 import { WidgetUser } from "components/WidgetUser/WidgetUser";
-import { WidgetGeneral } from "components/WidgetGeneral/WidgetGeneral";
 import { WidgetAdvert } from "components/WidgetAdvert/WidgetAdvert";
 import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
 import { Box, useMediaQuery } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import Button from "@mui/material/Button";
-import FlexBetween from "components/FlexBetween";
-import UserImage from "components/UserImage";
-import { Divider, TextField, useTheme, IconButton } from "@mui/material";
-
-import { ModalPostEdit } from "components/ModalPostEdit/ModalPostEdit";
 
 export const PageHome = () => {
   const user = useSelector((state) => state.auth.user);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-  const [post, setPost] = useState("");
-  const { palette } = useTheme();
-
-  const [postId, setPostId] = useState(null);
-
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleEditPost = (postId) => {
-    setOpen(true);
-    setPostId(postId);
-  };
 
   return (
     <>
@@ -38,21 +16,26 @@ export const PageHome = () => {
         <Box>
           <Navbar />
           <Box
-            display="flex"
-            flexDirection={isNonMobileScreens ? "row" : "column"}
-            gap="1.5rem"
-            padding="1.5rem 5%"
+            sx={{
+              display: "flex",
+              flexDirection: isNonMobileScreens ? "row" : "column",
+              justifyContent: "center",
+              gap: "1.5rem",
+              maxWidth: "xl",
+              m: "1.5rem auto",
+              p: "0 1.5rem 1.5rem",
+            }}
           >
             <Box flexBasis={isNonMobileScreens ? "25%" : "100%"}>
               <WidgetUser />
             </Box>
 
             <Box flexBasis={isNonMobileScreens ? "45%" : "100%"}>
-              <WidgetGeneral
-                controlCategory={true}
-                addNewPost={true}
-                handleEditPost={handleEditPost}
-              />
+              <Box sx={{ display: "flex", gap: "1rem" }}>
+                <Link to="/home">All posts</Link>
+                <Link to="/home/users">All users</Link>
+              </Box>
+              <Outlet />
             </Box>
 
             {isNonMobileScreens && (
@@ -69,32 +52,6 @@ export const PageHome = () => {
           </Box>
         </Box>
       )}
-      <div>
-        {/* Modal window - start */}
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              padding: "1rem",
-              maxWidth: "500px",
-              transform: "translate(-50%, -50%)",
-              bgcolor: "background.paper",
-              borderRadius: "0.5rem",
-              boxShadow: 24,
-            }}
-          >
-            <ModalPostEdit postId={postId} handleClose={handleClose} />
-          </Box>
-        </Modal>
-      </div>
-      {/* Modal window - end */}
     </>
   );
 };

@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { Navbar } from "components/Navbar/Navbar";
 import { WidgetUser } from "components/WidgetUser/WidgetUser";
+import { WidgetPosts } from "components/WidgetPosts/WidgetPosts";
 import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
-import { WidgetGeneral } from "components/WidgetGeneral/WidgetGeneral";
 import { Box, useMediaQuery } from "@mui/material";
 
 export const PageProfile = () => {
@@ -26,7 +26,7 @@ export const PageProfile = () => {
           </Box>
 
           <Box flexBasis={isNonMobileScreens ? "50%" : "100%"}>
-            <WidgetGeneral controlCategory={false} />
+            <WidgetPosts />
           </Box>
         </Box>
       )}

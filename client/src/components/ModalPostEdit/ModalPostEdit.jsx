@@ -4,24 +4,17 @@ import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import {
   Box,
-  Divider,
   Typography,
   TextField,
   useTheme,
   Button,
   IconButton,
 } from "@mui/material";
-import {
-  EditOutlined,
-  DeleteOutlined,
-  ImageOutlined,
-} from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
-import { updatePost } from "redux/posts/postsOperations";
+import PostsOperations from "redux/posts/postsOperations";
 
 export const ModalPostEdit = ({
   postId,
@@ -31,20 +24,15 @@ export const ModalPostEdit = ({
   handleClose,
 }) => {
   const [image, setImage] = useState(null);
-  const dispatch = useDispatch();
-
-  const user = useSelector((state) => state.auth.user);
-
   const [deleteCurrentPhoto, setDeleteCurrentPhoto] = useState(false);
-
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const posts = useSelector((state) => state.posts.posts);
   const currentPost = posts.filter((post) => post._id === postId);
   const [postDescription, setPostDescription] = useState(
     currentPost[0].description
   );
   const { palette } = useTheme();
-
-  const [isImage, setIsImage] = useState(false);
 
   const handleChangePost = () => {
     const formData = new FormData();
@@ -58,12 +46,9 @@ export const ModalPostEdit = ({
       formData.append("picturePath", image.name);
     }
 
-    dispatch(updatePost({ page, limit, sort, formData }));
-    // setImage(null);
-    // setIsImage(false);
+    dispatch(PostsOperations.updatePost({ page, limit, sort, formData }));
     setDeleteCurrentPhoto(false);
     handleClose();
-    console.log(deleteCurrentPhoto);
   };
 
   const handleCheckboxChange = (event) => {

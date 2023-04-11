@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllUsers } from "redux/user/userOperations";
 import { ItemUser } from "components/ItemUser/ItemUser";
 import { Box, Button, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import Loader from "components/Loader";
 import WidgetWrapper from "components/WidgetWrapper";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
@@ -12,6 +10,8 @@ import Select from "@mui/material/Select";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import MenuItem from "@mui/material/MenuItem";
+
+import UserOperations from "redux/user/userOperations";
 
 export const WidgetAllUsers = ({ user = null }) => {
   const [page, setPage] = useState(1);
@@ -25,7 +25,9 @@ export const WidgetAllUsers = ({ user = null }) => {
   const { palette } = useTheme();
 
   useEffect(() => {
-    dispatch(getAllUsers({ page, limit, sort, isLoadMore: false }));
+    dispatch(
+      UserOperations.getAllUsers({ page, limit, sort, isLoadMore: false })
+    );
     // eslint-disable-next-line
   }, [dispatch, limit, sort]);
 
@@ -47,13 +49,19 @@ export const WidgetAllUsers = ({ user = null }) => {
   const handleChangeLimit = (e) => handleChange("limit", e.target.value);
   const handleChangeSort = (sortType) => handleChange("sortType", sortType);
   const handleLoadMore = () => {
-    dispatch(getAllUsers({ page: page + 1, limit, sort, isLoadMore: true }));
+    dispatch(
+      UserOperations.getAllUsers({
+        page: page + 1,
+        limit,
+        sort,
+        isLoadMore: true,
+      })
+    );
     setPage(page + 1);
   };
 
   return (
     <Box display="flex" flexDirection="column" gap="1.5rem">
-      {isLoading && <Loader />}
       {allUsers.length > 0 && !isLoading && !error ? (
         <>
           <Box

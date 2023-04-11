@@ -1,103 +1,79 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  registerUser,
-  loginUser,
-  refreshUser,
-  logoutUser,
-  updateUser,
-  sendPasswordEmail,
-} from "./authOperations";
-import AuthOperations from "./authOperations";
+import AuthOperations from "./AuthOperations";
 
 const initialState = {
   user: [],
-  token: null,
   isLogged: false,
   isLoading: false,
-  isRegistred: false,
+  accessToken: null,
   error: null,
 };
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: "auth",
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(registerUser.pending, (state) => {
-      state.error = null;
-      state.isRedirect = false;
-      state.isLoading = true;
-    });
-    builder.addCase(registerUser.fulfilled, (state) => {
-      state.isRegistred = true;
-      state.isLoading = false;
-    });
-    builder.addCase(registerUser.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isRedirect = false;
-      state.isLoading = false;
-    });
-    builder.addCase(loginUser.pending, (state) => {
+    builder.addCase(AuthOperations.register.pending, (state) => {
       state.error = null;
       state.isLoading = true;
     });
-    builder.addCase(loginUser.fulfilled, (state, action) => {
-      state.token = action.payload.token;
+    builder.addCase(AuthOperations.register.fulfilled, (state, action) => {
+      state.user = action.payload.user;
+      state.accessToken = action.payload.accessToken;
       state.isLogged = true;
       state.isLoading = false;
     });
-    builder.addCase(loginUser.rejected, (state, action) => {
-      state.token = null;
+    builder.addCase(AuthOperations.register.rejected, (state, action) => {
       state.error = action.payload;
       state.isLogged = false;
       state.isLoading = false;
     });
-    // builder.addCase(updateUser.pending, (state) => {
-    //   state.isLoading = true;
-    // });
-    // builder.addCase(updateUser.fulfilled, (state, action) => {
-    //   state.user = action.payload;
-    //   state.isLogged = true;
-    //   state.isLoading = false;
-    // });
-    // builder.addCase(updateUser.rejected, (state, action) => {
-    //   state.isLoading = false;
-    // });
-    builder.addCase(AuthOperations.refresh.pending, (state) => {
-      state.isLoading = true;
+    builder.addCase(AuthOperations.login.pending, (state) => {
       state.error = null;
+      state.isLoading = true;
+    });
+    builder.addCase(AuthOperations.login.fulfilled, (state, action) => {
+      state.user = action.payload.user;
+      state.accessToken = action.payload.accessToken;
+      state.isLogged = true;
+      state.isLoading = false;
+    });
+    builder.addCase(AuthOperations.login.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLogged = false;
+      state.isLoading = false;
+    });
+    builder.addCase(AuthOperations.logout.pending, (state) => {
+      state.isLoading = false;
+    });
+    builder.addCase(AuthOperations.logout.fulfilled, (state) => {
+      state.accessToken = null;
+      state.isLogged = false;
+      state.isLoading = false;
+    });
+    builder.addCase(AuthOperations.logout.rejected, (state, action) => {
+      state.error = action.payload;
+      state.accessToken = null;
+      state.isLogged = false;
+      state.isLoading = false;
+    });
+    builder.addCase(AuthOperations.refresh.pending, (state) => {
+      state.error = null;
+      state.isLoading = true;
     });
     builder.addCase(AuthOperations.refresh.fulfilled, (state, action) => {
       state.user = action.payload.user;
+      state.accessToken = action.payload.accessToken;
       state.isLogged = true;
       state.isLoading = false;
     });
     builder.addCase(AuthOperations.refresh.rejected, (state, action) => {
       state.error = action.payload;
+      state.accessToken = null;
       state.isLogged = false;
       state.isLoading = false;
     });
-    builder.addCase(logoutUser.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(logoutUser.fulfilled, (state) => {
-      state.token = null;
-      state.isLoading = false;
-      state.isLogged = false;
-    });
-    builder.addCase(logoutUser.rejected, (state, action) => {
-      state.error = action.payload;
-      state.isLoading = false;
-    });
-    builder.addCase(sendPasswordEmail.pending, (state) => {});
-    builder.addCase(sendPasswordEmail.fulfilled, (state, action) => {});
-    builder.addCase(sendPasswordEmail.rejected, (state, action) => {});
-  },
-  reducers: {
-    logout: (state) => {
-      state.token = null;
-    },
   },
 });
 
-export const { logout } = authSlice.actions;
 export default authSlice.reducer;

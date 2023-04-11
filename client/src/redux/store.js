@@ -18,7 +18,7 @@ import userSlice from "./user/userSlice";
 const persistAuthConfig = {
   key: "auth",
   storage,
-  whitelist: ["token", "isLogged"],
+  whitelist: ["accessToken", "isLogged", "user"],
 };
 
 const persistThemeConfig = {

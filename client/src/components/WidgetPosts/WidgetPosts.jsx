@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { WidgetNewPost } from "components/WidgetNewPost/WidgetNewPost";
-import { fetchPosts } from "redux/posts/postsOperations";
+import { ModalPostEdit } from "components/ModalPostEdit/ModalPostEdit";
 import { ItemPost } from "components/ItemPost/ItemPost";
 import { useParams } from "react-router-dom";
 import { useTheme } from "@emotion/react";
@@ -12,15 +12,19 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import PostsOperation from "redux/posts/postsOperations";
+import Modal from "@mui/material/Modal";
 
 export const WidgetPosts = ({
   user = null,
   addNewPost = true,
-  handleEditPost,
+  // handleEditPost,
 }) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(localStorage.getItem("limit") || 10);
   const [sort, setSort] = useState(localStorage.getItem("sortType") || "desc");
+  const [postId, setPostId] = useState(null);
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const totalCounts = useSelector((state) => state.posts.totalCounts);
@@ -29,10 +33,17 @@ export const WidgetPosts = ({
   const currentUserId = user ? user : userId;
   const { palette } = useTheme();
 
+  const handleClose = () => setOpen(false);
+
+  const handleEditPost = (postId) => {
+    setOpen(true);
+    setPostId(postId);
+  };
+
   useEffect(() => {
     if (currentUserId) {
       dispatch(
-        fetchPosts({
+        PostsOperation.fetchPosts({
           userId: currentUserId,
           page,
           limit,
@@ -41,7 +52,9 @@ export const WidgetPosts = ({
         })
       );
     } else {
-      dispatch(fetchPosts({ page, limit, sort, isLoadMore: false }));
+      dispatch(
+        PostsOperation.fetchPosts({ page, limit, sort, isLoadMore: false })
+      );
     }
     // eslint-disable-next-line
   }, [dispatch, userId, limit, sort]);
@@ -64,7 +77,14 @@ export const WidgetPosts = ({
   const handleChangeLimit = (e) => handleChange("limit", e.target.value);
   const handleChangeSort = (sortType) => handleChange("sortType", sortType);
   const handleLoadMore = () => {
-    dispatch(fetchPosts({ page: page + 1, limit, sort, isLoadMore: true }));
+    dispatch(
+      PostsOperation.fetchPosts({
+        page: page + 1,
+        limit,
+        sort,
+        isLoadMore: true,
+      })
+    );
     setPage(page + 1);
   };
 
@@ -135,6 +155,28 @@ export const WidgetPosts = ({
           </LoadingButton>
         </Box>
       ) : null}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            padding: "1rem",
+            maxWidth: "500px",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            borderRadius: "0.5rem",
+            boxShadow: 24,
+          }}
+        >
+          <ModalPostEdit postId={postId} handleClose={handleClose} />
+        </Box>
+      </Modal>
     </Box>
   );
 };

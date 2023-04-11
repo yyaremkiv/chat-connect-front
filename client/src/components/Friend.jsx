@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addRemoveUserFriend } from "redux/user/userOperations";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
+
+import UserOperations from "redux/user/userOperations";
 
 const Friend = ({
   friend: { _id: friendId, firstName, lastName, picturePath, occupation },
@@ -21,7 +22,7 @@ const Friend = ({
   const { palette } = useTheme();
 
   const handlePatchFriend = () => {
-    dispatch(addRemoveUserFriend({ userId: _id, friendId }));
+    dispatch(UserOperations.addRemoveUserFriend({ userId: _id, friendId }));
   };
 
   const handleClick = () => {
