@@ -28,16 +28,32 @@ class PostsServices {
     );
   }
 
-  static async addComment(postId, text) {
-    return API.patch(`/posts/${postId}/comment`, {
-      text,
-    });
+  static async addComment({ postId, text, page, limit, sort }) {
+    return API.patch(
+      `/posts/comment/add?page=${page}&limit=${limit}&sort=${sort}`,
+      { postId, text }
+    );
   }
 
-  static async deleteComment(postId, commentId) {
-    return API.patch(`/posts/${postId}/comment/delete`, {
-      commentId,
-    });
+  static async updateComment({ postId, commentId, text, page, limit, sort }) {
+    return API.patch(
+      `/posts/comment/update?page=${page}&limit=${limit}&sort=${sort}`,
+      { postId, commentId, text }
+    );
+  }
+
+  static async fetchComments({ postId, page, limit, sort, isLoadMore }) {
+    return API.patch(
+      `/posts/comments?page=${page}&limit=${limit}&sort=${sort}`,
+      { postId, isLoadMore }
+    );
+  }
+
+  static async deleteComment({ postId, commentId, page, limit, sort }) {
+    return API.patch(
+      `/posts/comment/delete?page=${page}&limit=${limit}&sort=${sort}`,
+      { postId, commentId }
+    );
   }
 
   static async patchLike(postId, userId) {

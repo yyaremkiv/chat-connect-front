@@ -11,12 +11,6 @@ const API = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
 });
 
-// const setAuthorizationHeader = (token) => {
-//   API.defaults.headers.common["Authorization"] = token
-//     ? `Bearer ${token}`
-//     : null;
-// };
-
 API.interceptors.request.use((config) => {
   const accessToken = store.getState().auth.accessToken;
   config.headers.Authorization = `Bearer ${accessToken}`;
@@ -46,5 +40,4 @@ API.interceptors.response.use(
   }
 );
 
-// export { setAuthorizationHeader };
 export default API;

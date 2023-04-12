@@ -1,14 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  fetchPosts,
-  createNewPost,
-  deletePost,
-  patchLike,
-  addComment,
-  deleteComment,
-  updatePost,
-} from "./postsOperations";
-
 import PostsOperation from "./postsOperations";
 
 const initialState = {
@@ -119,17 +109,56 @@ const postsSlice = createSlice({
       state.error = null;
     });
     builder.addCase(PostsOperation.deleteComment.fulfilled, (state, action) => {
+      const updatePost = action.payload;
+      const postIndex = state.posts.findIndex(
+        (post) => post._id === updatePost._id
+      );
+      if (postIndex !== -1) {
+        state.posts[postIndex] = updatePost;
+      }
+      state.isLoading = false;
+    });
+    builder.addCase(PostsOperation.deleteComment.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(PostsOperation.updateComment.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(PostsOperation.updateComment.fulfilled, (state, action) => {
       const updatedPost = action.payload;
       const postIndex = state.posts.findIndex(
         (post) => post._id === updatedPost._id
       );
-      console.log(postIndex);
       if (postIndex !== -1) {
         state.posts[postIndex] = updatedPost;
       }
       state.isLoading = false;
     });
-    builder.addCase(PostsOperation.deleteComment.rejected, (state, action) => {
+    builder.addCase(PostsOperation.updateComment.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(PostsOperation.fetchComments.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(PostsOperation.fetchComments.fulfilled, (state, action) => {
+      const updatedPost = action.payload.data;
+      const postIndex = state.posts.findIndex(
+        (post) => post._id === updatedPost._id
+      );
+      if (postIndex !== -1) {
+        if (action.payload.isLoadMore) {
+          state.posts[postIndex].comments.push(...updatedPost.comments);
+        } else {
+          state.posts[postIndex] = updatedPost;
+        }
+      }
+      state.isLoading = false;
+    });
+    builder.addCase(PostsOperation.fetchComments.rejected, (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
     });

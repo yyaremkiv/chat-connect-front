@@ -24,6 +24,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import UserOperations from "redux/user/userOperations";
 import PostsOperation from "redux/posts/postsOperations";
 
+import { SectionComments } from "components/SectionComments/SectionComments";
+
 export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   const {
     _id: postId,
@@ -34,6 +36,7 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
     description,
     picturePath,
     comments,
+    commentsCount,
   } = post;
   const [isComments, setIsComments] = useState(false);
   const [addCommentShow, setAddCommentShow] = useState(false);
@@ -163,7 +166,7 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-            <Typography>{comments.length}</Typography>
+            <Typography>{commentsCount}</Typography>
           </FlexBetween>
         </FlexBetween>
 
@@ -177,15 +180,13 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
         </FlexBetween>
       </FlexBetween>
 
-      {addCommentShow ? (
-        <Box sx={{ marginTop: "1rem" }}>
-          <WidgetNewComment postId={postId} />
-        </Box>
-      ) : null}
-
-      {isComments && comments.length ? (
-        <ListComments comments={comments} postId={postId} />
-      ) : null}
+      <SectionComments
+        postId={postId}
+        comments={comments}
+        totalComments={commentsCount}
+        showNewComment={addCommentShow}
+        showListComments={isComments && commentsCount > 0}
+      />
     </WidgetWrapper>
   );
 };

@@ -1,21 +1,19 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
 import { TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
-import PostsOperations from "redux/posts/postsOperations";
 
-export const WidgetNewComment = ({ postId }) => {
+export const WidgetNewComment = ({ postId, handleAddComment }) => {
   const [commentText, setCommentText] = useState("");
-  const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.posts.isLoading);
   const { palette } = useTheme();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!commentText.length) return;
-    dispatch(PostsOperations.addComment({ postId, text: commentText }));
+    handleAddComment(commentText);
     setCommentText("");
   };
 

@@ -1,11 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  getUserData,
-  getAllUsers,
-  getUserFriends,
-  addRemoveUserFriend,
-  changeUserAvatar,
-} from "./userOperations";
 import UserOperations from "./userOperations";
 
 const initialState = {
