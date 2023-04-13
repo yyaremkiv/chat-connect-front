@@ -17,10 +17,8 @@ import Post from "./models/Post.js";
 import { users, posts } from "./data/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 import { Storage } from "@google-cloud/storage";
 
-/* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
@@ -32,9 +30,6 @@ app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
-// app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-
-// const credentials = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
 const storage = new Storage({
   projectId: "your-project-id",
@@ -196,7 +191,7 @@ async function register(req, res) {
 }
 
 app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
+app.use("/user", userRoutes);
 app.use("/posts", postRoutes);
 
 const PORT = process.env.PORT || 6001;
