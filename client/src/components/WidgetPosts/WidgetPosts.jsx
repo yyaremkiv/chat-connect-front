@@ -15,11 +15,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import PostsOperation from "redux/posts/postsOperations";
 import Modal from "@mui/material/Modal";
 
-export const WidgetPosts = ({
-  user = null,
-  addNewPost = true,
-  // handleEditPost,
-}) => {
+export const WidgetPosts = ({ user = null, addNewPost = true }) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(localStorage.getItem("limit") || 10);
   const [sort, setSort] = useState(localStorage.getItem("sortType") || "desc");

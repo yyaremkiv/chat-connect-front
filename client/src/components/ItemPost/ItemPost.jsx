@@ -6,25 +6,20 @@ import {
   FavoriteOutlined,
 } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
-import { WidgetNewComment } from "components/WidgetNewComment/WidgetNewComment";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { formatDate } from "helper/dateFunction.ts";
-import { ListComments } from "components/ListComments/ListComments";
+import { SectionComments } from "components/SectionComments/SectionComments";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCommentIcon from "@mui/icons-material/AddComment";
-
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
-
 import UserOperations from "redux/user/userOperations";
 import PostsOperation from "redux/posts/postsOperations";
-
-import { SectionComments } from "components/SectionComments/SectionComments";
 
 export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   const {
@@ -44,8 +39,12 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   const isLiked = Boolean(likes[user._id]);
   const likeCount = Object.keys(likes).length;
   const dispatch = useDispatch();
-  const friends = useSelector((state) => state.user.friends.data);
-  const isFriend = friends?.find(({ friendId }) => friendId._id === author._id);
+  const authUserFrinends = useSelector((state) => state.user.friends.authUser);
+
+  const isFriend = authUserFrinends?.find(
+    ({ friendId }) => friendId._id === author._id
+  );
+
   const { palette } = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -97,27 +96,6 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
           showList={false}
         />
 
-        <IconButton
-          aria-label="more"
-          id="long-button"
-          aria-controls={open ? "long-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <MoreVertIcon sx={{ fontSize: "1.5rem" }} />
-        </IconButton>
-        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          <MenuItem onClick={handleDeletePost}>
-            <DeleteIcon sx={{ color: palette.neutral.main }} />{" "}
-            <Typography sx={{ ml: 1 }}>Delete Post</Typography>
-          </MenuItem>
-          <MenuItem onClick={() => handleEdit(postId)}>
-            <EditIcon sx={{ color: palette.neutral.main }} />
-            <Typography sx={{ ml: 1 }}>Edit Post</Typography>
-          </MenuItem>
-        </Menu>
-
         {user._id !== author._id ? (
           isFriend ? (
             <IconButton
@@ -134,7 +112,30 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
               <PersonAddOutlined sx={{ color: palette.primary.dark }} />
             </IconButton>
           )
-        ) : null}
+        ) : (
+          <Box>
+            <IconButton
+              aria-label="more"
+              id="long-button"
+              aria-controls={open ? "long-menu" : undefined}
+              aria-expanded={open ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <MoreVertIcon sx={{ fontSize: "1.5rem" }} />
+            </IconButton>
+            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+              <MenuItem onClick={handleDeletePost}>
+                <DeleteIcon sx={{ color: palette.neutral.main }} />{" "}
+                <Typography sx={{ ml: 1 }}>Delete Post</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => handleEdit(postId)}>
+                <EditIcon sx={{ color: palette.neutral.main }} />
+                <Typography sx={{ ml: 1 }}>Edit Post</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
+        )}
       </Box>
       <Typography color={palette.neutral.main} sx={{ mt: "1rem" }}>
         {description}

@@ -26,7 +26,7 @@ export const PageProfile = () => {
           </Box>
 
           <Box flexBasis={isNonMobileScreens ? "50%" : "100%"}>
-            <WidgetPosts />
+            <WidgetPosts addNewPost={false} />
           </Box>
         </Box>
       )}

@@ -9,7 +9,7 @@ import { ModalCommentEdit } from "components/ModalCommentEdit/ModalCommentEdit";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
 import Pagination from "@mui/material/Pagination";
-import { Button, Divider, Typography, useTheme } from "@mui/material";
+import { Button, Typography, useTheme } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -33,7 +33,6 @@ export const SectionComments = ({
   const [modalOpen, setModalOpen] = useState(false);
   const handleModalClose = () => setModalOpen(false);
   const [commentId, setcommentId] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const isLoading = useSelector((state) => state.posts.isLoading);
 
@@ -108,14 +107,12 @@ export const SectionComments = ({
   const handleEditComment = (commentId) => {
     setcommentId(commentId);
     setModalOpen(true);
-    setAnchorEl(null);
   };
 
   const handleDeleteComment = (commentId) => {
     dispatch(
       PostsOperations.deleteComment({ postId, commentId, page, limit, sort })
     );
-    setAnchorEl(null);
   };
 
   const handleAddComment = (text) => {
@@ -189,7 +186,9 @@ export const SectionComments = ({
         </Box>
       ) : null}
 
-      {comments.length < totalComments && showListComments ? (
+      {comments.length < totalComments &&
+      showListComments &&
+      Math.ceil(totalComments / limit) > page ? (
         <Box display="flex" justifyContent="center" p="0.5rem">
           <LoadingButton
             size="large"
@@ -204,7 +203,7 @@ export const SectionComments = ({
         </Box>
       ) : null}
 
-      {showListComments ? (
+      {showListComments && comments.length < totalComments ? (
         <Box sx={{ display: "flex", justifyContent: "center", p: "0.5rem" }}>
           <Pagination
             count={Math.ceil(totalComments / limit)}

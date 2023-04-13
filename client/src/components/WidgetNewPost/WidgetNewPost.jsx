@@ -1,130 +1,112 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { DropzoneUpload } from "components/DropzoneUpload";
+import { ImageOutlined } from "@mui/icons-material";
+import * as Yup from "yup";
 import {
-  EditOutlined,
-  DeleteOutlined,
-  ImageOutlined,
-} from "@mui/icons-material";
-import {
-  Box,
   Divider,
   Typography,
   TextField,
   useTheme,
   Button,
-  IconButton,
 } from "@mui/material";
+import PostsOperation from "redux/posts/postsOperations";
 import FlexBetween from "components/FlexBetween";
-import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 
-import PostsOperation from "redux/posts/postsOperations";
+const validationSchema = Yup.object().shape({
+  text: Yup.string().required("This field is required"),
+});
 
 export const WidgetNewPost = ({ page, limit, sort }) => {
-  const [post, setPost] = useState("");
   const [image, setImage] = useState(null);
   const [isImage, setIsImage] = useState(false);
-  const user = useSelector((state) => state.user.user.data);
+  const [text, setText] = useState("");
+  const [error, setError] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user.data);
   const { palette } = useTheme();
 
   const handlePost = async () => {
     const formData = new FormData();
     formData.append("userId", user._id);
-    formData.append("description", post);
-    if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
-    }
+    formData.append("description", text);
+    if (image) formData.append("picture", image);
 
     dispatch(PostsOperation.createPost({ page, limit, sort, formData }));
     setImage(null);
     setIsImage(false);
-    setPost("");
+    setText("");
+  };
+
+  const handleChange = (e) => setText(e.target.value);
+
+  const handleBlur = async () => {
+    try {
+      await validationSchema.validate({ text });
+      setError(false);
+    } catch (err) {
+      setError(true);
+    }
   };
 
   return (
     <WidgetWrapper>
-      <Typography mb="0.5rem" textAlign="right">
-        Hello, Add New Post!
+      <Typography sx={{ mb: "0.25rem", textAlign: "right" }}>
+        Hello, Add New Post
       </Typography>
-      <FlexBetween gap="1.5rem">
+      <FlexBetween sx={{ display: "flex", gap: "1rem", mb: "1rem" }}>
         <UserImage image={user.picturePath} />
         <TextField
-          placeholder="What's on your mind..."
-          onChange={(e) => setPost(e.target.value)}
-          value={post}
           multiline
+          placeholder="What's on your mind..."
+          value={text}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={error}
+          helperText={error && "This field cannot be empty"}
           sx={{
             width: "100%",
             backgroundColor: palette.neutral.light,
           }}
         />
       </FlexBetween>
-      {isImage && (
-        <Box
-          border={`1px solid ${palette.neutral.medium}`}
-          borderRadius="0.5rem"
-          mt="1rem"
-          p="0.75rem"
-        >
-          <Dropzone
-            acceptedFiles=".jpg,.jpeg,.png"
-            multiple={false}
-            onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <FlexBetween>
-                <Box
-                  {...getRootProps()}
-                  border={`2px dashed ${palette.primary.main}`}
-                  borderRadius="0.5rem"
-                  p="0.25rem 1rem"
-                  width="100%"
-                  sx={{ "&:hover": { cursor: "pointer" } }}
-                >
-                  <input {...getInputProps()} />
-                  {!image ? (
-                    <p>Add Image Here</p>
-                  ) : (
-                    <FlexBetween>
-                      <Typography>{image.name}</Typography>
-                      <IconButton>
-                        <EditOutlined />
-                      </IconButton>
-                    </FlexBetween>
-                  )}
-                </Box>
-                {image && (
-                  <IconButton
-                    onClick={() => setImage(null)}
-                    sx={{ marginLeft: "1rem" }}
-                  >
-                    <DeleteOutlined />
-                  </IconButton>
-                )}
-              </FlexBetween>
-            )}
-          </Dropzone>
-        </Box>
-      )}
-      <Divider sx={{ margin: "1.25rem 0" }} />
-      <FlexBetween>
-        <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
-          <ImageOutlined sx={{ color: palette.neutral.mediumMain }} />
-          <Typography
-            color={palette.neutral.mediumMain}
-            sx={{
-              "&:hover": { cursor: "pointer", color: palette.neutral.medium },
-            }}
-          >
-            Image
-          </Typography>
-        </FlexBetween>
 
-        <Button disabled={!post} onClick={handlePost}>
-          POST
+      {isImage && <DropzoneUpload image={image} setImage={setImage} />}
+
+      <Divider sx={{ m: "1rem 0" }} />
+
+      <FlexBetween>
+        <Button
+          variant="text"
+          onClick={() => setIsImage(!isImage)}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            fontSize: "0.8rem",
+            color: palette.neutral.main,
+          }}
+        >
+          <ImageOutlined sx={{ color: palette.neutral.main }} />
+          IMAGE
+        </Button>
+
+        <Button
+          variant="text"
+          onClick={handlePost}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            fontSize: "0.8rem",
+            color: palette.neutral.main,
+          }}
+        >
+          <PostAddIcon sx={{ color: palette.neutral.main }} />
+          ADD POST
         </Button>
       </FlexBetween>
     </WidgetWrapper>

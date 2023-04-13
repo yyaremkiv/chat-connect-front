@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { formatDate } from "helper/dateFunction.ts";
 import UserImage from "components/UserImage";
@@ -15,11 +16,12 @@ export const ItemComment = ({
 }) => {
   const {
     id: commentId,
-    author: { firstName, lastName, picturePath },
+    author: { _id: postUserId, firstName, lastName, picturePath },
     created,
     updated,
     text,
   } = comment;
+  const authUser = useSelector((state) => state.auth.user);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const { palette } = useTheme();
@@ -61,28 +63,30 @@ export const ItemComment = ({
             ) : null}
           </Box>
 
-          <Box sx={{ ml: "auto" }}>
-            <IconButton
-              aria-label="more"
-              id="long-button"
-              aria-controls={open ? "long-menu" : undefined}
-              aria-expanded={open ? "true" : undefined}
-              aria-haspopup="true"
-              onClick={handleClick}
-            >
-              <MoreVertIcon sx={{ fontSize: "1.5rem" }} />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-              <MenuItem onClick={() => handleDelete(commentId)}>
-                <DeleteIcon sx={{ color: palette.neutral.main }} />
-                <Typography sx={{ ml: 1 }}>Delete Comment</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => handleEdit(commentId)}>
-                <EditIcon sx={{ color: palette.neutral.main }} />
-                <Typography sx={{ ml: 1 }}>Edit Comment</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
+          {authUser._id === postUserId ? (
+            <Box sx={{ ml: "auto" }}>
+              <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={open ? "long-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
+                <MoreVertIcon sx={{ fontSize: "1.5rem" }} />
+              </IconButton>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={() => handleDelete(commentId)}>
+                  <DeleteIcon sx={{ color: palette.neutral.main }} />
+                  <Typography sx={{ ml: 1 }}>Delete Comment</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => handleEdit(commentId)}>
+                  <EditIcon sx={{ color: palette.neutral.main }} />
+                  <Typography sx={{ ml: 1 }}>Edit Comment</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          ) : null}
         </Box>
         <Typography
           sx={{

@@ -1,65 +1,125 @@
+import { useState } from "react";
 import Dropzone from "react-dropzone";
-import { Box, Typography, useTheme, IconButton, Tooltip } from "@mui/material";
 import FlexBetween from "./FlexBetween";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import {
+  Box,
+  Typography,
+  useTheme,
+  IconButton,
+  Button,
+  Tooltip,
+} from "@mui/material";
 import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
-import SaveIcon from "@mui/icons-material/Save";
 
-export const DropzoneUpload = ({ image, setImage, handleSend }) => {
+export const DropzoneUpload = ({ image, setImage }) => {
+  const [error, setError] = useState(null);
   const { palette } = useTheme();
 
+  const handleDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    const fileType = file.type;
+    const fileName = file.name;
+    const extension = fileName.split(".").pop();
+
+    if (
+      ![".jpg", ".jpeg", ".png"].includes(`.${extension}`) ||
+      !fileType.startsWith("image/")
+    ) {
+      setError(
+        `The file type ${extension} is not supported. Please upload a .jpg, .jpeg or .png file.`
+      );
+      return;
+    }
+
+    setImage(file);
+    setError(null);
+  };
+
+  const handleDeleteImage = () => setImage(null);
+
   return (
-    <Box>
-      <Dropzone
-        acceptedFiles=".jpg,.jpeg,.png"
-        multiple={false}
-        onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
-      >
-        {({ getRootProps, getInputProps }) => (
-          <FlexBetween display="flex" gap="1.5rem">
+    <Dropzone multiple={false} onDrop={handleDrop}>
+      {({ getRootProps, getInputProps }) => (
+        <Box>
+          <FlexBetween>
             <Box
               {...getRootProps()}
-              border={`2px dashed ${palette.primary.main}`}
-              borderRadius="0.5rem"
-              p="0.25rem 1rem"
-              width="100%"
-              sx={{ "&:hover": { cursor: "pointer" } }}
+              sx={{
+                width: "100%",
+                "&:hover": { cursor: "pointer" },
+              }}
             >
               <input {...getInputProps()} />
               {!image ? (
-                <p>Add or change your avatar here</p>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    width: "100%",
+                    backgroundColor: palette.neutral.light,
+                    border: `1px dashed ${palette.neutral.medium}`,
+                    borderRadius: "0.5rem",
+                    p: "0.75rem",
+                  }}
+                >
+                  <CloudUploadIcon
+                    style={{
+                      fontSize: "2.5rem",
+                      color: palette.neutral.mediumMain,
+                    }}
+                  />
+                  <Typography>
+                    Drag and drop your files here. Only .jpg, .jpeg, or .png
+                    files are accepted.
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      textTransform: "none",
+                    }}
+                  >
+                    Or Click to Select
+                  </Button>
+                </Box>
               ) : (
                 <FlexBetween>
                   <Typography>{image.name}</Typography>
-                  <Tooltip title="Change the selected photo" placement="top">
-                    <IconButton>
+                  <Tooltip title="Change the selected file" placement="top">
+                    <IconButton sx={{ ml: "1rem" }}>
                       <EditOutlined />
                     </IconButton>
                   </Tooltip>
                 </FlexBetween>
               )}
             </Box>
-            <Box>
-              {!image ? null : (
-                <FlexBetween display="flex" gap="0.5rem">
-                  <Tooltip title="Save the selected photo" placement="top">
-                    <IconButton onClick={handleSend}>
-                      <SaveIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete the selected photo" placement="top">
-                    <IconButton
-                      onClick={() => setImage(null)}
-                      sx={{ marginLeft: "1rem" }}
-                    >
-                      <DeleteOutlined />
-                    </IconButton>
-                  </Tooltip>
-                </FlexBetween>
-              )}
-            </Box>
+
+            {image && (
+              <Tooltip title="Delete the selected file" placement="top">
+                <IconButton
+                  onClick={handleDeleteImage}
+                  sx={{ marginLeft: "1rem" }}
+                >
+                  <DeleteOutlined />
+                </IconButton>
+              </Tooltip>
+            )}
           </FlexBetween>
-        )}
-      </Dropzone>
-    </Box>
+
+          {error && (
+            <Typography
+              color="error"
+              variant="caption"
+              style={{ fontSize: "0.75rem" }}
+            >
+              {error}
+            </Typography>
+          )}
+        </Box>
+      )}
+    </Dropzone>
   );
 };

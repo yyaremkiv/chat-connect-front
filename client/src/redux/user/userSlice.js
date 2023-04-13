@@ -4,7 +4,7 @@ import UserOperations from "./userOperations";
 const initialState = {
   user: { data: [], isLoading: false, error: null },
   allUsers: { data: [], totalCounts: 0, isLoading: false, error: null },
-  friends: { data: [], isLoading: false, error: null },
+  friends: { data: [], authUser: [], isLoading: false, error: null },
 };
 
 const userSlice = createSlice({
@@ -52,7 +52,8 @@ const userSlice = createSlice({
     builder.addCase(
       UserOperations.getUserFriends.fulfilled,
       (state, action) => {
-        state.friends.data = action.payload.friends;
+        state.friends.data = action.payload.userFriends.friends;
+        state.friends.authUser = action.payload.authUserFriends.friends;
         state.friends.isLoading = false;
       }
     );
@@ -67,7 +68,8 @@ const userSlice = createSlice({
     builder.addCase(
       UserOperations.addRemoveUserFriend.fulfilled,
       (state, action) => {
-        state.friends.data = action.payload.friends;
+        state.friends.data = action.payload.userFriends.friends;
+        state.friends.authUser = action.payload.authUserFriends.friends;
         state.friends.isLoading = false;
       }
     );

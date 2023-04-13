@@ -8,16 +8,18 @@ import WidgetWrapper from "components/WidgetWrapper";
 
 import UserOperations from "redux/user/userOperations";
 
-export const WidgetFriendList = () => {
+export const WidgetFriendList = ({ authUser }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const friends = useSelector((state) => state.user.friends.data);
+  const authUserFriends = useSelector((state) => state.user.friends.authUser);
   const isLoading = useSelector((state) => state.user.friends.isLoading);
   const error = useSelector((state) => state.user.friends.error);
   const { userId } = useParams();
   const { palette } = useTheme();
 
-  const currentUser = userId ? userId : user._id;
+  const currentUser = authUser ? user._id : userId;
+  const currentList = authUser ? authUserFriends : friends;
 
   useEffect(() => {
     if (currentUser) dispatch(UserOperations.getUserFriends(currentUser));
@@ -26,7 +28,7 @@ export const WidgetFriendList = () => {
   return (
     <WidgetWrapper>
       {isLoading && <Loader />}
-      {friends && !isLoading && !error ? (
+      {currentList && !isLoading && !error ? (
         <>
           <Box
             display="flex"
@@ -43,12 +45,12 @@ export const WidgetFriendList = () => {
             </Typography>
             <Typography
               color={palette.neutral.medium}
-            >{`${friends.length} friends`}</Typography>
+            >{`${currentList.length} friends`}</Typography>
           </Box>
 
           <Box display="flex" flexDirection="column" gap="0.75rem">
-            {friends.length
-              ? friends.map((friend) => (
+            {currentList.length
+              ? currentList.map((friend) => (
                   <Box
                     key={friend.friendId._id}
                     display="flex"
