@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { formatDate } from "helper/dateFunction.ts";
 import UserImage from "components/UserImage";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -46,10 +51,18 @@ export const ItemComment = ({
         flexDirection: "column",
         alignItems: "center",
         gap: "0.5rem",
+        p: "0.5rem 0",
       }}
     >
       <Box sx={{ width: "100%" }}>
-        <Box display="flex" gap="0.5rem" alignItems="center" p="0 0.5rem">
+        <Box
+          sx={{
+            display: "flex",
+            gap: "0.5rem",
+            alignItems: "center",
+            p: "0 0.5rem",
+          }}
+        >
           <UserImage image={picturePath} size="40px" />
           <Box>
             <Typography fontSize="h5">{`${firstName} ${lastName}`}</Typography>
@@ -91,7 +104,6 @@ export const ItemComment = ({
         <Typography
           sx={{
             color: palette.neutral.main,
-            m: "0.5rem 0 0.5rem 0",
             p: "0 0.5rem 0.25rem 4rem",
           }}
         >

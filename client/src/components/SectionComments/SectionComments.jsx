@@ -2,18 +2,23 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { WidgetNewComment } from "components/WidgetNewComment/WidgetNewComment";
 import { ListComments } from "components/ListComments/ListComments";
-import { Box } from "@mui/material";
-import PostsOperations from "redux/posts/postsOperations";
-import Modal from "@mui/material/Modal";
 import { ModalCommentEdit } from "components/ModalCommentEdit/ModalCommentEdit";
-import LoadingButton from "@mui/lab/LoadingButton";
-import SendIcon from "@mui/icons-material/Send";
-import Pagination from "@mui/material/Pagination";
-import { Button, Typography, useTheme } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import { LoadingButton } from "@mui/lab";
+import {
+  Box,
+  Button,
+  Divider,
+  MenuItem,
+  Modal,
+  Pagination,
+  Select,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import PostsOperations from "redux/posts/postsOperations";
 
 export const SectionComments = ({
   postId,
@@ -22,23 +27,16 @@ export const SectionComments = ({
   showNewComment = false,
   showListComments = false,
 }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [commentId, setcommentId] = useState(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(localStorage.getItem("commentLimit") || 5);
   const [sort, setSort] = useState(
     localStorage.getItem("commentSortType") || "desc"
   );
   const dispatch = useDispatch();
-  const { palette } = useTheme();
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const handleModalClose = () => setModalOpen(false);
-  const [commentId, setcommentId] = useState(null);
-
   const isLoading = useSelector((state) => state.posts.isLoading);
-
-  const handleCloseModal = () => {
-    setModalOpen(!modalOpen);
-  };
+  const { palette } = useTheme();
 
   useEffect(() => {
     if (showListComments) {
@@ -52,6 +50,7 @@ export const SectionComments = ({
         })
       );
     }
+    // eslint-disable-next-line
   }, [dispatch, showListComments, postId, limit, sort]);
 
   const handleLoadMore = () => {
@@ -67,21 +66,6 @@ export const SectionComments = ({
     setPage(page + 1);
   };
 
-  const handleChange = (setting, value) => {
-    localStorage.setItem(setting, value);
-    switch (setting) {
-      case "commentLimit":
-        setPage(1);
-        setLimit(value);
-        break;
-      case "commentSortType":
-        setSort(value);
-        break;
-      default:
-        break;
-    }
-  };
-
   const handleChangePage = (_, value) => {
     dispatch(
       PostsOperations.fetchComments({
@@ -95,18 +79,8 @@ export const SectionComments = ({
     setPage(value);
   };
 
-  const handleChangeSort = (sortType) => {
-    handleChange("commentSortType", sortType);
-  };
-
-  const handleChangeLimit = (e) => {
-    const value = e.target.value;
-    handleChange("commentLimit", value);
-  };
-
-  const handleEditComment = (commentId) => {
-    setcommentId(commentId);
-    setModalOpen(true);
+  const handleCloseModal = () => {
+    setModalOpen(!modalOpen);
   };
 
   const handleDeleteComment = (commentId) => {
@@ -140,35 +114,87 @@ export const SectionComments = ({
     );
   };
 
+  const handleChange = (setting, value) => {
+    localStorage.setItem(setting, value);
+    switch (setting) {
+      case "commentLimit":
+        setPage(1);
+        setLimit(value);
+        break;
+      case "commentSortType":
+        setSort(value);
+        break;
+      default:
+        break;
+    }
+  };
+  const handleChangeSort = (sortType) =>
+    handleChange("commentSortType", sortType);
+  const handleModalClose = () => setModalOpen(false);
+
+  const handleChangeLimit = (e) => {
+    const value = e.target.value;
+    handleChange("commentLimit", value);
+  };
+
+  const handleEditComment = (commentId) => {
+    setcommentId(commentId);
+    setModalOpen(true);
+  };
+
   return (
-    <Box sx={{ border: "1px solid red" }}>
+    <Box>
       {showNewComment ? (
-        <WidgetNewComment postId={postId} handleAddComment={handleAddComment} />
+        <WidgetNewComment handleAddComment={handleAddComment} />
       ) : null}
 
       {showListComments ? (
         <Box>
-          <Box sx={{ border: "1px solid red", p: "1rem" }}>
-            <Box display="flex" justifyContent="right" gap="1rem" p="0.5rem 0">
-              <Typography color={palette.neutral.main}>
+          <Divider sx={{ m: "0.5rem 0" }} />
+
+          <Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "right",
+                gap: "1rem",
+                p: "0.5rem 0",
+              }}
+            >
+              <Typography variant="h6" sx={{ color: palette.neutral.main }}>
                 Comments shown: {comments.length}
-                {/* {page * limit > totalCounts ? totalCounts : page * limit} */}
               </Typography>
-              <Typography color={palette.neutral.main}>
+              <Typography variant="h6" sx={{ color: palette.neutral.main }}>
                 Total Comments: {totalComments}
               </Typography>
             </Box>
-            <Box display="flex" justifyContent="space-between">
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mb: "1rem",
+              }}
+            >
               <Button
+                variant="text"
                 onClick={() =>
                   handleChangeSort(sort === "desc" ? "asc" : "desc")
                 }
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  fontSize: "0.85rem",
+                  color: palette.neutral.main,
+                }}
               >
                 {sort === "desc" ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
-                <Typography ml="0.5rem">Date</Typography>
+                <Typography variant="h5">Sort Date</Typography>
               </Button>
-              <Box display="flex" alignItems="center" gap="1rem">
-                <Typography>Display post count: </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <Typography variant="h5" sx={{ color: palette.neutral.main }}>
+                  Display post count:{" "}
+                </Typography>
                 <Select size="small" value={limit} onChange={handleChangeLimit}>
                   <MenuItem value={3}>3</MenuItem>
                   <MenuItem value={5}>5</MenuItem>
@@ -178,6 +204,7 @@ export const SectionComments = ({
               </Box>
             </Box>
           </Box>
+
           <ListComments
             comments={comments}
             handleEditComment={handleEditComment}
@@ -189,14 +216,14 @@ export const SectionComments = ({
       {comments.length < totalComments &&
       showListComments &&
       Math.ceil(totalComments / limit) > page ? (
-        <Box display="flex" justifyContent="center" p="0.5rem">
+        <Box sx={{ display: "flex", justifyContent: "center", p: "0.75rem" }}>
           <LoadingButton
-            size="large"
-            variant="contained"
-            loadingPosition="end"
-            endIcon={<SendIcon />}
+            variant="text"
+            loadingPosition="start"
+            startIcon={<RefreshIcon />}
             loading={isLoading}
             onClick={handleLoadMore}
+            sx={{ p: "0.75rem 2rem", fontSize: "0.8rem", color: "inherit" }}
           >
             <span>Load more comments!</span>
           </LoadingButton>
@@ -204,11 +231,12 @@ export const SectionComments = ({
       ) : null}
 
       {showListComments && comments.length < totalComments ? (
-        <Box sx={{ display: "flex", justifyContent: "center", p: "0.5rem" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", pt: "0.5rem" }}>
           <Pagination
             count={Math.ceil(totalComments / limit)}
             page={page}
             onChange={handleChangePage}
+            disabled={isLoading}
           />
         </Box>
       ) : null}

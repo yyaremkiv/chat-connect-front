@@ -10,7 +10,6 @@ import Select from "@mui/material/Select";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import MenuItem from "@mui/material/MenuItem";
-
 import UserOperations from "redux/user/userOperations";
 
 export const WidgetAllUsers = ({ user = null }) => {
@@ -46,8 +45,6 @@ export const WidgetAllUsers = ({ user = null }) => {
     }
   };
 
-  const handleChangeLimit = (e) => handleChange("limit", e.target.value);
-  const handleChangeSort = (sortType) => handleChange("sortType", sortType);
   const handleLoadMore = () => {
     dispatch(
       UserOperations.getAllUsers({
@@ -60,36 +57,58 @@ export const WidgetAllUsers = ({ user = null }) => {
     setPage(page + 1);
   };
 
+  const handleChangeLimit = (e) => handleChange("limit", e.target.value);
+  const handleChangeSort = (sortType) => handleChange("sortType", sortType);
+
   return (
     <Box display="flex" flexDirection="column" gap="1.5rem">
       {allUsers.length > 0 && !isLoading && !error ? (
         <>
           <Box
-            p="0.5rem 1rem"
-            backgroundColor={palette.background.alt}
-            borderRadius="0.5rem"
+            sx={{
+              p: "0.75rem 1rem",
+              backgroundColor: palette.background.alt,
+              borderRadius: "0.5rem",
+            }}
           >
-            <Box display="flex" justifyContent="right" gap="1rem" p="0.5rem 0">
-              <Typography color={palette.neutral.main}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "right",
+                gap: "1rem",
+                pb: "0.5rem",
+              }}
+            >
+              <Typography variant="h6" sx={{ color: palette.neutral.main }}>
                 Users shown:{" "}
                 {page * limit > totalCounts ? totalCounts : page * limit}
               </Typography>
-              <Typography color={palette.neutral.main}>
+              <Typography variant="h6" sx={{ color: palette.neutral.main }}>
                 Total Users: {totalCounts}
               </Typography>
             </Box>
 
-            <Box display="flex" justifyContent="space-between">
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Button
+                variant="text"
                 onClick={() =>
                   handleChangeSort(sort === "desc" ? "asc" : "desc")
                 }
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  fontSize: "0.85rem",
+                  color: palette.neutral.main,
+                }}
               >
                 {sort === "desc" ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
-                <Typography ml="0.5rem">Date</Typography>
+                <Typography variant="h5">Sort Date</Typography>
               </Button>
-              <Box display="flex" alignItems="center" gap="1rem">
-                <Typography>Display Users count: </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <Typography variant="h5" sx={{ color: palette.neutral.main }}>
+                  Display Users count:{" "}
+                </Typography>
                 <Select size="small" value={limit} onChange={handleChangeLimit}>
                   <MenuItem value={3}>3</MenuItem>
                   <MenuItem value={5}>5</MenuItem>

@@ -4,7 +4,6 @@ import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
-
 import UserOperations from "redux/user/userOperations";
 
 const Friend = ({

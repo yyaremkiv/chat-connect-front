@@ -1,69 +1,94 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import { useTheme } from "@emotion/react";
-import { TextField } from "@mui/material";
+import { Box, Divider, FormHelperText, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
 
-export const WidgetNewComment = ({ postId, handleAddComment }) => {
-  const [commentText, setCommentText] = useState("");
+const initialValues = { text: "" };
+
+const validationSchema = Yup.object().shape({
+  text: Yup.string()
+    .required("This field is required")
+    .matches(/^(?!\s)(?!.*\s$)/, "Text cannot start or end with spaces.")
+    .min(6, "Comment must be at least 6 characters long.")
+    .max(200, "Comment cannot be longer than 200 characters."),
+});
+
+export const WidgetNewComment = ({ handleAddComment }) => {
   const isLoading = useSelector((state) => state.posts.isLoading);
   const { palette } = useTheme();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!commentText.length) return;
-    handleAddComment(commentText);
-    setCommentText("");
-  };
-
-  const handleChangeInput = (e) => {
-    setCommentText(e.target.value);
+  const handleSubmitPost = (values, { resetForm }) => {
+    handleAddComment(values.text);
+    resetForm();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        marginBottom: "1.5rem",
-      }}
+    <Formik
+      onSubmit={handleSubmitPost}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
     >
-      <TextField
-        placeholder="Your comment"
-        fullWidth={true}
-        value={commentText}
-        onChange={handleChangeInput}
-        multiline
-        disabled={isLoading}
-        sx={{
-          backgroundColor: palette.neutral.light,
-        }}
-      />
-      <LoadingButton
-        type="submit"
-        endIcon={<SendIcon />}
-        loading={isLoading}
-        disabled={isLoading}
-        loadingPosition="center"
-        sx={{
-          color: palette.background.alt,
-          backgroundColor: palette.primary.main,
-          borderRadius: "0.5rem",
-          padding: "0.5rem 4rem",
-          fontSize: "0.75rem",
-          "&:hover": {
-            backgroundColor: palette.primary.dark,
-          },
-          "&:focus": {
-            backgroundColor: palette.primary.dark,
-          },
-        }}
-      >
-        <span>{isLoading ? "Send comment" : "Send"}</span>
-      </LoadingButton>
-    </form>
+      {({
+        values,
+        errors,
+        touched,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+      }) => (
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box sx={{ m: "0.5rem 0 1rem 0" }}>
+            <Divider sx={{ mb: "0.75rem" }} />
+            <TextField
+              multiline
+              placeholder="Add New Comment"
+              name="text"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.text}
+              error={Boolean(touched.text && errors.text)}
+              disabled={isLoading}
+              sx={{
+                width: "100%",
+                backgroundColor: palette.neutral.light,
+              }}
+            />
+            <FormHelperText
+              error={Boolean(touched.text && errors.text)}
+              sx={{
+                visibility: touched.text && errors.text ? "visible" : "hidden",
+                height: "0.3rem",
+              }}
+            >
+              {errors.text}
+            </FormHelperText>
+          </Box>
+
+          <LoadingButton
+            type="submit"
+            loading={isLoading}
+            loadingPosition="start"
+            startIcon={<SendIcon />}
+            variant="outlined"
+            sx={{
+              m: "0.25rem auto",
+              p: "0.5rem 2rem",
+              width: "fit-content",
+            }}
+          >
+            <span>Add comment</span>
+          </LoadingButton>
+        </form>
+      )}
+    </Formik>
   );
 };

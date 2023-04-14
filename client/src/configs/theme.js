@@ -97,11 +97,11 @@ export const themeSettings = (mode) => {
       },
       h5: {
         fontFamily: ["Rubik", "sans-serif"].join(","),
-        fontSize: 16,
+        fontSize: "0.9rem",
       },
       h6: {
         fontFamily: ["Rubik", "sans-serif"].join(","),
-        fontSize: 14,
+        fontSize: "0.8rem",
       },
     },
   };

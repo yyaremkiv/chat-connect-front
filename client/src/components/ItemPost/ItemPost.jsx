@@ -1,25 +1,32 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { formatDate } from "helper/dateFunction.ts";
+import { SectionComments } from "components/SectionComments/SectionComments";
+import { useTheme } from "@emotion/react";
 import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
+  PersonAddOutlined,
+  PersonRemoveOutlined,
 } from "@mui/icons-material";
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
-import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import { formatDate } from "helper/dateFunction.ts";
-import { SectionComments } from "components/SectionComments/SectionComments";
-import FlexBetween from "components/FlexBetween";
-import Friend from "components/Friend";
-import WidgetWrapper from "components/WidgetWrapper";
+import {
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCommentIcon from "@mui/icons-material/AddComment";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import UserOperations from "redux/user/userOperations";
 import PostsOperation from "redux/posts/postsOperations";
+import FlexBetween from "components/FlexBetween";
+import Friend from "components/Friend";
+import WidgetWrapper from "components/WidgetWrapper";
 
 export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   const {
@@ -35,19 +42,17 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
   } = post;
   const [isComments, setIsComments] = useState(false);
   const [addCommentShow, setAddCommentShow] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const user = useSelector((state) => state.auth.user);
   const isLiked = Boolean(likes[user._id]);
   const likeCount = Object.keys(likes).length;
   const dispatch = useDispatch();
   const authUserFrinends = useSelector((state) => state.user.friends.authUser);
-
+  const { palette } = useTheme();
+  const open = Boolean(anchorEl);
   const isFriend = authUserFrinends?.find(
     ({ friendId }) => friendId._id === author._id
   );
-
-  const { palette } = useTheme();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
 
   const handlePatchLike = () =>
     dispatch(PostsOperation.patchLike({ postId, userId: user._id }));
@@ -60,20 +65,14 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
       })
     );
 
-  const handleShowAddCommentWidget = () => setAddCommentShow(!addCommentShow);
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
   const handleDeletePost = () => {
     dispatch(PostsOperation.deletePost({ postId, page, limit, sort }));
     setAnchorEl(null);
   };
+
+  const handleShowAddCommentWidget = () => setAddCommentShow(!addCommentShow);
+  const handleClose = () => setAnchorEl(null);
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
 
   const handleEdit = (postId) => {
     handleEditPost(postId);
@@ -137,22 +136,22 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
           </Box>
         )}
       </Box>
-      <Typography color={palette.neutral.main} sx={{ mt: "1rem" }}>
+      <Typography variant="h5" color={palette.neutral.main} sx={{ mt: "1rem" }}>
         {description}
       </Typography>
 
       {picturePath && (
         <img
+          src={picturePath}
           width="100%"
           height="auto"
           alt="post"
           style={{ borderRadius: "0.5rem", marginTop: "0.75rem" }}
-          src={picturePath}
         />
       )}
-      <FlexBetween mt="0.25rem">
-        <FlexBetween gap="1rem">
-          <FlexBetween gap="0.3rem">
+      <FlexBetween sx={{ mt: "0.25rem" }}>
+        <FlexBetween sx={{ gap: "1rem" }}>
+          <FlexBetween sx={{ gap: "0.3rem" }}>
             <IconButton onClick={handlePatchLike}>
               {isLiked ? (
                 <FavoriteOutlined sx={{ color: palette.primary.main }} />
@@ -163,7 +162,7 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
             <Typography>{likeCount}</Typography>
           </FlexBetween>
 
-          <FlexBetween gap="0.3rem">
+          <FlexBetween sx={{ gap: "0.3rem" }}>
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>

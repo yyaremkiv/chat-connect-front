@@ -3,13 +3,11 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import { FormConfig } from "configs/Form.config";
-
-import AuthOperations from "redux/auth/AuthOperations";
-
 import { TextField } from "@mui/material";
 import { FormHelperText } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
 import { Typography } from "@mui/material";
+import AuthOperations from "redux/auth/AuthOperations.js";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";

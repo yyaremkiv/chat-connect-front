@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import { logoutUser } from "redux/auth/authOperations22222";
-import AuthOperations from "redux/auth/AuthOperations";
 import { setModeTheme } from "redux/theme/themeSlice";
 import {
   Box,
@@ -20,12 +18,11 @@ import {
   Message,
   DarkMode,
   LightMode,
-  Notifications,
-  Help,
   Menu,
   Close,
 } from "@mui/icons-material";
 import FlexBetween from "../../components/FlexBetween";
+import AuthOperations from "redux/auth/AuthOperations.js";
 
 export const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -50,15 +47,18 @@ export const Navbar = () => {
           m: "0 auto",
         }}
       >
-        <FlexBetween gap="1.75rem">
+        <FlexBetween sx={{ gap: "1.75rem" }}>
           <Typography
-            fontWeight="bold"
-            fontSize="clamp(1rem, 2rem, 2.25rem)"
             color="primary"
-            onClick={() => navigate("/home")}
+            onClick={() => {
+              navigate("/home");
+              window.location.reload();
+            }}
             sx={{
+              fontWeight: "bold",
+              fontSize: "clamp(1rem, 2rem, 2.25rem)",
               "&:hover": {
-                color: palette.primary.light,
+                color: palette.primary.dark,
                 cursor: "pointer",
               },
             }}
@@ -67,10 +67,12 @@ export const Navbar = () => {
           </Typography>
           {isNonMobileScreens && (
             <FlexBetween
-              backgroundColor={palette.neutral.light}
-              borderRadius="9px"
-              gap="3rem"
-              padding="0.1rem 1.5rem"
+              sx={{
+                backgroundColor: palette.neutral.light,
+                borderRadius: "9px",
+                gap: "3rem",
+                padding: "0.1rem 1.5rem",
+              }}
             >
               <InputBase placeholder="Search..." />
               <IconButton>
@@ -130,16 +132,18 @@ export const Navbar = () => {
 
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
-          position="fixed"
-          right="0"
-          bottom="0"
-          height="100%"
-          zIndex="10"
-          maxWidth="500px"
-          minWidth="300px"
-          backgroundColor={palette.background.default}
+          sx={{
+            position: "fixed",
+            right: "0",
+            bottom: "0",
+            height: "100%",
+            zIndex: "10",
+            maxWidth: "500px",
+            minWidth: "300px",
+            backgroundColor: palette.background.default,
+          }}
         >
-          <Box display="flex" justifyContent="flex-end" p="1rem">
+          <Box sx={{ display: "flex", justifyContent: "flex-end", p: "1rem" }}>
             <IconButton
               onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
             >
@@ -148,11 +152,13 @@ export const Navbar = () => {
           </Box>
 
           <FlexBetween
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            gap="3rem"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "3rem",
+            }}
           >
             <IconButton
               onClick={() => dispatch(setModeTheme())}
@@ -167,8 +173,6 @@ export const Navbar = () => {
               )}
             </IconButton>
             <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} />
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}

@@ -5,15 +5,22 @@ import { ModalPostEdit } from "components/ModalPostEdit/ModalPostEdit";
 import { ItemPost } from "components/ItemPost/ItemPost";
 import { useParams } from "react-router-dom";
 import { useTheme } from "@emotion/react";
-import { Box, Button, Typography } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
-import SendIcon from "@mui/icons-material/Send";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import { LoadingButton } from "@mui/lab";
+import { TransitionGroup } from "react-transition-group";
+import {
+  Box,
+  Button,
+  List,
+  MenuItem,
+  Modal,
+  Select,
+  Typography,
+} from "@mui/material";
+import Collapse from "@mui/material/Collapse";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import PostsOperation from "redux/posts/postsOperations";
-import Modal from "@mui/material/Modal";
 
 export const WidgetPosts = ({ user = null, addNewPost = true }) => {
   const [page, setPage] = useState(1);
@@ -21,20 +28,13 @@ export const WidgetPosts = ({ user = null, addNewPost = true }) => {
   const [sort, setSort] = useState(localStorage.getItem("sortType") || "desc");
   const [postId, setPostId] = useState(null);
   const [open, setOpen] = useState(false);
+  const { userId } = useParams();
+  const { palette } = useTheme();
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const totalCounts = useSelector((state) => state.posts.totalCounts);
   const isLoading = useSelector((state) => state.posts.isLoading);
-  const { userId } = useParams();
   const currentUserId = user ? user : userId;
-  const { palette } = useTheme();
-
-  const handleClose = () => setOpen(false);
-
-  const handleEditPost = (postId) => {
-    setOpen(true);
-    setPostId(postId);
-  };
 
   useEffect(() => {
     if (currentUserId) {
@@ -70,8 +70,6 @@ export const WidgetPosts = ({ user = null, addNewPost = true }) => {
     }
   };
 
-  const handleChangeLimit = (e) => handleChange("limit", e.target.value);
-  const handleChangeSort = (sortType) => handleChange("sortType", sortType);
   const handleLoadMore = () => {
     dispatch(
       PostsOperation.fetchPosts({
@@ -84,34 +82,62 @@ export const WidgetPosts = ({ user = null, addNewPost = true }) => {
     setPage(page + 1);
   };
 
+  const handleChangeLimit = (e) => handleChange("limit", e.target.value);
+  const handleChangeSort = (sortType) => handleChange("sortType", sortType);
+  const handleClose = () => setOpen(false);
+
+  const handleEditPost = (postId) => {
+    setOpen(true);
+    setPostId(postId);
+  };
+
   return (
-    <Box display="flex" flexDirection="column" gap="1.5rem">
+    <Box sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       {addNewPost && <WidgetNewPost page={page} limit={limit} sort={sort} />}
 
       <Box
-        p="0.5rem 1rem"
-        backgroundColor={palette.background.alt}
-        borderRadius="0.5rem"
+        sx={{
+          p: "0.75rem 1rem",
+          backgroundColor: palette.background.alt,
+          borderRadius: "0.5rem",
+        }}
       >
-        <Box display="flex" justifyContent="right" gap="1rem" p="0.5rem 0">
-          <Typography color={palette.neutral.main}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "right",
+            gap: "1rem",
+            pb: "0.5rem",
+          }}
+        >
+          <Typography variant="h6" sx={{ color: palette.neutral.main }}>
             Posts shown:{" "}
             {page * limit > totalCounts ? totalCounts : page * limit}
           </Typography>
-          <Typography color={palette.neutral.main}>
+          <Typography variant="h6" sx={{ color: palette.neutral.main }}>
             Total Posts: {totalCounts}
           </Typography>
         </Box>
 
-        <Box display="flex" justifyContent="space-between">
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Button
+            variant="text"
             onClick={() => handleChangeSort(sort === "desc" ? "asc" : "desc")}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontSize: "0.85rem",
+              color: palette.neutral.main,
+            }}
           >
             {sort === "desc" ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
-            <Typography ml="0.5rem">Date</Typography>
+            <Typography variant="h5">Sort Date</Typography>
           </Button>
-          <Box display="flex" alignItems="center" gap="1rem">
-            <Typography>Display post count: </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <Typography variant="h5" sx={{ color: palette.neutral.main }}>
+              Display post count:{" "}
+            </Typography>
             <Select size="small" value={limit} onChange={handleChangeLimit}>
               <MenuItem value={3}>3</MenuItem>
               <MenuItem value={5}>5</MenuItem>
@@ -123,29 +149,39 @@ export const WidgetPosts = ({ user = null, addNewPost = true }) => {
       </Box>
 
       {posts.length > 0 ? (
-        <Box display="flex" flexDirection="column" gap="1.5rem">
-          {posts.map((post) => (
-            <ItemPost
-              key={post._id}
-              post={post}
-              page={page}
-              limit={limit}
-              sort={sort}
-              handleEditPost={handleEditPost}
-            />
-          ))}
-        </Box>
+        <List>
+          <TransitionGroup
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.5rem",
+            }}
+          >
+            {posts.map((post) => (
+              <Collapse key={post._id}>
+                <ItemPost
+                  post={post}
+                  page={page}
+                  limit={limit}
+                  sort={sort}
+                  handleEditPost={handleEditPost}
+                />
+              </Collapse>
+            ))}
+          </TransitionGroup>
+        </List>
       ) : null}
 
       {posts?.length > 0 && page * limit < totalCounts ? (
-        <Box display="flex" justifyContent="center" p="1.5rem">
+        <Box sx={{ display: "flex", justifyContent: "center", pb: "1.5rem" }}>
           <LoadingButton
             size="large"
-            variant="contained"
-            loadingPosition="end"
-            endIcon={<SendIcon />}
+            variant="text"
+            loadingPosition="start"
+            startIcon={<RefreshIcon />}
             loading={isLoading}
             onClick={handleLoadMore}
+            sx={{ p: "0.75rem 2rem", fontSize: "0.8rem", color: "inherit" }}
           >
             <span>Load more posts!</span>
           </LoadingButton>
