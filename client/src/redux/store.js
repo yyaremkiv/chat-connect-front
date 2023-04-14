@@ -10,10 +10,10 @@ import {
 } from "redux-persist";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
-import authSlice from "./auth/authSlice";
-import postsSlice from "./posts/postsSlice";
-import themeSlice from "./theme/themeSlice";
-import userSlice from "./user/userSlice";
+import authSlice from "./auth/authSlice.js";
+import postsSlice from "./posts/postsSlice.js";
+import themeSlice from "./theme/themeSlice.js";
+import userSlice from "./user/userSlice.js";
 
 const persistAuthConfig = {
   key: "auth",
