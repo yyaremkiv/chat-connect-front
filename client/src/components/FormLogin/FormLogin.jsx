@@ -7,7 +7,6 @@ import { TextField } from "@mui/material";
 import { FormHelperText } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
 import { Typography } from "@mui/material";
-import AuthOperations from "redux/auth/AuthOperations.js";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -16,6 +15,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LoadingButton from "@mui/lab/LoadingButton";
+import AuthOperations from "redux/auth/AuthOperations.js";
 
 export const FormLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -55,7 +55,6 @@ export const FormLogin = () => {
               style={{ height: "60px" }}
             />
 
-            {/* Password - start */}
             <FormControl variant="outlined">
               <InputLabel
                 htmlFor="outlined-adornment-password"
@@ -141,8 +140,8 @@ export const FormLogin = () => {
           </Typography>
         )}
         <Typography mt="1rem">User to test:</Typography>
-        <Typography>email: phonelist@mail.com</Typography>
-        <Typography>password: phonelist</Typography>
+        <Typography>email: test@mail.com</Typography>
+        <Typography>password: tester</Typography>
       </Box>
     </Box>
   );

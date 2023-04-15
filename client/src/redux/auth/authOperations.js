@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import AuthService from "services/AuthService.js";
+import AuthService from "../../services/AuthService.js";
 
 class AuthOperations {
   static login = createAsyncThunk(

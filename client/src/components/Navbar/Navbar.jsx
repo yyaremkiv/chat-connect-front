@@ -52,7 +52,6 @@ export const Navbar = () => {
             color="primary"
             onClick={() => {
               navigate("/home");
-              window.location.reload();
             }}
             sx={{
               fontWeight: "bold",

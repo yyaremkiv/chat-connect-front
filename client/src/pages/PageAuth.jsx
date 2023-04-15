@@ -16,7 +16,6 @@ export const PageAuth = () => {
   const dispatch = useDispatch();
   const isRegistred = useSelector((state) => state.auth.isRegistred);
   const navigate = useNavigate();
-
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const { palette } = useTheme();
 
@@ -27,10 +26,12 @@ export const PageAuth = () => {
   return (
     <Box>
       <Box
-        width="100%"
-        backgroundColor={palette.background.alt}
-        p="1rem 6%"
-        textAlign="center"
+        sx={{
+          width: "100%",
+          backgroundColor: palette.background.alt,
+          p: "1rem 6%",
+          textAlign: "center",
+        }}
       >
         <Link to="/" style={{ textDecoration: "none" }}>
           <Typography
@@ -53,17 +54,21 @@ export const PageAuth = () => {
       </Box>
 
       <Box
-        width={isNonMobileScreens ? "50%" : "93%"}
-        p="2rem"
-        m="2rem auto"
-        borderRadius="1.5rem"
-        backgroundColor={palette.background.alt}
+        sx={{
+          width: isNonMobileScreens ? "50%" : "93%",
+          p: "2rem",
+          m: "2rem auto",
+          borderRadius: "1.5rem",
+          backgroundColor: palette.background.alt,
+        }}
       >
         <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb="0.5rem"
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: "0.5rem",
+          }}
         >
           <Typography fontWeight="500" variant="h5">
             Welcome to ChatConnect, a social network!

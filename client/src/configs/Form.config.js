@@ -92,6 +92,20 @@ export const FormConfig = {
       "Linkedins link must be no more than 50 characters"
     ),
   }),
+  postSchema: Yup.object().shape({
+    text: Yup.string()
+      .required("This field is required")
+      .matches(/^(?!\s)(?!.*\s$)/, "Text cannot start or end with spaces.")
+      .min(6, "Post must be at least 6 characters long.")
+      .max(200, "Post cannot be longer than 200 characters."),
+  }),
+  commentSchema: Yup.object().shape({
+    text: Yup.string()
+      .required("This field is required")
+      .matches(/^(?!\s)(?!.*\s$)/, "Text cannot start or end with spaces.")
+      .min(6, "Comment must be at least 6 characters long.")
+      .max(200, "Comment cannot be longer than 200 characters."),
+  }),
   typePage: {
     login: "login",
     register: "register",

@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { DropzoneUpload } from "components/DropzoneUpload";
 import { ImageOutlined } from "@mui/icons-material";
 import { Formik } from "formik";
-import * as Yup from "yup";
+import { FormHelperText } from "@mui/material";
+import { FormConfig } from "configs/Form.config";
 import {
   Box,
   Divider,
@@ -18,17 +19,6 @@ import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-import { FormHelperText } from "@mui/material";
-
-const initialValues = { text: "" };
-
-const validationSchema = Yup.object().shape({
-  text: Yup.string()
-    .required("This field is required")
-    .matches(/^(?!\s)(?!.*\s$)/, "Text cannot start or end with spaces.")
-    .min(6, "Post must be at least 6 characters long.")
-    .max(200, "Post cannot be longer than 200 characters."),
-});
 
 export const WidgetNewPost = ({ page, limit, sort }) => {
   const [image, setImage] = useState(null);
@@ -54,8 +44,8 @@ export const WidgetNewPost = ({ page, limit, sort }) => {
     <WidgetWrapper>
       <Formik
         onSubmit={handleSubmitPost}
-        initialValues={initialValues}
-        validationSchema={validationSchema}
+        initialValues={{ text: "" }}
+        validationSchema={FormConfig.postSchema}
       >
         {({
           values,

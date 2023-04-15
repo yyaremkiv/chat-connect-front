@@ -12,7 +12,8 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(PostsOperation.fetchPosts.pending, (state) => {
+    builder.addCase(PostsOperation.fetchPosts.pending, (state, action) => {
+      if (!action.meta.arg.isLoadMore) state.posts = [];
       state.isLoading = true;
       state.error = null;
     });

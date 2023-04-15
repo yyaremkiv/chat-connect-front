@@ -188,7 +188,7 @@ export const SectionComments = ({
                   color: palette.neutral.main,
                 }}
               >
-                {sort === "desc" ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                {sort === "desc" ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
                 <Typography variant="h5">Sort Date</Typography>
               </Button>
               <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -253,11 +253,20 @@ export const SectionComments = ({
             top: "50%",
             left: "50%",
             padding: "1rem",
-            maxWidth: "500px",
+            maxWidth: {
+              xs: "90vw",
+              sm: "80vw",
+              md: "60vw",
+              lg: "50vw",
+              xl: "40vw",
+            },
+            width: "100%",
             transform: "translate(-50%, -50%)",
             bgcolor: "background.paper",
             borderRadius: "0.5rem",
             boxShadow: 24,
+            maxHeight: "90vh",
+            overflowY: "auto",
           }}
         >
           <ModalCommentEdit

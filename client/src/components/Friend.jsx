@@ -15,25 +15,34 @@ const Friend = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { _id } = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
   const friends = useSelector((state) => state.user.friends.data);
   const isFriend = friends?.find((friend) => friend.friendId._id === friendId);
   const { palette } = useTheme();
 
   const handlePatchFriend = () => {
-    dispatch(UserOperations.addRemoveUserFriend({ userId: _id, friendId }));
+    dispatch(
+      UserOperations.addRemoveUserFriend({ userId: user._id, friendId })
+    );
   };
 
   const handleClick = () => {
-    navigate(`/profile/${friendId}`);
+    if (user._id === friendId) return;
+    navigate(`/home/profile/${friendId}`);
     navigate(0);
   };
 
-  if (_id === friendId && hideAdmin) return null;
+  if (user._id === friendId && hideAdmin) return null;
 
   return (
     <FlexBetween gap="1rem" sx={{ width: "100%" }}>
-      <Box display="flex" gap="0.75rem">
+      <Box
+        sx={{
+          display: "flex",
+          gap: "0.75rem",
+          alignItems: "center",
+        }}
+      >
         <UserImage image={picturePath} size="55px" />
         <Box onClick={handleClick}>
           <Typography
@@ -42,8 +51,8 @@ const Friend = ({
             fontWeight="500"
             sx={{
               "&:hover": {
-                color: palette.primary.light,
-                cursor: "pointer",
+                cursor: user._id !== friendId ? "pointer" : null,
+                color: user._id !== friendId ? palette.primary.light : null,
               },
             }}
           >
@@ -66,7 +75,7 @@ const Friend = ({
         </Box>
       </Box>
 
-      {_id !== friendId && showList ? (
+      {user._id !== friendId && showList ? (
         isFriend ? (
           <IconButton
             onClick={() => handlePatchFriend()}

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import UserServices from "services/UserServices.js";
+import UserServices from "../../services/UserServices";
 
 class UserOperations {
   static getUser = createAsyncThunk(

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, useTheme } from "@mui/material";
-import UserImage from "components/UserImage";
 import { formatDate } from "helper/dateFunction.ts";
+import UserImage from "components/UserImage";
 
 export const ItemUser = ({
   user: {
@@ -20,18 +20,24 @@ export const ItemUser = ({
   const { palette } = useTheme();
 
   const handleClick = () => {
-    navigate(`/profile/${userId}`);
+    navigate(`/home/profile/${userId}`);
     navigate(0);
   };
 
   return (
-    <Box display="flex" alignItems="center" gap="0.75rem">
+    <Box sx={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
       <Box>
         <UserImage image={picturePath} size="75px" />
       </Box>
 
       <Box sx={{ width: "100%" }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Typography
             color={palette.neutral.main}
             variant="h5"
@@ -51,7 +57,7 @@ export const ItemUser = ({
           </Typography>
         </Box>
 
-        <Box display="flex" gap="1.5rem">
+        <Box sx={{ display: "flex", gap: "1.5rem" }}>
           <Box>
             <Typography color={palette.neutral.medium} fontSize="0.75rem">
               Location: {location}

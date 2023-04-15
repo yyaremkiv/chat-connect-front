@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import FlexBetween from "components/FlexBetween";
-import Dropzone from "react-dropzone";
+import { DropzoneUpload } from "components/DropzoneUpload";
+import { Formik } from "formik";
+import { FormConfig } from "configs/Form.config";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 import {
   Box,
   Typography,
   TextField,
   useTheme,
   Button,
-  IconButton,
+  FormHelperText,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
-import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import PostsOperations from "redux/posts/postsOperations";
 
 export const ModalPostEdit = ({
@@ -29,149 +30,148 @@ export const ModalPostEdit = ({
   const user = useSelector((state) => state.auth.user);
   const posts = useSelector((state) => state.posts.posts);
   const currentPost = posts.filter((post) => post._id === postId);
-  const [postDescription, setPostDescription] = useState(
-    currentPost[0].description
-  );
   const { palette } = useTheme();
 
-  const handleChangePost = () => {
+  const handleSubmitPost = (values, { resetForm }) => {
+    if (
+      values.text === currentPost[0].description &&
+      !image &&
+      !deleteCurrentPhoto
+    )
+      return Notify.warning("Make changes first");
+
     const formData = new FormData();
     formData.append("userId", user._id);
     formData.append("postId", postId);
-    formData.append("description", postDescription);
+    formData.append("description", values.text);
     formData.append("deletePhoto", deleteCurrentPhoto);
-
-    if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
-    }
+    if (image) formData.append("picture", image);
 
     dispatch(PostsOperations.updatePost({ page, limit, sort, formData }));
     setDeleteCurrentPhoto(false);
     handleClose();
+    resetForm();
+    Notify.success("Your changes have been submitted");
   };
 
-  const handleCheckboxChange = (event) => {
+  const handleCheckboxChange = (event) =>
     setDeleteCurrentPhoto(event.target.checked);
-  };
 
   return (
     <Box>
-      <Typography mb="0.5rem" textAlign="center">
-        Change your post
-      </Typography>
-      <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        {/* SECTION PHOTO - start */}
-
-        {currentPost[0].picturePath ? (
-          <Box
-            sx={{
-              width: "50%",
+      <Formik
+        onSubmit={handleSubmitPost}
+        initialValues={{ text: currentPost[0].description }}
+        validationSchema={FormConfig.postSchema}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+        }) => (
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
             }}
           >
-            <img
-              width="100%"
-              height="auto"
-              alt="post"
-              style={{
-                borderRadius: "0.5rem",
-                marginTop: "0.75rem",
-                backgroundColor: "rgba(0, 0, 0, 0.9)",
+            <Typography
+              sx={{
+                fontSize: "1rem",
+                fontWeight: 500,
+                textAlign: "center",
               }}
-              src={currentPost[0].picturePath}
-            />
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={deleteCurrentPhoto}
-                    onChange={handleCheckboxChange}
-                  />
-                }
-                label="Delete current photo"
-              />
-            </FormGroup>
-          </Box>
-        ) : null}
-        {/* SECTION PHOTO - end */}
-
-        <Box sx={{ width: "50%" }}>
-          {/* {isImage && ( */}
-
-          <Box
-            border={`1px solid ${palette.neutral.medium}`}
-            borderRadius="0.5rem"
-            mt="1rem"
-            p="0.75rem"
-          >
-            <Dropzone
-              acceptedFiles=".jpg,.jpeg,.png"
-              multiple={false}
-              onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
             >
-              {({ getRootProps, getInputProps }) => (
-                <FlexBetween>
-                  <Box
-                    {...getRootProps()}
-                    border={`2px dashed ${palette.primary.main}`}
-                    borderRadius="0.5rem"
-                    p="0.1rem 1rem"
-                    width="100%"
-                    sx={{ "&:hover": { cursor: "pointer" } }}
-                  >
-                    <input {...getInputProps()} />
-                    {!image ? (
-                      <p>Add Image Here</p>
-                    ) : (
-                      <FlexBetween>
-                        <Typography>{image.name}</Typography>
-                        <IconButton>
-                          <EditOutlined />
-                        </IconButton>
-                      </FlexBetween>
-                    )}
-                  </Box>
-                  <IconButton
-                    onClick={() => setImage(null)}
-                    sx={{ marginLeft: "1rem" }}
-                  >
-                    <DeleteOutlined />
-                  </IconButton>
-                </FlexBetween>
-              )}
-            </Dropzone>
-          </Box>
-        </Box>
-      </Box>
-      <FlexBetween mt="1.5rem">
-        <TextField
-          placeholder="What's on your mind..."
-          value={postDescription}
-          onChange={(e) => setPostDescription(e.target.value)}
-          multiline
-          sx={{
-            width: "100%",
-            backgroundColor: palette.neutral.light,
-          }}
-        />
-      </FlexBetween>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "1rem",
-        }}
-      >
-        <Button
-          onClick={handleChangePost}
-          sx={{
-            backgroundColor: palette.neutral.light,
-            fontSize: "1rem",
-          }}
-        >
-          Update Post
-        </Button>
-      </Box>
+              Edit your post:
+            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              {currentPost[0].picturePath ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1.5rem",
+                    width: "100%",
+                  }}
+                >
+                  <img
+                    width="10%"
+                    height="auto"
+                    alt="post"
+                    style={{
+                      borderRadius: "0.5rem",
+                      backgroundColor: "rgba(0, 0, 0, 0.9)",
+                    }}
+                    src={currentPost[0].picturePath}
+                  />
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={deleteCurrentPhoto}
+                          onChange={handleCheckboxChange}
+                        />
+                      }
+                      label="Delete current photo"
+                    />
+                  </FormGroup>
+                </Box>
+              ) : null}
+            </Box>
+
+            <DropzoneUpload image={image} setImage={setImage} />
+
+            <Box sx={{ width: "100%" }}>
+              <TextField
+                multiline
+                placeholder="What's on your mind..."
+                name="text"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.text}
+                error={Boolean(touched.text && errors.text)}
+                sx={{
+                  width: "100%",
+                  backgroundColor: palette.neutral.light,
+                }}
+              />
+              <FormHelperText
+                error={Boolean(touched.text && errors.text)}
+                sx={{
+                  visibility:
+                    touched.text && errors.text ? "visible" : "hidden",
+                  height: "0.3rem",
+                }}
+              >
+                {errors.text}
+              </FormHelperText>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="text"
+                type="submit"
+                sx={{
+                  p: "0.5rem 3rem",
+                  fontSize: "1rem",
+                  backgroundColor: palette.neutral.light,
+                }}
+              >
+                Update Post
+              </Button>
+            </Box>
+          </form>
+        )}
+      </Formik>
     </Box>
   );
 };

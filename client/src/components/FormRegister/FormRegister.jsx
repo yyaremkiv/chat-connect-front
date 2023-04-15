@@ -77,7 +77,6 @@ export const FormRegister = () => {
               sx={{ height: "60px" }}
             />
 
-            {/* Password - start */}
             <FormControl sx={{ gridColumn: "span 4" }} variant="outlined">
               <InputLabel
                 htmlFor="outlined-adornment-password"
@@ -117,7 +116,6 @@ export const FormRegister = () => {
                 {errors.password}
               </FormHelperText>
             </FormControl>
-            {/* Password - end */}
 
             <Box gridColumn="2/4">
               <LoadingButton

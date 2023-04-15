@@ -20,10 +20,12 @@ export const WidgetAdvert = () => {
         style={{ borderRadius: "0.5rem", margin: "0.75rem 0" }}
       />
       <Box
-        display="flex"
-        justifyContent="space-between"
-        flexWrap="wrap"
-        gap="1rem"
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
       >
         <Typography color={palette.neutral.main}>IntergalBud</Typography>
         <Link
@@ -34,7 +36,10 @@ export const WidgetAdvert = () => {
           https://intergal-bud.com.ua
         </Link>
       </Box>
-      <Typography color={palette.neutral.medium} m="0.75rem 0 0.5rem 0">
+      <Typography
+        color={palette.neutral.medium}
+        sx={{ m: "0.75rem 0 0.5rem 0" }}
+      >
         A reliable partner in the construction of commercial and residential
         buildings. A full range of services from design to construction. Our
         team of professionals guarantees quality and adherence to deadlines.

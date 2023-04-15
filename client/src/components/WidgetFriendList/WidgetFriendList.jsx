@@ -5,7 +5,6 @@ import { Box, Typography, useTheme } from "@mui/material";
 import Loader from "components/Loader";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
-
 import UserOperations from "redux/user/userOperations";
 
 export const WidgetFriendList = ({ authUser }) => {
@@ -31,10 +30,12 @@ export const WidgetFriendList = ({ authUser }) => {
       {currentList && !isLoading && !error ? (
         <>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb="1.5rem"
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: "1.5rem",
+            }}
           >
             <Typography
               color={palette.neutral.dark}
@@ -53,9 +54,11 @@ export const WidgetFriendList = ({ authUser }) => {
               ? currentList.map((friend) => (
                   <Box
                     key={friend.friendId._id}
-                    display="flex"
-                    flexDirection="column"
-                    gap="1.5rem"
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1.5rem",
+                    }}
                   >
                     <Friend friend={friend.friendId} showList={true} />
                   </Box>

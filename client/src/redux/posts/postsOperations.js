@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import PostsServices from "services/PostsServices.js";
+import PostsServices from "../../services/PostsServices.js";
 
 class PostsOperations {
   static fetchPosts = createAsyncThunk(

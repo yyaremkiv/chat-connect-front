@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ItemUser } from "components/ItemUser/ItemUser";
+import { TransitionGroup } from "react-transition-group";
 import { Box, Button, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -11,6 +12,8 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import MenuItem from "@mui/material/MenuItem";
 import UserOperations from "redux/user/userOperations";
+import List from "@mui/material/List";
+import Collapse from "@mui/material/Collapse";
 
 export const WidgetAllUsers = ({ user = null }) => {
   const [page, setPage] = useState(1);
@@ -61,7 +64,7 @@ export const WidgetAllUsers = ({ user = null }) => {
   const handleChangeSort = (sortType) => handleChange("sortType", sortType);
 
   return (
-    <Box display="flex" flexDirection="column" gap="1.5rem">
+    <Box sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       {allUsers.length > 0 && !isLoading && !error ? (
         <>
           <Box
@@ -102,7 +105,7 @@ export const WidgetAllUsers = ({ user = null }) => {
                   color: palette.neutral.main,
                 }}
               >
-                {sort === "desc" ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                {sort === "desc" ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
                 <Typography variant="h5">Sort Date</Typography>
               </Button>
               <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -120,14 +123,26 @@ export const WidgetAllUsers = ({ user = null }) => {
           </Box>
 
           <WidgetWrapper>
-            <Box display="flex" flexDirection="column" gap="1rem">
-              {allUsers?.map((user, index) => (
-                <ItemUser key={index} user={user} />
-              ))}
-            </Box>
+            <List>
+              <TransitionGroup
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                }}
+              >
+                {allUsers?.map((user) => (
+                  <Collapse key={user._id}>
+                    <ItemUser user={user} />
+                  </Collapse>
+                ))}
+              </TransitionGroup>
+            </List>
 
             {allUsers?.length && page * limit < totalCounts ? (
-              <Box display="flex" justifyContent="center" p="1.5rem">
+              <Box
+                sx={{ display: "flex", justifyContent: "center", p: "1.5rem" }}
+              >
                 <LoadingButton
                   size="large"
                   variant="contained"

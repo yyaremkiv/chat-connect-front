@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { Navbar } from "components/Navbar/Navbar";
 import { WidgetUser } from "components/WidgetUser/WidgetUser";
 import { WidgetPosts } from "components/WidgetPosts/WidgetPosts";
 import { WidgetFriendList } from "components/WidgetFriendList/WidgetFriendList";
@@ -11,7 +10,6 @@ export const PageProfile = () => {
 
   return (
     <Box>
-      <Navbar />
       {user._id && (
         <Box
           display="flex"

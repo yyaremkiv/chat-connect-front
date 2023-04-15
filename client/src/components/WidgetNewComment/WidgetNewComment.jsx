@@ -1,20 +1,10 @@
 import { useSelector } from "react-redux";
 import { Formik } from "formik";
-import * as Yup from "yup";
+import { FormConfig } from "configs/Form.config";
 import { useTheme } from "@emotion/react";
 import { Box, Divider, FormHelperText, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
-
-const initialValues = { text: "" };
-
-const validationSchema = Yup.object().shape({
-  text: Yup.string()
-    .required("This field is required")
-    .matches(/^(?!\s)(?!.*\s$)/, "Text cannot start or end with spaces.")
-    .min(6, "Comment must be at least 6 characters long.")
-    .max(200, "Comment cannot be longer than 200 characters."),
-});
 
 export const WidgetNewComment = ({ handleAddComment }) => {
   const isLoading = useSelector((state) => state.posts.isLoading);
@@ -28,8 +18,8 @@ export const WidgetNewComment = ({ handleAddComment }) => {
   return (
     <Formik
       onSubmit={handleSubmitPost}
-      initialValues={initialValues}
-      validationSchema={validationSchema}
+      initialValues={{ text: "" }}
+      validationSchema={FormConfig.commentSchema}
     >
       {({
         values,
