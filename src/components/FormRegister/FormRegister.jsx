@@ -13,7 +13,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LoadingButton from "@mui/lab/LoadingButton";
-import AuthOperations from "../../AuthOperations.js";
+import AuthOperations from "../../redux/auth/AuthOperations.js";
 
 export const FormRegister = () => {
   const [showPassword, setShowPassword] = useState(false);
