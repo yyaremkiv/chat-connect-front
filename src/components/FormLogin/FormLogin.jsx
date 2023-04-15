@@ -96,38 +96,34 @@ export const FormLogin = () => {
               </FormHelperText>
             </FormControl>
 
-            <Box>
-              <LoadingButton
-                fullWidth
-                variant="contained"
-                loading={isLoading}
-                disabled={isLoading}
-                loadingPosition="center"
-                type="submit"
-                sx={{
-                  marginTop: "0.5rem",
-                  marginBottom: "1rem",
-                  fontSize: "0.9rem",
-                  color: palette.textColor.primary,
-                }}
-              >
-                <span>LOGIN</span>
-              </LoadingButton>
-            </Box>
+            <LoadingButton
+              variant="contained"
+              loading={isLoading}
+              disabled={isLoading}
+              loadingPosition="center"
+              type="submit"
+              sx={{
+                margin: "0 auto 1rem auto",
+                padding: "0.25rem 4rem",
+                fontSize: "0.9rem",
+                color: "#fff",
+              }}
+            >
+              <span>LOGIN</span>
+            </LoadingButton>
           </form>
         )}
       </Formik>
 
       <Box>
-        <Link to="/register">
+        <Link to="/register" style={{ textDecoration: "none" }}>
           <Typography
             sx={{
-              marginBottom: "0.25rem",
-              textDecoration: "underline",
+              textDecoration: "none",
               color: palette.primary.main,
               "&:hover": {
                 cursor: "pointer",
-                color: palette.primary.light,
+                textDecoration: "underline",
               },
             }}
           >

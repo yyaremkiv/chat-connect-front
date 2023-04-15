@@ -6,7 +6,6 @@ class AuthService {
   }
 
   static async register(values) {
-    console.log("log", values);
     return API.post("/register", values);
   }
 

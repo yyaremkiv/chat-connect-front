@@ -8,7 +8,7 @@ import {
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material";
-import EmailIcon from "@mui/icons-material/Email";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import UserImage from "../UserImage";
 import FlexBetween from "../FlexBetween";
 import WidgetWrapper from "../WidgetWrapper";
@@ -31,8 +31,6 @@ export const WidgetUser = () => {
   useEffect(() => {
     dispatch(UserOperations.getUser(activeUser));
   }, [dispatch, activeUser]);
-
-  console.log(currentUser);
 
   const {
     firstName,
@@ -106,7 +104,7 @@ export const WidgetUser = () => {
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-              <EmailIcon
+              <MailOutlineIcon
                 fontSize="large"
                 sx={{ color: palette.neutral.main }}
               />

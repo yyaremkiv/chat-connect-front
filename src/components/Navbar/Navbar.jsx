@@ -57,12 +57,21 @@ export const Navbar = () => {
               fontWeight: "bold",
               fontSize: "clamp(1rem, 2rem, 2.25rem)",
               "&:hover": {
-                color: palette.primary.dark,
                 cursor: "pointer",
               },
             }}
           >
-            ChatConnect
+            Chat
+            <Typography
+              component="span"
+              sx={{
+                color: palette.neutral.dark,
+                fontWeight: "bold",
+                fontSize: "2rem",
+              }}
+            >
+              Connect
+            </Typography>
           </Typography>
           {isNonMobileScreens && (
             <FlexBetween

@@ -24,7 +24,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(AuthOperations.register.rejected, (state, action) => {
-      state.error = action.payload;
+      state.error = action.payload.data.message;
       state.isLogged = false;
       state.isLoading = false;
     });
@@ -39,7 +39,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(AuthOperations.login.rejected, (state, action) => {
-      state.error = action.payload;
+      state.error = action.payload.data.message;
       state.isLogged = false;
       state.isLoading = false;
     });

@@ -117,38 +117,34 @@ export const FormRegister = () => {
               </FormHelperText>
             </FormControl>
 
-            <Box gridColumn="2/4">
-              <LoadingButton
-                fullWidth
-                variant="contained"
-                loading={isLoading}
-                disabled={isLoading}
-                loadingPosition="center"
-                type="submit"
-                sx={{
-                  marginTop: "0.5rem",
-                  marginBottom: "1rem",
-                  fontSize: "0.9rem",
-                  color: palette.textColor.primary,
-                }}
-              >
-                REGISTER
-              </LoadingButton>
-            </Box>
+            <LoadingButton
+              variant="contained"
+              loading={isLoading}
+              disabled={isLoading}
+              loadingPosition="center"
+              type="submit"
+              sx={{
+                margin: "0 auto 1rem auto",
+                padding: "0.25rem 4rem",
+                fontSize: "0.9rem",
+                color: "#fff",
+              }}
+            >
+              REGISTER
+            </LoadingButton>
           </form>
         )}
       </Formik>
 
       <Box>
-        <Link to="/">
+        <Link to="/" style={{ textDecoration: "none" }}>
           <Typography
             sx={{
               marginBottom: "0.25rem",
-              textDecoration: "underline",
               color: palette.primary.main,
               "&:hover": {
                 cursor: "pointer",
-                color: palette.primary.light,
+                textDecoration: "underline",
               },
             }}
           >
