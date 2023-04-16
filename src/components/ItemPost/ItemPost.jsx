@@ -25,6 +25,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import UserOperations from "redux/user/userOperations";
 import PostsOperation from "redux/posts/postsOperations";
 import FlexBetween from "components/FlexBetween";
+import PostImage from "components/PostImage";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 
@@ -54,8 +55,10 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
     ({ friendId }) => friendId._id === author._id
   );
 
-  const handlePatchLike = () =>
+  const handlePatchLike = () => {
     dispatch(PostsOperation.patchLike({ postId, userId: user._id }));
+    setIsComments(false);
+  };
 
   const handlePatchFriend = () =>
     dispatch(
@@ -136,19 +139,16 @@ export const ItemPost = ({ post, page, limit, sort, handleEditPost }) => {
           </Box>
         )}
       </Box>
-      <Typography variant="h5" color={palette.neutral.main} sx={{ mt: "1rem" }}>
+      <Typography
+        variant="h5"
+        color={palette.neutral.main}
+        sx={{ m: "1rem 0 0.5rem 0" }}
+      >
         {description}
       </Typography>
 
-      {picturePath && (
-        <img
-          src={picturePath}
-          width="100%"
-          height="auto"
-          alt="post"
-          style={{ borderRadius: "0.5rem", marginTop: "0.75rem" }}
-        />
-      )}
+      {picturePath && <PostImage picturePath={picturePath} />}
+
       <FlexBetween sx={{ mt: "0.25rem" }}>
         <FlexBetween sx={{ gap: "1rem" }}>
           <FlexBetween sx={{ gap: "0.3rem" }}>

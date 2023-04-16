@@ -48,8 +48,13 @@ const postsSlice = createSlice({
       state.error = null;
     });
     builder.addCase(PostsOperation.updatePost.fulfilled, (state, action) => {
-      state.posts = action.payload.posts;
-      state.totalCounts = action.payload.totalCounts;
+      const updatedPost = action.payload;
+      const postIndex = state.posts.findIndex(
+        (post) => post._id === updatedPost._id
+      );
+      if (postIndex !== -1) {
+        state.posts[postIndex] = updatedPost;
+      }
       state.isLoading = false;
     });
     builder.addCase(PostsOperation.updatePost.rejected, (state, action) => {
@@ -128,13 +133,17 @@ const postsSlice = createSlice({
       state.error = null;
     });
     builder.addCase(PostsOperation.updateComment.fulfilled, (state, action) => {
-      const updatedPost = action.payload;
-      const postIndex = state.posts.findIndex(
-        (post) => post._id === updatedPost._id
-      );
-      if (postIndex !== -1) {
-        state.posts[postIndex] = updatedPost;
-      }
+      state.posts = state.posts.map((post) => {
+        if (post._id === action.payload.postId) {
+          post.comments = post.comments.map((comment) => {
+            if (comment.id === action.payload.updatedComment.id) {
+              comment = action.payload.updatedComment;
+            }
+            return comment;
+          });
+        }
+        return post;
+      });
       state.isLoading = false;
     });
     builder.addCase(PostsOperation.updateComment.rejected, (state, action) => {

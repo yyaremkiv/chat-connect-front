@@ -53,17 +53,9 @@ class PostsOperations {
 
   static updatePost = createAsyncThunk(
     "posts/updatePost",
-    async (
-      { page = 1, limit = 10, sort = "desc", formData },
-      { rejectWithValue }
-    ) => {
+    async (formData, { rejectWithValue }) => {
       try {
-        const { data } = await PostsServices.updatePost(
-          page,
-          limit,
-          sort,
-          formData
-        );
+        const { data } = await PostsServices.updatePost(formData);
         return data;
       } catch (err) {
         return rejectWithValue(err.message);
@@ -84,6 +76,18 @@ class PostsOperations {
           limit,
           sort
         );
+        return data;
+      } catch (err) {
+        return rejectWithValue(err.message);
+      }
+    }
+  );
+
+  static patchLike = createAsyncThunk(
+    "posts/patchLike",
+    async ({ postId, userId }, { rejectWithValue }) => {
+      try {
+        const { data } = await PostsServices.patchLike(postId, userId);
         return data;
       } catch (err) {
         return rejectWithValue(err.message);
@@ -118,17 +122,18 @@ class PostsOperations {
   static addComment = createAsyncThunk(
     "posts/addComment",
     async (
-      { postId, text, page = 1, limit = 10, sort = "desc" },
+      { postId, commentText, page = 1, limit = 10, sort = "desc" },
       { rejectWithValue }
     ) => {
       try {
         const { data } = await PostsServices.addComment({
           postId,
-          text,
+          commentText,
           page,
           limit,
           sort,
         });
+
         return data;
       } catch (err) {
         return rejectWithValue(err.message);
@@ -138,19 +143,14 @@ class PostsOperations {
 
   static updateComment = createAsyncThunk(
     "posts/updateComment",
-    async (
-      { postId, commentId, text, page = 1, limit = 10, sort = "desc" },
-      { rejectWithValue }
-    ) => {
+    async ({ postId, commentId, commentText }, { rejectWithValue }) => {
       try {
         const { data } = await PostsServices.updateComment({
           postId,
           commentId,
-          text,
-          page,
-          limit,
-          sort,
+          commentText,
         });
+
         return data;
       } catch (err) {
         return rejectWithValue(err.message);
@@ -172,18 +172,6 @@ class PostsOperations {
           limit,
           sort,
         });
-        return data;
-      } catch (err) {
-        return rejectWithValue(err.message);
-      }
-    }
-  );
-
-  static patchLike = createAsyncThunk(
-    "posts/patchLike",
-    async ({ postId, userId }, { rejectWithValue }) => {
-      try {
-        const { data } = await PostsServices.patchLike(postId, userId);
         return data;
       } catch (err) {
         return rejectWithValue(err.message);

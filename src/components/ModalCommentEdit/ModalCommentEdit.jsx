@@ -15,7 +15,7 @@ export const ModalCommentEdit = ({
   postId,
   commentId,
   handleClose,
-  handleUpdatePost,
+  handleUpdateComment,
 }) => {
   const { palette } = useTheme();
   const { posts } = useSelector((state) => state.posts);
@@ -26,7 +26,7 @@ export const ModalCommentEdit = ({
     if (values.text === comment?.text)
       return Notify.warning("Make changes first");
 
-    handleUpdatePost(values.text);
+    handleUpdateComment(values.text);
     handleClose();
     resetForm();
     Notify.success("Your changes have been submitted");

@@ -17,17 +17,10 @@ import {
 } from "@mui/material";
 import PostsOperations from "redux/posts/postsOperations";
 
-export const ModalPostEdit = ({
-  postId,
-  page = 1,
-  limit = 10,
-  sort = "desc",
-  handleClose,
-}) => {
+export const ModalPostEdit = ({ postId, handleClose }) => {
   const [image, setImage] = useState(null);
   const [deleteCurrentPhoto, setDeleteCurrentPhoto] = useState(false);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
   const posts = useSelector((state) => state.posts.posts);
   const currentPost = posts.filter((post) => post._id === postId);
   const { palette } = useTheme();
@@ -41,13 +34,12 @@ export const ModalPostEdit = ({
       return Notify.warning("Make changes first");
 
     const formData = new FormData();
-    formData.append("userId", user._id);
     formData.append("postId", postId);
-    formData.append("description", values.text);
+    formData.append("textPost", values.text);
     formData.append("deletePhoto", deleteCurrentPhoto);
     if (image) formData.append("picture", image);
 
-    dispatch(PostsOperations.updatePost({ page, limit, sort, formData }));
+    dispatch(PostsOperations.updatePost(formData));
     setDeleteCurrentPhoto(false);
     handleClose();
     resetForm();

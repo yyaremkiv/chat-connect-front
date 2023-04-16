@@ -17,6 +17,7 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
+import UserImage from "components/UserImage";
 import cloudConfig from "configs/cloudConfig";
 import CircularProgress from "@mui/material/CircularProgress";
 import UserOperations from "redux/user/userOperations";
@@ -115,13 +116,7 @@ export const PageConfig = () => {
             }}
           >
             <Box sx={{ width: "140px", height: "140px" }}>
-              <img
-                src={user.picturePath}
-                alt={user.firstName}
-                width="100%"
-                height="100%"
-                style={{ objectFit: "cover", borderRadius: "0.5rem" }}
-              />
+              <UserImage image={user.picturePath} size="140px" />
             </Box>
 
             {user.picturePath !== cloudConfig.publicImagePathDefault ? (

@@ -79,21 +79,17 @@ export const SectionComments = ({
     setPage(value);
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(!modalOpen);
-  };
-
   const handleDeleteComment = (commentId) => {
     dispatch(
       PostsOperations.deleteComment({ postId, commentId, page, limit, sort })
     );
   };
 
-  const handleAddComment = (text) => {
+  const handleAddComment = (commentText) => {
     dispatch(
       PostsOperations.addComment({
         postId,
-        text,
+        commentText,
         page,
         limit,
         sort,
@@ -101,15 +97,12 @@ export const SectionComments = ({
     );
   };
 
-  const handleUpdatePost = (text) => {
+  const handleUpdateComment = (commentText) => {
     dispatch(
       PostsOperations.updateComment({
         postId,
         commentId,
-        text,
-        page,
-        limit,
-        sort,
+        commentText,
       })
     );
   };
@@ -141,6 +134,8 @@ export const SectionComments = ({
     setcommentId(commentId);
     setModalOpen(true);
   };
+
+  const handleCloseModal = () => setModalOpen(!modalOpen);
 
   return (
     <Box>
@@ -273,7 +268,7 @@ export const SectionComments = ({
             postId={postId}
             commentId={commentId}
             handleClose={handleCloseModal}
-            handleUpdatePost={handleUpdatePost}
+            handleUpdateComment={handleUpdateComment}
           />
         </Box>
       </Modal>

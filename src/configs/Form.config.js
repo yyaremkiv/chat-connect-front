@@ -10,9 +10,6 @@ export const FormConfig = {
     lastName: "",
     email: "",
     password: "",
-    location: "",
-    occupation: "",
-    picture: "",
   },
   loginSchema: Yup.object().shape({
     email: Yup.string()
