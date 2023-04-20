@@ -15,12 +15,12 @@ class PostsOperations {
       { rejectWithValue }
     ) => {
       try {
-        const { data } = await PostsServices.fetchPosts(
+        const { data } = await PostsServices.fetchPosts({
           userId,
           page,
           limit,
-          sort
-        );
+          sort,
+        });
 
         return isLoadMore
           ? { data, isLoadMore: true }
@@ -38,12 +38,12 @@ class PostsOperations {
       { rejectWithValue }
     ) => {
       try {
-        const { data } = await PostsServices.createPost(
+        const { data } = await PostsServices.createPost({
           page,
           limit,
           sort,
-          formData
-        );
+          formData,
+        });
         return data;
       } catch (err) {
         return rejectWithValue(err.message);
@@ -70,12 +70,12 @@ class PostsOperations {
       { rejectWithValue }
     ) => {
       try {
-        const { data } = await PostsServices.deletePost(
+        const { data } = await PostsServices.deletePost({
           postId,
           page,
           limit,
-          sort
-        );
+          sort,
+        });
         return data;
       } catch (err) {
         return rejectWithValue(err.message);

@@ -21,7 +21,7 @@ class UserOperations {
       { rejectWithValue }
     ) => {
       try {
-        const { data } = await UserServices.getAllUsers(page, limit, sort);
+        const { data } = await UserServices.getAllUsers({ page, limit, sort });
         return isLoadMore
           ? { data, isLoadMore: true }
           : { data, isLoadMore: false };
@@ -59,10 +59,10 @@ class UserOperations {
     "user/addRemoveUserFriend",
     async ({ userId, friendId }, { rejectWithValue }) => {
       try {
-        const { data } = await UserServices.addRemoveUserFriend(
+        const { data } = await UserServices.addRemoveUserFriend({
           userId,
-          friendId
-        );
+          friendId,
+        });
 
         return data;
       } catch (err) {

@@ -27,7 +27,14 @@ export const FormLogin = () => {
   return (
     <Box>
       <Formik
-        onSubmit={(values) => dispatch(AuthOperations.login(values))}
+        onSubmit={(values) =>
+          dispatch(
+            AuthOperations.login({
+              email: values.email.toLocaleLowerCase(),
+              password: values.password,
+            })
+          )
+        }
         initialValues={FormConfig.initialValuesLogin}
         validationSchema={FormConfig.loginSchema}
       >
@@ -136,8 +143,8 @@ export const FormLogin = () => {
           </Typography>
         )}
         <Typography mt="1rem">User to test:</Typography>
-        <Typography>email: test@mail.com</Typography>
-        <Typography>password: tester</Typography>
+        <Typography>email: user-test@mail.com</Typography>
+        <Typography>password: eiYo9eeMu</Typography>
       </Box>
     </Box>
   );

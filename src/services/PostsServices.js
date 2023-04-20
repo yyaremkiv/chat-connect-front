@@ -1,28 +1,25 @@
 import API from "http";
 
 class PostsServices {
-  static async fetchPosts(userId, page, limit, sort) {
-    const url = userId
-      ? `/posts/${userId}/posts?page=${page}&limit=${limit}&sort=${sort}`
-      : `/posts?page=${page}&limit=${limit}&sort=${sort}`;
-    return API.get(url);
+  static async fetchPosts({ userId, page, limit, sort }) {
+    const url = userId ? `/posts/${userId}/posts` : "/posts";
+    return API.get(url, {
+      params: { page, limit, sort },
+    });
   }
 
-  static async createPost(page, limit, sort, formData) {
-    return API.post(
-      `/posts?page=${page}&limit=${limit}&sort=${sort}`,
-      formData
-    );
+  static async createPost({ page, limit, sort, formData }) {
+    return API.post("/posts", formData, { params: { page, limit, sort } });
   }
 
   static async updatePost(formData) {
     return API.patch("/posts", formData);
   }
 
-  static async deletePost(postId, page, limit, sort) {
-    return API.delete(
-      `/posts/${postId}/delete?page=${page}&limit=${limit}&sort=${sort}`
-    );
+  static async deletePost({ postId, page, limit, sort }) {
+    return API.delete(`/posts/${postId}/delete`, {
+      params: { page, limit, sort },
+    });
   }
 
   static async patchLike(postId, userId) {
@@ -31,20 +28,22 @@ class PostsServices {
 
   static async fetchComments({ postId, page, limit, sort, isLoadMore }) {
     return API.patch(
-      `/posts/comments?page=${page}&limit=${limit}&sort=${sort}`,
-      { postId, isLoadMore }
+      "/posts/comments",
+      { postId, isLoadMore },
+      { params: { page, limit, sort } }
     );
   }
 
   static async addComment({ postId, commentText, page, limit, sort }) {
     return API.patch(
-      `/posts/comment/add?page=${page}&limit=${limit}&sort=${sort}`,
-      { postId, commentText }
+      "/posts/comment/add",
+      { postId, commentText },
+      { params: { page, limit, sort } }
     );
   }
 
   static async updateComment({ postId, commentId, commentText }) {
-    return API.patch(`/posts/comment/update`, {
+    return API.patch("/posts/comment/update", {
       postId,
       commentId,
       commentText,
@@ -53,8 +52,9 @@ class PostsServices {
 
   static async deleteComment({ postId, commentId, page, limit, sort }) {
     return API.patch(
-      `/posts/comment/delete?page=${page}&limit=${limit}&sort=${sort}`,
-      { postId, commentId }
+      "/posts/comment/delete",
+      { postId, commentId },
+      { params: { page, limit, sort } }
     );
   }
 }

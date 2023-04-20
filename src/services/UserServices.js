@@ -5,8 +5,10 @@ class UserServices {
     return API.get(`/user/${userId}`);
   }
 
-  static async getAllUsers(page, limit, sort) {
-    return API.get(`/user/list?page=${page}&limit=${limit}&sort=${sort}`);
+  static async getAllUsers({ page, limit, sort }) {
+    return API.get("/user/list", {
+      params: { page, limit, sort },
+    });
   }
 
   static async updateUser(values) {
@@ -17,7 +19,7 @@ class UserServices {
     return API.get(`/user/${userId}/friends`);
   }
 
-  static async addRemoveUserFriend(userId, friendId) {
+  static async addRemoveUserFriend({ userId, friendId }) {
     return API.patch(`/user/${userId}/${friendId}`);
   }
 
