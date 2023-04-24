@@ -9,11 +9,16 @@ class PostsServices {
   }
 
   static async createPost({ page, limit, sort, formData }) {
-    return API.post("/posts", formData, { params: { page, limit, sort } });
+    return API.post("/posts", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      params: { page, limit, sort },
+    });
   }
 
   static async updatePost(formData) {
-    return API.patch("/posts", formData);
+    return API.patch("/posts", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   }
 
   static async deletePost({ postId, page, limit, sort }) {

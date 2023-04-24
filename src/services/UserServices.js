@@ -24,7 +24,9 @@ class UserServices {
   }
 
   static async changeAvatarUser(formData) {
-    return API.patch("/user/avatar", formData);
+    return API.patch("/user/avatar", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   }
 }
 
